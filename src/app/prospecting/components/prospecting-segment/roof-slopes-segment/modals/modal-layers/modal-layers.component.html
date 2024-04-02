@@ -1,0 +1,15 @@
+<ion-content class="ion-padding">
+  <app-checkbox-list
+    *ngFor="let layer of layers; let i = index"
+    [options]="layer.items"
+    [title]="'Layer ' + (i + 1) + (i==0 ? ' (Top)' : '')"
+    subTitle="Shingle type"
+    text="shingle_type_remove"
+    [small]="true"
+    (optionEmited)="onLayerSelected($event, layer.id, i + 1)"
+  ></app-checkbox-list>
+  <ion-button (click)="onClick()" expand="block">
+    Accept
+  </ion-button>
+</ion-content>
+

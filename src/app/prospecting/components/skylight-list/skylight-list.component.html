@@ -1,0 +1,44 @@
+<ion-row *ngFor="let skylight of psbSkylights">
+  <ion-col class="ion-no-padding">
+      <app-button-option-simple [description]="skylight.skylights" [active]="true" (modalEmited)="openModalSkylight(skylight)">
+      </app-button-option-simple>
+      <ion-item style="--inner-padding-end: 0px" class="detail-padding">
+          <ion-grid>
+              <ion-row>
+                  <ion-col class="ion-no-padding">
+                      <ion-label class="roofing-subtitble sf-pro-regular">
+                          <ion-text *ngIf="skylight.on_rigde">It is over the ridge / </ion-text>
+                          <ion-text *ngIf="!skylight.width && !skylight.lenght">{{ getDescSkylightSizeCatalog(skylight.id_skylight_size) }} </ion-text>
+                          <ion-text *ngIf="skylight.width && skylight.lenght">{{ getDescSkylightSizeCatalog(skylight.id_skylight_size) }} ({{skylight.width}} x {{skylight.lenght}})</ion-text>
+                      </ion-label>
+                  </ion-col>
+              </ion-row>
+              <ion-row *ngIf="!skylight.need_replace">
+                  <ion-col class="ion-no-padding">
+                      <ion-label style="text-transform: uppercase" class="roofing-title-popup sf-pro-regular" color="medium">
+                          Don´t need a replace
+                      </ion-label>
+                  </ion-col>
+              </ion-row>
+              <ion-row>
+                  <ion-col class="ion-no-padding">
+                      <ion-label class="roofing-subtitble sf-pro-regular">
+                        <ion-text *ngIf="skylight.id_fkit_option"> Flashing kit {{ getDescFlashingKit(skylight.id_fkit_option) }}</ion-text>
+                        <ion-text *ngIf="skylight.note && skylight.note != ''">/ Added note</ion-text>
+                      </ion-label>
+                  </ion-col>
+              </ion-row>
+              <ion-row>
+                  <ion-col class="ion-no-padding">
+                      <ion-text *ngIf="psbSkylights.length > 0" style="float: right" color="tertiary"
+                          class="roofing-subtitble sf-pro-regular" (click)="openModalDelete(skylight)">Delete
+                      </ion-text>
+                  </ion-col>
+              </ion-row>
+          </ion-grid>
+      </ion-item>
+  </ion-col>
+</ion-row>
+<app-add-new-or-not-required btnText="Add new Skylight" chkBText="No skylight required" [isNoRequired]="isNoRequired"
+    [activeNoRequired]="activeNoRequired" (addEmited)="openModalSkylight()"
+    (optionEmited)="onNoRequiredCheked($event, 3)"></app-add-new-or-not-required>

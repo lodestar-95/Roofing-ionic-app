@@ -1,0 +1,155 @@
+<ion-content forceOverscroll="false">
+  <div class="center modal-container">
+    <ion-item class="modal-title-padding">
+      <ion-label class="roofing-title">Roof slopes</ion-label>
+    </ion-item>
+    <form [formGroup]="roofSlopeForm">
+      <ion-item>
+        <ion-input
+          formControlName="name"
+          class="roofing-label sf-pro-regular"
+          placeholder="Name"></ion-input>
+      </ion-item>
+      <ion-item
+        lines="none"
+        class="ion-no-padding item-error"
+        *ngIf="
+          roofSlopeForm.get('name').invalid &&
+          (roofSlopeForm.get('name').dirty || roofSlopeForm.get('name').touched)
+        ">
+        <ion-label color="danger" style="text-align: center" class="roofing-error"
+          >Required field</ion-label
+        >
+      </ion-item>
+
+      <ion-item lines="none" style="margin-top: 3vh">
+        <ion-label position="fixed">Pitch</ion-label>
+        <ion-input
+          formControlName="angle"
+          class="input-form"
+          inputmode="decimal"
+          placeholder="1.0"
+          type="tel"
+          (keypress)="allowNumbers($event, 'angle')"></ion-input>
+        <ion-label class="label-form">/12</ion-label>
+      </ion-item>
+      <ion-item
+        lines="none"
+        class="ion-no-padding item-error"
+        *ngIf="
+          roofSlopeForm.get('angle').invalid &&
+          (roofSlopeForm.get('angle').dirty || roofSlopeForm.get('angle').touched)
+        ">
+        <ion-label color="danger" class="roofing-error">Valid 1.0 - 24.0 value</ion-label>
+      </ion-item>
+        <ion-label *ngIf="roofSlopeForm.get('angle').value >= 13" color="danger" class="roofing-error">This roof pitch is greater than 12/12. Please validate the steep slope price is accurate for this roof project.</ion-label>
+
+      <ion-item lines="none">
+        <ion-label position="fixed">Area</ion-label>
+        <ion-input
+          formControlName="area"
+          class="input-form"
+          placeholder="00.0"
+          type="tel"
+          (keypress)="allowNumbers($event, 'area')"></ion-input>
+        <ion-label class="label-form">SQ</ion-label>
+      </ion-item>
+      <ion-item
+        lines="none"
+        class="ion-no-padding item-error"
+        *ngIf="
+          roofSlopeForm.get('area').invalid &&
+          (roofSlopeForm.get('area').dirty || roofSlopeForm.get('area').touched)
+        ">
+        <ion-label color="danger" class="roofing-error">Required field</ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="jobType == 13 || jobType == 16" lines="none">
+        <ion-label position="fixed">Layers</ion-label>
+        <ion-input
+          formControlName="layers"
+          class="input-form"
+          type="tel"
+          placeholder="1-5"
+          pattern="[1-5]"
+          type="tel"
+          (keypress)="allowNumbers($event)"></ion-input>
+        <ion-label class="label-form"></ion-label>
+      </ion-item>
+      <ion-item
+        lines="none"
+        class="ion-no-padding item-error"
+        *ngIf="
+          (jobType == 13 || jobType == 16) &&
+          roofSlopeForm.get('layers').invalid &&
+          (roofSlopeForm.get('layers').dirty || roofSlopeForm.get('layers').touched)
+        ">
+        <ion-label color="danger" class="roofing-error">Valid 1-5 value</ion-label>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="fixed">Floor</ion-label>
+        <ion-input
+          formControlName="floor"
+          class="input-form"
+          type="tel"
+          placeholder="1-5"
+          pattern="[1-5]"
+          type="tel"
+          (keypress)="allowNumbers($event)"></ion-input>
+        <ion-label class="label-form"></ion-label>
+      </ion-item>
+      <ion-item
+        lines="none"
+        class="ion-no-padding item-error"
+        *ngIf="
+          roofSlopeForm.get('floor').invalid &&
+          (roofSlopeForm.get('floor').dirty || roofSlopeForm.get('floor').touched)
+        ">
+        <ion-label color="danger" class="roofing-error">Valid 1-5 value</ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="jobType == 13" lines="none">
+        <ion-checkbox
+          formControlName="cbOsbArea"
+          (ionChange)="onClickOSB()"
+          color="secondary"
+          slot="start"
+          mode="md"></ion-checkbox>
+        <ion-label position="fixed">OSB Area (optional)</ion-label>
+        <ion-input
+          formControlName="osbArea"
+          (keypress)="allowNumbers($event, 'osbArea')"
+          class="input-form"
+          placeholder="00.0"></ion-input>
+        <ion-label class="label-form">SQ</ion-label>
+      </ion-item>
+      <ion-item
+        lines="none"
+        class="ion-no-padding item-error"
+        *ngIf="
+          jobType == 13 &&
+          isCheckedOSB &&
+          roofSlopeForm.get('osbArea').invalid &&
+          (roofSlopeForm.get('osbArea').dirty || roofSlopeForm.get('osbArea').touched)
+        ">
+        <ion-label color="danger" class="roofing-error"
+          >Valid 0.1-{{ roofSlopeForm.get('area').value }} value</ion-label
+        >
+      </ion-item>
+    </form>
+  </div>
+</ion-content>
+<ion-footer class="ion-padding">
+  <ion-item>
+    <ion-button
+      class="sf-pro-semibold roofing-button button-padding"
+      type="ngSubmit"
+      expand="block"
+      color="primary"
+      (click)="confirm()"
+      [disabled]="!roofSlopeForm.valid || !roofSlopeForm.dirty">
+      Accept
+    </ion-button>
+  </ion-item>
+</ion-footer>

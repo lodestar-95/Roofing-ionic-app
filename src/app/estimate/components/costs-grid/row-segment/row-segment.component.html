@@ -1,0 +1,27 @@
+<ion-segment
+  [value]="segment"
+  (ionChange)="segmentChanged($event)"
+  mode="md"
+  *ngIf="showSegment"
+  scrollable
+>
+  <ion-segment-button value="built-in">
+    <ion-label>Built In</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="upgrades">
+    <ion-label>Upgrades</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="optionals">
+    <ion-label>Optionals</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<app-builtin-costs-segment
+  *ngIf="segment == 'built-in' && showSegment"
+></app-builtin-costs-segment>
+<app-optionals-costs-segment
+  *ngIf="segment == 'upgrades' && showSegment"
+></app-optionals-costs-segment>
+<app-upgrades-costs-segment
+  *ngIf="segment == 'optionals' && showSegment"
+></app-upgrades-costs-segment>

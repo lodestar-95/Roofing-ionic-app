@@ -1,0 +1,16 @@
+{
+    "prospecting_types": [
+        {
+            "prospecting_type" : "Residential",
+            "id_prospecting_type" : 1
+        },
+        {
+            "prospecting_type" : "Comercial",
+            "id_prospecting_type" : 2
+        },
+        {
+            "prospecting_type" : "Centimark",
+            "id_prospecting_type" : 3
+        }
+    ]
+}

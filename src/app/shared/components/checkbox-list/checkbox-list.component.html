@@ -1,0 +1,32 @@
+<ion-grid class="general-segment">
+  <ion-row>
+    <ion-col *ngIf="!isLeft" size-md="3" size-xs="1"></ion-col>
+    <ion-col [attr.size-md]="isLeft ? '12' : '6'" [attr.size-xs]="isLeft ? '12' : '10'">
+      <ion-label *ngIf="title" color="black" class="roofing-title">{{ title }}</ion-label>
+      <p *ngIf="subTitle" class="roofing-label sf-pro-medium">{{ subTitle }}</p>
+      <ion-label *ngIf="subTitleDesc" class="roofing-label sf-pro-medium">
+        {{ subTitleDesc }}
+        <ion-text *ngIf="!isValid" color="tertiary">Unidentified</ion-text>
+      </ion-label>
+    </ion-col>
+    <ion-col *ngIf="!isLeft" size-md="3" size-xs="1"></ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col *ngIf="!isLeft" size-md="3" size-xs="1"></ion-col>
+    <ion-col size-md="6" size-xs="10">
+      <ion-item *ngFor="let option of chkLists" class="ion-no-padding" lines="none">
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="option.isChecked"
+          (ngModelChange)="optionSelcted(option)"
+          [disabled]="isLeft ? !isValid : false"></ion-checkbox>
+        <ion-label class="roofing-label"
+          >{{ option[text] }}
+          <p class="ion-text-wrap">{{ option[subText] }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-col>
+    <ion-col *ngIf="!isLeft" size-md="3" size-xs="1"></ion-col>
+  </ion-row>
+</ion-grid>

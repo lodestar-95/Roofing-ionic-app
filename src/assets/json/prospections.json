@@ -1,0 +1,890 @@
+{
+	"data": [
+		{
+			"project_name" : "Parent's House",
+			"id_user_saleman" : 9,
+			"user_saleman": {
+				"id_user" : 9,
+				"id_contact" : 7,
+				"contact" : {
+					"id_contact" : 7,
+					"first_name" : "John",
+					"last_name" : "Fidanza",
+					"id_contact_type" : 1,
+					"phones": [{
+						"id_contact_phone" : 5,
+						"phone" : "333 3423 545",
+						"is_default" : true,
+						"id_contact" : 7
+					}]
+				},
+				"id_role" : 3,
+				"modification_date" : null,
+				"login_online_date" : null,
+				"createdAt" : null,
+				"updatedAt" : null,
+				"deletedAt" : null
+			},
+			"next_contact_date" : "2022-06-06T05:00:00.000Z",
+			"id_project_status" : 1,
+			"project_status" : {
+				"id" : 1,
+				"project_status" : "draft"
+			},
+			"prospecting_start_date" : "2022-06-01T05:00:00.000Z",
+			"id_contact_address" : 1,
+			"contact_address" : {
+				"address" : "Lemmon Ave 23",
+				"city" : "Nampa",
+				"id_country_state" : 1,
+				"country_state" : {
+					"country_state" : "Idaho",
+					"code" : "ID",
+					"id_country" : 1,
+					"id_country_state" : 1
+				},
+				"id_contact" : 8,
+				"contact" : {
+					"id_contact" : 8,
+					"first_name" : "Custmer",
+					"last_name" : "Example",
+					"id_contact_type" : 2,
+					"phone" : "8901234567x21",
+					"phones": [{
+						"id_contact_phone" : 3,
+						"phone" : "234 2233 098",
+						"is_default" : true,
+						"id_contact" : 8
+					}],
+					"emails": [{
+						"email" : "jlp@mbd.com",
+						"id_contact" : 8,
+						"id_contact_email" : 3,
+						"is_default" : true
+					}],
+					"id_lead_type" : 1,
+					"lead_type" : {
+						"lead_type" : "Referral",
+						"id_lead_type" : 1
+					},
+					"id_customer" : 1,
+					"customer" : {
+						"id_customer" : 1,
+						"id_contact" : 8,
+						"id_contact_referred" : 3,
+						"contact_referred" : {
+							"id_contact" : 3,
+							"first_name" : "Andres",
+							"last_name" : "Zopi",
+							"id_contact_type" : 1
+						}
+					},
+					"id_customer_type" : 1,
+					"customer_type" : {
+						"id_customer_type" : 1,
+						"customer_type" : "Home Owner"
+					}
+				},
+				"id_contact_address" : 1
+			},
+			"id" : 1,
+			"id_prospecting_type" : 1,
+			"prospecting_type" : {
+				"prospecting_type" : "Residential",
+				"id_prospecting_type" : 1
+			},
+			"project_notes":[{
+					"id" : 1,
+					"note" : "Nota interno",
+					"show_on_work_order" : false,
+					"id_user" : 2,
+					"datetime" : "2022-04-27T05:00:00.000Z",
+					"id_project" : 1
+				},
+				{
+					"id" : 2,
+					"note" : "Nota Work Order",
+					"show_on_work_order" : true,
+					"id_user" : 3,
+					"contact" : {
+						"id_contact" : 4,
+						"first_name" : "Peter",
+						"last_name" : "Parker",
+						"id_contact_type" : 1,
+						"phones": [{
+							"id_contact_pone" : 2,
+							"phone" : "111 2345 345",
+							"is_default" : true,
+							"id_contact" : 4
+						}]
+					},
+					"datetime" : "2022-05-20T05:00:00.000Z",
+					"id_project" : 1
+				}
+			],
+			"project_versions": [
+				{
+					"id" : 1,
+					"project_version" : "v1. 05\/20\/2022",
+					"id_project" : 1,
+					"project_buildings" : [{
+						"id_project_building" : 1,
+						"project_shingle_building" : {
+							"id_project_shingle_building" : 1,
+							"wasting" : 10,
+							"id_inwshield_rows" : 1,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "3 Feet on eaves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 3,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 1
+							},
+							"id_project_building" : 1,
+							"ridge_lf" : 20,
+							"hips_lf" : 1,
+							"eves_rakes_lf_flat_roof" : 2,
+							"id_metal_eves_rakes_flat_roof" : 3,
+							"eves_starters_lf_low_slope" : 4,
+							"id_metal_eves_starters_low_slope" : 1,
+							"rakes_lf_low_steep_slope" : 5,
+							"id_metal_rakes_low_steep_slope" : 2,
+							"valleys_lf_low_steep_slope" : 6,
+							"eves_starters_lf_steep_slope" : 7,
+							"id_metal_eves_starters_lf_steep_slope" : 1,
+							"valleys_lf_steep_slope" : 8,
+							"project_warranty_types_requested" : [{
+								"id_warranty_type" : 1,
+								"warranty_type" : {
+									"warranty_type" : "Standard",
+									"id_warranty_type" : 1
+								},
+								"id_project_warranty_type_requested" : 1,
+								"is_built_in" : true,
+								"id_project_shingle_building" : 1
+							}]
+						},
+						"id_prospecting_material_type" : 1,
+						"prospecting_material_type" : {
+							"id_prospecting_material_type" : 1,
+							"prospecting_material_type" : "Shingle"
+						},
+						"description" : "Parent's House",
+						"id_project_version" : 1,
+						"id_job_type" : 13,
+						"job_type" : {
+							"job_type" : "Remove & replace",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 13
+						},
+						"is_main_building" : true,
+						"project_shingle_slopes": [
+							{
+								"id" : 1,
+								"name" : "Slope A",
+								"pitch" : 4.5,
+								"shingle_area" : 8.2,
+								"floor" : 1,
+								"layers" : 2,
+								"osb_area" : 5,
+								"id_project_shingle_building" : 1
+							},
+							{
+								"id" : 2,
+								"name" : "Slope B",
+								"pitch" : 5.5,
+								"shingle_area" : 7.2,
+								"floor" : 1,
+								"layers" : 1,
+								"osb_area" : 0,
+								"id_project_shingle_building" : 2
+							}
+						],
+						"project_shingle_layers": [
+							{
+								"id" : 3,
+								"id_project_shingle_building" : 1,
+								"id_shingle_type_remove" : 1,
+								"layer" : 1
+							},
+							{
+								"id" : 4,
+								"id_project_shingle_building" : 1,
+								"id_shingle_type_remove" : 2,
+								"layer" : 2
+							}
+						]
+					},
+					{
+						"id_project_building" : 2,
+						"id_prospecting_material_type" : 2,
+						"prospecting_material_type" : {
+							"id_prospecting_material_type" : 2,
+							"prospecting_material_type" : "Metal"
+						},
+						"description" : "Garage",
+						"id_project_version" : 1,
+						"id_job_type" : 13,
+						"job_type" : {
+							"job_type" : "Remove & replace",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 13
+						},
+						"is_main_building" : false
+					}],
+					"is_current_version" : true
+				}
+			]
+		},
+		{
+			"project_name" : "For rent house",
+			"id_user_saleman" : 9,
+			"user_saleman": {
+				"id_user" : 9,
+				"id_contact" : 7,
+				"contact" : {
+					"id_contact" : 7,
+					"first_name" : "John",
+					"last_name" : "Fidanza",
+					"id_contact_type" : 1,
+					"phones": [{
+						"id_contact_phone" : 5,
+						"phone" : "333 3423 545",
+						"is_default" : true,
+						"id_contact" : 7
+					}]
+				},
+				"id_role" : 3,
+				"modification_date" : null,
+				"login_online_date" : null,
+				"createdAt" : null,
+				"updatedAt" : null,
+				"deletedAt" : null
+			},
+			"next_contact_date" : "2022-05-25T05:00:00.000Z",
+			"id_project_status" : 1,
+			"project_status" : {
+				"id" : 1,
+				"project_status" : "draft"
+			},
+			"prospecting_start_date" : "2022-06-01T05:00:00.000Z",
+			"id_contact_address" : 1,
+			"contact_address" : {
+				"address" : "Lemmon Ave 23",
+				"city" : "Nampa",
+				"id_country_state" : 1,
+				"country_state" : {
+					"country_state" : "Idaho",
+					"code" : "ID",
+					"id_country" : 1,
+					"id_country_state" : 1
+				},
+				"id_contact" : 8,
+				"contact" : {
+					"id_contact" : 8,
+					"first_name" : "Custmer",
+					"last_name" : "Example",
+					"id_contact_type" : 2,
+					"phones": [{
+						"id_contact_phone" : 3,
+						"phone" : "234 2233 098",
+						"is_default" : true,
+						"id_contact" : 8
+					}],
+					"emails": [{
+						"email" : "jlp@mbd.com",
+						"id_contact" : 8,
+						"id_contact_email" : 3,
+						"is_default" : true
+					}],
+					"id_lead_type" : 1,
+					"lead_type" : {
+						"lead_type" : "Referral",
+						"id_lead_type" : 1
+					},
+					"id_customer" : 1,
+					"customer" : {
+						"id_customer" : 1,
+						"id_contact" : 8,
+						"id_contact_referred" : 3,
+						"contact_referred" : {
+							"id_contact" : 3,
+							"first_name" : "Andres",
+							"last_name" : "Zopi",
+							"id_contact_type" : 1
+						}
+					},
+					"id_customer_type" : 1,
+					"customer_type" : {
+						"id_customer_type" : 1,
+						"customer_type" : "Home Owner"
+					}
+				},
+				"id_contact_address" : 1
+			},
+			"id" : 2,
+			"id_prospecting_type" : 1,
+			"prospecting_type" : {
+				"prospecting_type" : "Residential",
+				"id_prospecting_type" : 1
+			},
+			"project_versions": [
+				{
+					"id" : 3,
+					"project_version" : "v1. 05\/21\/2022",
+					"id_project" : 2,
+					"is_current_version" : true,
+					"project_buildings" : [
+					{
+						"id_project_building" : 3,
+						"project_shingle_building" : {
+							"id_project_shingle_building" : 2,
+							"wasting" : 30,
+							"id_inwshield_rows" : 2,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "6 Feet on eves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 6,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 2
+							},
+							"id_project_building" : 3,
+							"ridge_lf" : 13,
+							"hips_lf" : null,
+							"eves_rakes_lf_flat_roof" : null,
+							"id_metal_eves_rakes_flat_roof" : null,
+							"eves_starters_lf_low_slope" : null,
+							"id_metal_eves_starters_low_slope" : null,
+							"rakes_lf_low_steep_slope" : null,
+							"id_metal_rakes_low_steep_slope" : null,
+							"valleys_lf_low_steep_slope" : null,
+							"eves_starters_lf_steep_slope" : null,
+							"id_metal_eves_starters_lf_steep_slope" : null,
+							"valleys_lf_steep_slope" : null,
+							"project_warranty_types_requested" : [{
+								"id_warranty_type" : 2,
+								"warranty_type" : {
+									"warranty_type" : "Material",
+									"id_warranty_type" : 2
+								},
+								"id_project_warranty_type_requested" : 2,
+								"is_built_in" : false,
+								"id_project_shingle_building" : 2
+							},{
+								"id_warranty_type" : 3,
+								"warranty_type" : {
+									"warranty_type" : "Workmanship",
+									"id_warranty_type" : 3
+								},
+								"id_project_warranty_type_requested" : 4,
+								"is_built_in" : true,
+								"id_project_shingle_building" : 2
+							}]
+						},
+						"description" : " ",
+						"id_project_version" : 3,
+						"id_prospecting_material_type" : 1,
+						"prospecting_material_type" : {
+							"id_prospecting_material_type" : 1,
+							"prospecting_material_type" : "Shingle"
+						},
+						"id_job_type" : 13,
+						"job_type" : {
+							"job_type" : "Remove & replace",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 13
+						},
+						"is_main_building" : true
+					}]
+				}
+			]
+		},
+		{
+			"project_name" : " ",
+			"id_user_saleman" : 5,
+			"user_saleman": {
+				"id_user" : 5,
+				"id_contact" : 2,
+				"contact" : {
+					"id_contact" : 2,
+					"first_name" : "Eren",
+					"last_name" : "Jeager",
+					"id_contact_type" : 1,
+					"phones": [{
+						"id_contact_phone" : 2,
+						"phone" : "222 1234 112",
+						"is_default" : false,
+						"id_contact" : 2
+					}]
+				},
+				"id_role" : 3,
+				"modification_date" : null,
+				"login_online_date" : null,
+				"createdAt" : null,
+				"updatedAt" : null,
+				"deletedAt" : null
+			},
+			"next_contact_date" : "2022-06-01T05:00:00.000Z",
+			"id_project_status" : 1,
+			"project_status" : {
+				"id" : 1,
+				"project_status" : "draft"
+			},
+			"prospecting_start_date" : "2022-06-01T05:00:00.000Z",
+			"id_contact_address" : 2,
+			"contact_address" : {
+				"address" : "Elm Street 34",
+				"city" : "Boise",
+				"id_country_state" : 2,
+				"country_state" : {
+					"country_state" : "Washington",
+					"code" : "WS",
+					"id_country" : 1,
+					"id_country_state" : 2
+				},
+				"id_contact" : 9,
+				"contact" : {
+					"id_contact" : 9,
+					"first_name" : "Other Customer",
+					"last_name" : "Example",
+					"id_contact_type" : 2,
+					"phones" : [{
+							"id_contact_pone" : 2,
+							"phone" : "222 1234 112",
+							"is_default" : false,
+							"id_contact" : 9
+						}],
+					"emails" : [{
+						"email" : "qwe@xcv.com",
+						"id_contact" : 9,
+						"id_contact_email" : 2,
+						"is_default" : true
+					}],
+					"customer" : {
+						"id_contact" : 9,
+						"id_contact_referred" : null,
+						"id_lead_type" : 2,
+						"lead_type" : {
+							"lead_type" : "Yelp",
+							"id_lead_type" : 2
+						},
+						"id_customer" : 2,
+						"id_customer_type" : 1,
+						"customer_type" : {
+							"id_customer_type" : 1,
+							"customer_type" : "Home Owner"
+						}
+					}
+				},
+				"id_contact_address" : 2
+			},
+			"id" : 3,
+			"id_prospecting_type" : 2,
+			"prospecting_type" : {
+				"prospecting_type" : "Comercial",
+				"id_prospecting_type" : 2
+			},
+			"project_versions": [{
+				"id" : 4,
+				"project_version" : "v1. 05\/22\/2022",
+				"id_project" : 3,
+				"is_current_version" : true,
+				"project_buildings" : [{
+					"id_project_building" : 4,
+					"id_prospecting_material_type" : 1,
+					"prospecting_material_type" : {
+						"id_prospecting_material_type" : 1,
+						"prospecting_material_type" : "Shingle"
+					},
+					"description" : null,
+					"id_project_version" : 4,
+					"id_job_type" : 13,
+					"job_type" : {
+						"job_type" : "Remove & replace",
+						"id_job_type_parent" : 2,
+						"id_job_type" : 13
+					},
+					"is_main_building" : true,
+					"project_shingle_building" : {
+						"id_project_shingle_building" : 3,
+						"wasting" : null,
+						"id_inwshield_rows" : null,
+						"id_project_building" : 4,
+						"ridge_lf" : null,
+						"hips_lf" : null,
+						"eves_rakes_lf_flat_roof" : null,
+						"id_metal_eves_rakes_flat_roof" : null,
+						"eves_starters_lf_low_slope" : null,
+						"id_metal_eves_starters_low_slope" : null,
+						"rakes_lf_low_steep_slope" : null,
+						"id_metal_rakes_low_steep_slope" : null,
+						"valleys_lf_low_steep_slope" : null,
+						"eves_starters_lf_steep_slope" : null,
+						"id_metal_eves_starters_lf_steep_slope" : null,
+						"valleys_lf_steep_slope" : null,
+						"project_warranty_types_requested" : [
+							{
+								"id_warranty_type" : 3,
+								"warranty_type" : {
+									"warranty_type" : "Workmanship",
+									"id_warranty_type" : 3
+								},
+								"id_project_warranty_type_requested" : 5,
+								"is_built_in" : false,
+								"id_project_shingle_building" : 3
+							},
+							{
+								"id_warranty_type" : 2,
+								"warranty_type" : {
+									"warranty_type" : "Material",
+									"id_warranty_type" : 2
+								},
+								"id_project_warranty_type_requested" : 6,
+								"is_built_in" : true,
+								"id_project_shingle_building" : 3
+							}
+						]
+					}
+				}]
+			}]
+		},
+		{
+			"project_name" : null,
+			"id_user_saleman" : 5,
+			"user_saleman": {
+				"id_user" : 5,
+				"id_contact" : 2,
+				"contact" : {
+					"id_contact" : 2,
+					"first_name" : "Eren",
+					"last_name" : "Jeager",
+					"id_contact_type" : 1,
+					"phones": [{
+						"id_contact_phone" : 2,
+						"phone" : "222 1234 112",
+						"is_default" : false,
+						"id_contact" : 2
+					}]
+				},
+				"id_role" : 3,
+				"modification_date" : null,
+				"login_online_date" : null,
+				"createdAt" : null,
+				"updatedAt" : null,
+				"deletedAt" : null
+			},
+			"next_contact_date" : "2022-05-03T17:12:00.000Z",
+			"id_project_status" : 2,
+			"project_status" : {
+				"id" : 2,
+				"project_status" : "pending of acceptance"
+			},
+			"prospecting_start_date" : "2022-05-01T05:00:00.000Z",
+			"id_contact_address" : 6,
+			"contact_address" : {
+				"address" : "Sesamo Street 90",
+				"city" : "Boise",
+				"id_country_state" : 2,
+				"country_state" : {
+					"country_state" : "Washington",
+					"code" : "WS",
+					"id_country" : 1,
+					"id_country_state" : 2
+				},
+				"id_contact" : 9,
+				"contact" : {
+					"id_contact" : 9,
+					"first_name" : "Other Customer",
+					"last_name" : "Example",
+					"id_contact_type" : 2,
+					"phones" : [{
+							"id_contact_pone" : 2,
+							"phone" : "222 1234 112",
+							"is_default" : false,
+							"id_contact" : 9
+						}],
+					"emails" : [{
+						"email" : "qwe@xcv.com",
+						"id_contact" : 9,
+						"id_contact_email" : 2,
+						"is_default" : true
+					}],
+					"customer" : {
+						"id_contact" : 9,
+						"id_contact_referred" : null,
+						"id_lead_type" : 2,
+						"lead_type" : {
+							"lead_type" : "Yelp",
+							"id_lead_type" : 2
+						},
+						"id_customer" : 2,
+						"id_customer_type" : 1,
+						"customer_type" : {
+							"id_customer_type" : 1,
+							"customer_type" : "Home Owner"
+						}
+					}
+				},
+				"id_contact_address" : 6
+			},
+			"id" : 4,
+			"id_prospecting_type" : 1,
+			"prospecting_type" : {
+				"prospecting_type" : "Residential",
+				"id_prospecting_type" : 1
+			},
+			"project_versions": [{
+				"id" : 5,
+				"project_version" : "v1. 05\/23\/2022",
+				"id_project" : 4,
+				"is_current_version" : false,
+				"project_buildings" : [
+					{
+						"id_project_building" : 8,
+						"description" : "Building 1",
+						"id_project_version" : 5,
+						"id_prospecting_material_type" : 1,
+						"prospecting_material_type" : {
+							"id_prospecting_material_type" : 1,
+							"prospecting_material_type" : "Shingle"
+						},
+						"id_job_type" : 13,
+						"job_type" : {
+							"job_type" : "Remove & replace",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 13
+						},
+						"is_main_building" : true,
+						"project_shingle_building" : {
+							"id_project_shingle_building" : 7,
+							"wasting" : 8,
+							"id_inwshield_rows" : 2,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "6 Feet on eves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 6,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 2
+							},
+							"id_project_building" : 8,
+							"ridge_lf" : 37,
+							"hips_lf" : 40,
+							"eves_rakes_lf_flat_roof" : null,
+							"id_metal_eves_rakes_flat_roof" : null,
+							"eves_starters_lf_low_slope" : 45,
+							"id_metal_eves_starters_low_slope" : null,
+							"rakes_lf_low_steep_slope" : null,
+							"id_metal_rakes_low_steep_slope" : null,
+							"valleys_lf_low_steep_slope" : null,
+							"eves_starters_lf_steep_slope" : null,
+							"id_metal_eves_starters_lf_steep_slope" : null,
+							"valleys_lf_steep_slope" : null
+						}
+					},
+					{
+						"id_project_building" : 9,
+						"id_prospecting_material_type" : 1,
+						"prospecting_material_type" : {
+							"id_prospecting_material_type" : 1,
+							"prospecting_material_type" : "Shingle"
+						},
+						"description" : "Building 2",
+						"id_project_version" : 5,
+						"id_job_type" : 14,
+						"job_type" : {
+							"job_type" : "Overlay",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 14
+						},
+						"is_main_building" : false,
+						"project_shingle_building" : {
+							"id_project_shingle_building" : 8,
+							"wasting" : 9,
+							"id_inwshield_rows" : 2,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "6 Feet on eves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 6,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 2
+							},
+							"id_project_building" : 9,
+							"ridge_lf" : 38,
+							"hips_lf" : 41,
+							"eves_rakes_lf_flat_roof" : null,
+							"id_metal_eves_rakes_flat_roof" : 44,
+							"eves_starters_lf_low_slope" : null,
+							"id_metal_eves_starters_low_slope" : null,
+							"rakes_lf_low_steep_slope" : null,
+							"id_metal_rakes_low_steep_slope" : null,
+							"valleys_lf_low_steep_slope" : null,
+							"eves_starters_lf_steep_slope" : null,
+							"id_metal_eves_starters_lf_steep_slope" : null,
+							"valleys_lf_steep_slope" : null
+						}
+					},
+					{
+						"id_project_building" : 10,
+						"id_prospecting_material_type" : 1,
+						"description" : "Building 3",
+						"id_project_version" : 5,
+						"id_job_type" : 13,
+						"job_type" : {
+							"job_type" : "Remove & replace",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 13
+						},
+						"is_main_building" : false,
+						"project_shingle_building" : {
+							"id_project_shingle_building" : 9,
+							"wasting" : 11,
+							"id_inwshield_rows" : 1,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "3 Feet on eves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 3,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 1
+							},
+							"id_project_building" : 10,
+							"ridge_lf" : 39,
+							"hips_lf" : 42,
+							"eves_rakes_lf_flat_roof" : 43,
+							"id_metal_eves_rakes_flat_roof" : null,
+							"eves_starters_lf_low_slope" : null,
+							"id_metal_eves_starters_low_slope" : null,
+							"rakes_lf_low_steep_slope" : null,
+							"id_metal_rakes_low_steep_slope" : null,
+							"valleys_lf_low_steep_slope" : null,
+							"eves_starters_lf_steep_slope" : null,
+							"id_metal_eves_starters_lf_steep_slope" : null,
+							"valleys_lf_steep_slope" : null
+						}
+					}
+				]
+			},
+			{
+				"id" : 2,
+				"project_version" : "v2. 05\/25\/2022",
+				"id_project" : 4,
+				"is_current_version" : true,
+				"project_buildings" : [
+					{
+						"id_project_building" : 5,
+						"id_prospecting_material_type" : 1,
+						"prospecting_material_type" : {
+							"id_prospecting_material_type" : 1,
+							"prospecting_material_type" : "Shingle"
+						},
+						"description" : "Building 1",
+						"id_project_version" : 2,
+						"id_job_type" : 13,
+						"job_type" : {
+							"job_type" : "Remove & replace",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 13
+						},
+						"is_main_building" : true,
+						"project_shingle_building" :{
+							"id_project_shingle_building" : 4,
+							"wasting" : 10,
+							"id_inwshield_rows" : 1,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "3 Feet on eves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 3,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 1
+							},
+							"id_project_building" : 5,
+							"ridge_lf" : 1,
+							"hips_lf" : 2,
+							"eves_rakes_lf_flat_roof" : 3,
+							"id_metal_eves_rakes_flat_roof" : 4,
+							"eves_starters_lf_low_slope" : 5,
+							"id_metal_eves_starters_low_slope" : 6,
+							"rakes_lf_low_steep_slope" : 7,
+							"id_metal_rakes_low_steep_slope" : 8,
+							"valleys_lf_low_steep_slope" : 9,
+							"eves_starters_lf_steep_slope" : 10,
+							"id_metal_eves_starters_lf_steep_slope" : 11,
+							"valleys_lf_steep_slope" : 12
+						}
+					},
+					{
+						"id_project_building" : 7,
+						"id_prospecting_material_type" : 1,
+						"description" : "Building 3",
+						"id_project_version" : 2,
+						"id_job_type" : 13,
+						"job_type" : {
+							"job_type" : "Remove & replace",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 13
+						},
+						"is_main_building" : false,
+						"project_shingle_building" :{
+							"id_project_shingle_building" : 5,
+							"wasting" : 20,
+							"id_inwshield_rows" : 1,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "3 Feet on eves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 3,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 1
+							},
+							"id_project_building" : 6,
+							"ridge_lf" : 24,
+							"hips_lf" : 23,
+							"eves_rakes_lf_flat_roof" : 22,
+							"id_metal_eves_rakes_flat_roof" : 21,
+							"eves_starters_lf_low_slope" : 20,
+							"id_metal_eves_starters_low_slope" : 19,
+							"rakes_lf_low_steep_slope" : 18,
+							"id_metal_rakes_low_steep_slope" : 17,
+							"valleys_lf_low_steep_slope" : 16,
+							"eves_starters_lf_steep_slope" : 15,
+							"id_metal_eves_starters_lf_steep_slope" : 14,
+							"valleys_lf_steep_slope" : 13
+						}
+					},
+					{
+						"id_project_building" : 6,
+						"id_prospecting_material_type" : 1,
+						"prospecting_material_type" : {
+							"id_prospecting_material_type" : 1,
+							"prospecting_material_type" : "Shingle"
+						},
+						"description" : "Building 2",
+						"id_project_version" : 2,
+						"id_job_type" : 14,
+						"job_type" : {
+							"job_type" : "Overlay",
+							"id_job_type_parent" : 2,
+							"id_job_type" : 14
+						},
+						"is_main_building" : false,
+						"project_shingle_building" :{
+							"id_project_shingle_building" : 6,
+							"wasting" : 30,
+							"id_inwshield_rows" : 2,
+							"inwshield_rows" : {
+								"inwsield_rows_option" : "6 Feet on eves+ 3 feet on Valleys",
+								"lineal_feets_eves" : 6,
+								"lineal_feets_valleys" : 3,
+								"id_inwshield_rows" : 2
+							},
+							"id_project_building" : 7,
+							"ridge_lf" : 25,
+							"hips_lf" : 26,
+							"eves_rakes_lf_flat_roof" : 27,
+							"id_metal_eves_rakes_flat_roof" : 28,
+							"eves_starters_lf_low_slope" : 29,
+							"id_metal_eves_starters_low_slope" : 30,
+							"rakes_lf_low_steep_slope" : 31,
+							"id_metal_rakes_low_steep_slope" : 32,
+							"valleys_lf_low_steep_slope" : 33,
+							"eves_starters_lf_steep_slope" : 34,
+							"id_metal_eves_starters_lf_steep_slope" : 35,
+							"valleys_lf_steep_slope" : 26
+						}
+					}
+				]
+			}]
+		}
+	]
+}

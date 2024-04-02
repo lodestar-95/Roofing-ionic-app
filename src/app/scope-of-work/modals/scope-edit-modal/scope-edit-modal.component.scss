@@ -1,0 +1,27 @@
+.padding-left {
+  --padding-start: 38px;
+}
+
+ion-content {
+  --padding-start: 25px;
+  --padding-end: 40px;
+  --padding-top: 40px;
+  --padding-bottom: 40px;
+}
+
+ion-segment-button {
+  --indicator-color: transparent;
+  --color-checked: black;
+  text-transform: capitalize;
+}
+
+ion-textarea {
+  border-style: solid;
+  border-color: rgb(165, 164, 164);
+}
+
+textarea {
+  width: 100%;
+  background: #fff;
+  height: 65vh;
+}

@@ -1,0 +1,67 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        slot="start"
+        defaultHref="home/prospecting"
+        text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="appMenu">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar [class.pt-15]="!building">
+    <ion-title mode="md" class="roofing-large-title sf-pro-bold"
+    *ngIf="building == null">Project Main Page </ion-title
+    >
+
+    <ion-title mode="md" class="roofing-large-title sf-pro-bold"
+    *ngIf="building">Roof Inspection </ion-title
+    >
+    <ion-button
+      color="primary"
+      class="building-button roofing-title ion-no-margin"
+      (click)="showBuildings()"
+      fill="clear"
+      *ngIf="building"
+      >Project Main Page </ion-button
+    >
+
+    <ion-buttons slot="end">
+      <ion-button *ngIf="showMdlAcceptance" (click)="openAcceptanceModal()">
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="openNotesModal()">
+        <ion-icon slot="icon-only" name="clipboard-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="openNewContactDateModal()">
+        <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="close-button" (click)="openRejectProposalModal()">
+        <ion-icon
+          slot="icon-only"
+          name="close-outline"
+          color="danger"
+          style="font-size: 50px"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="content-detail">
+  <app-prospecting-detail
+    *ngIf="project"
+    (showBuildingsEmited)="showBuilding = $event"
+    (changeVersionEmited)="showBuilding = true"></app-prospecting-detail>
+
+  <app-prospecting-segment
+    *ngIf="!showBuilding"
+    (showBuildingsEmmited)="showBuildings()"></app-prospecting-segment>
+
+  <app-building-list
+    *ngIf="showBuilding"
+    (showBuildingsEmited)="onBuildingSelected($event)"></app-building-list>
+</ion-content>

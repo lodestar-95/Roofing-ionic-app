@@ -1,0 +1,23 @@
+<app-button-option
+  [description]="description"
+  [active]="active"
+  [showIconError] = "showIconError"
+  (modalEmited)="buttonEventEmmited()"
+></app-button-option>
+
+<ion-grid>
+  <ion-row>
+    <ion-col size="3" size-xs="1" size-md="3" class="ion-no-padding"></ion-col>
+    <ion-col size="6" size-xs="10" size-md="6" class="ion-no-padding">
+      <ion-list class="ion-no-padding">
+        <div *ngFor="let item of otherMeasuresList">
+          <ion-item *ngIf="item.visible" class="ion-no-padding" lines="none"><!--no-inner-padding-->
+            <ion-label>{{ item.description }}</ion-label>
+            <ion-label slot="end">{{ item.value }}</ion-label>
+          </ion-item>
+        </div>
+      </ion-list>
+    </ion-col>
+    <ion-col size="3" size-xs="1" size-md="3" class="ion-no-padding"></ion-col>
+  </ion-row>
+</ion-grid>

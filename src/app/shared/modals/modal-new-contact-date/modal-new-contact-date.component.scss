@@ -1,0 +1,48 @@
+ion-content {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+  background: rgba(209, 213, 219);
+  opacity: 1;
+}
+
+
+ion-toolbar{
+  --background: white:
+}
+
+::-webkit-scrollbar, *::-webkit-scrollbar {
+  display: none !important;
+  overflow: hidden;
+}
+
+ion-segment-button {
+  --indicator-color: white;
+  --color-checked: dark;
+}
+
+@media screen and (min-width: 350px) {
+  .hidden-xs {
+      display:none;
+  }
+}
+
+
+.full-width {
+    width: 100%;
+  }
+
+.ion-datetime {
+    font-size: 12px; /* Tamaño de fuente 12 */
+    width: 80%!important; /* Ancho del 80% */
+}
+
+@media screen and (min-width: 576px) and (max-width: 768px) {
+    ion-datetime {
+        width: 80%;
+    }
+    
+}

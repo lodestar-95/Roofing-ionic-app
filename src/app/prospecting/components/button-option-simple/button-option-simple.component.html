@@ -1,0 +1,14 @@
+<ion-row>
+  <ion-col>
+    <ion-item
+      (click)="openModal($event)"
+      lines="none"
+      color="light"
+      class="roofing-label sf-pro-regular"
+      [disabled]="!active" 
+      button
+    >
+      <ion-input readonly="true" style="padding-left: 15px !important;" [(ngModel)]="description"></ion-input>
+    </ion-item>
+  </ion-col>
+</ion-row>

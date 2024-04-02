@@ -1,0 +1,236 @@
+<ion-content>
+  <ion-item lines="none" class="ion-no-padding">
+    <ion-text class="roofing-title">Out of Town Expenses</ion-text>
+  </ion-item>
+
+  <form [formGroup]="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item
+            class="ion-no-padding"
+            lines="none"
+            button
+            (click)="noRequiredChange()"
+            detail="false">
+            <ion-icon
+              name="square-outline"
+              *ngIf="!noRequired"
+              class="ion-no-padding icon"></ion-icon>
+            <ion-icon
+              name="checkbox"
+              *ngIf="noRequired"
+              class="ion-no-padding icon"
+              color="success"></ion-icon>
+            <ion-label class="ion-padding Certain-Teed">No Required </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper"> Additional fuel </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-label slot="start" class="lbl-left">$</ion-label>
+            <ion-input
+              formControlName="additionalFuel"
+              class="ion-text-left"
+              (keypress)="allowNumbers($event, 'additionalFuel')"
+              placeholder="00">
+            </ion-input>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('additionalFuel').invalid &&
+              (ngForm.get('additionalFuel').touched || ngForm.get('additionalFuel').dirty)
+            "
+            >Valid 0-99999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wrapper">Estimated days</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="estimatedDays"
+              class="ion-text-right"
+              type="number"
+              (keypress)="allowNumbers($event)"
+              placeholder="00">
+            </ion-input>
+            <ion-label slot="end">QTY</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('estimatedDays').invalid &&
+              (ngForm.get('estimatedDays').touched || ngForm.get('estimatedDays').dirty)
+            "
+            >Valid 0-999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wrapper">Estimated roofers</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="estimatedRoofers"
+              class="ion-text-right"
+              type="number"
+              (keypress)="allowNumbers($event)"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">QTY</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('estimatedRoofers').invalid &&
+              (ngForm.get('estimatedRoofers').touched ||
+                ngForm.get('estimatedRoofers').dirty)
+            "
+            >Valid 0-99 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" size-xs="12">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper"> Lodging rate per day </ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item class="ion-no-padding" lines="none" (click)="optionSelected(hotelId)">
+            <ion-checkbox
+              slot="start"
+              [checked]="optionHotel"
+              [disabled]="noRequired"></ion-checkbox>
+
+            <ion-text class="ion-no-wraper">Hotel</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-label slot="start" class="lbl-left">$</ion-label>
+            <ion-input
+              formControlName="lodingRateHotel"
+              class="ion-text-left"
+              inputmode="decimal"
+              (keypress)="allowNumbers($event, 'lodingRateHotel')"
+              placeholder="00"></ion-input>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('lodingRateHotel').invalid &&
+              (ngForm.get('lodingRateHotel').touched ||
+                ngForm.get('lodingRateHotel').dirty)
+            "
+            >Valid 0-9999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item
+            class="ion-no-padding"
+            lines="none"
+            (click)="optionSelected(airBnBId)">
+            <ion-checkbox
+              slot="start"
+              [checked]="optionAirbnb"
+              [disabled]="noRequired"></ion-checkbox>
+
+            <ion-text class="ion-no-wraper">Airbnb</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-label slot="start" class="lbl-left">$</ion-label>
+            <ion-input
+              formControlName="lodingRateAirbnb"
+              class="ion-text-left"
+              (keypress)="allowNumbers($event, 'lodingRateAirbnb')"
+              placeholder="00"></ion-input>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('lodingRateAirbnb').invalid &&
+              (ngForm.get('lodingRateAirbnb').touched ||
+                ngForm.get('lodingRateAirbnb').dirty)
+            "
+            >Valid 0-9999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wrapper">Travel time</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="travelTime"
+              class="ion-text-right"
+              type="number"
+              (keypress)="allowNumbers($event)"
+              placeholder="00">
+            </ion-input>
+            <ion-label slot="end">Hrs</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('travelTime').invalid &&
+              (ngForm.get('travelTime').touched || ngForm.get('travelTime').dirty)
+            "
+            >Valid 0-999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button
+      class="sf-pro-semibold roofing-button button-padding"
+      expand="block"
+      color="primary"
+      (click)="confirm()"
+      [disabled]="
+        !noRequired && (!ngForm.valid || !ngForm.dirty || outIdLodingType == 0)
+      ">
+      Accept
+    </ion-button>
+  </form>
+</ion-content>

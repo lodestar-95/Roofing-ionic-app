@@ -1,0 +1,178 @@
+<ion-content>
+  <ion-item class="ion-no-padding">
+    <ion-text class="roofing-title">Add Material</ion-text>
+  </ion-item>
+
+  <form [formGroup]="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-xs="12" class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Supplier
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" size-xs="12">
+          <app-button-option-simple [description]="selectedSupplier" [active]="true"
+            (modalEmited)="openSupplierOptions($event)"></app-button-option-simple>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="selectedSupplierId == 0">
+        <ion-col size="7" size-xs="6">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Name
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="5" size-xs="6">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="supplierName" class="ion-text-left">
+            </ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('supplierName').invalid  &&
+            (ngForm.get('supplierName').touched || ngForm.get('supplierName').dirty)
+          ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <div class="divider-line"></div>
+
+      <ion-row>
+        <ion-col size="12" size-xs="12" class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Material
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" size-xs="12">
+          <app-button-option-simple [description]="selectedMaterial" [active]="true"
+            (modalEmited)="openMaterialOptions($event)"></app-button-option-simple>
+        </ion-col>
+      </ion-row>
+
+
+
+      <ion-row *ngIf="selectedMaterialId == 0">
+        <ion-col size="7" size-xs="6">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Name
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="5" size-xs="6">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="materialName" class="ion-text-left">
+            </ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('materialName').invalid  &&
+            (ngForm.get('materialName').touched || ngForm.get('materialName').dirty)
+          ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="7" size-xs="6">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper"> Price </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="5" size-xs="6">
+          <ion-item color="light" lines="none">
+            <ion-label slot="start" class="lbl-left">$</ion-label>
+            <ion-input formControlName="materialPrice" class="ion-text-left" type="number"
+            (keypress)="allowNumbers($event, 'materialPrice')"
+              placeholder="00">
+            </ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+              ngForm.get('materialPrice').invalid &&
+              (ngForm.get('materialPrice').touched || ngForm.get('materialPrice').dirty)
+            ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="selectedMaterialId == 0">
+        <ion-col size="7" size-xs="6">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper"> Unit </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="5" size-xs="6">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="materialUnit" placeholder="PC" (click)="openPopoverUnits($event)"></ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+                ngForm.get('materialUnit').invalid &&
+                (ngForm.get('materialUnit').touched || ngForm.get('materialUnit').dirty)
+              ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <div *ngFor="let building of buildings">
+        <div class="divider-line-light"></div>
+        <ion-item lines="none" class="ion-no-padding">
+          <ion-text class="ion-no-wraper">
+            {{building.description}}
+          </ion-text>
+        </ion-item>
+
+        <ion-row>
+          <ion-col size="6" size-xs="3">
+            <ion-item lines="none" class="ion-no-padding">
+              <ion-text class="ion-no-wraper" class="ion-text-left" (keypress)="allowNumbers($event)" placeholder="00">
+                Quantity
+              </ion-text>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" size-xs="2">
+            <ion-item color="light" lines="none">
+              <ion-input class="ion-text-left" [formControlName]="building.id" 
+              (keypress)="allowNumbers($event, building.id)" type="number">
+              </ion-input>
+            </ion-item>
+            <ion-label color="danger" class="roofing-error" *ngIf="
+              ngForm.get(building.id).invalid  &&
+              (ngForm.get(building.id).touched || ngForm.get(building.id).dirty)
+            ">Required field</ion-label>
+          </ion-col>
+
+          <ion-col size="6" size-xs="2" offset="0" offsetXs="2">
+            <ion-item lines="none" class="ion-no-padding">
+              <ion-text class="ion-no-wraper">
+                Total
+              </ion-text>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" size-xs="3">
+            <ion-item color="light" lines="none">
+              <ion-text class="ion-no-wraper">
+                {{(ngForm.get('materialPrice').value * ngForm.get(building.id).value)|currency}}
+              </ion-text>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </div>
+
+
+      <ion-button class="sf-pro-semibold roofing-button button-padding" expand="block" color="primary"
+        (click)="confirm()" [disabled]="!ngForm.valid || (selectedSupplierId == undefined) || (selectedMaterialId == undefined)">
+        Accept
+      </ion-button>
+    </ion-grid>
+  </form>
+</ion-content>

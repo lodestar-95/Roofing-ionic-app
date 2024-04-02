@@ -1,0 +1,84 @@
+<ion-content>
+  <ion-item class="ion-no-padding">
+    <ion-text class="roofing-title">Move To:</ion-text>
+  </ion-item>
+
+  <form [formGroup]="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-xs="12" class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Supplier
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" size-xs="12">
+          <app-button-option-simple [description]="selectedSupplier" [active]="true"
+            (modalEmited)="openSupplierOptions($event)"></app-button-option-simple>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="selectedSupplierId == 0">
+        <ion-col size="7" size-xs="6">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Name
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="5" size-xs="6">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="name" class="ion-text-right">
+            </ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('name').invalid  &&
+            (ngForm.get('name').touched || ngForm.get('name').dirty)
+          ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="7" size-xs="6">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper"> Price </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="5" size-xs="6">
+          <ion-item color="light" lines="none">
+            <ion-label slot="start" class="lbl-left">$</ion-label>
+            <ion-input
+              formControlName="price"
+              class="ion-text-left"
+              (keypress)="allowNumbers($event, 'price')"
+              placeholder="00"
+              type="number">
+            </ion-input>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('price').invalid &&
+              (ngForm.get('price').touched || ngForm.get('price').dirty)
+            "
+            >Valid 0-99999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-button
+        class="sf-pro-semibold roofing-button button-padding"
+        expand="block"
+        color="primary"
+        (click)="confirm()"
+        [disabled]="!ngForm.valid">
+        Accept
+      </ion-button>
+    </ion-grid>
+  </form>
+</ion-content>

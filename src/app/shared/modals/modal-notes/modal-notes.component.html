@@ -1,0 +1,40 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-button (click)="dismissModal()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Notes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-prospecting-item [project]="project"></app-prospecting-item>
+
+  <ion-item color="light" class="ion-margin">
+    <ion-textarea [(ngModel)]="textNote" rows="10" cols="20" placeholder="Enter any notes here..."></ion-textarea>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="showKindOfNotePopover($event)">Save note
+        <ion-icon name="arrow-up-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+
+  <ion-segment mode="md" type="reset" [value]="segment" (ionChange)="segmentChanged($event)">
+    <ion-segment-button class="roofing-subtitble" value="work-notes">
+      <ion-label>Work order notes
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button class="roofing-subtitble" value="team-notes">
+      <ion-label>Internal team notes
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <app-notes-list [notes]="workNotes" *ngIf="segment === 'work-notes'"></app-notes-list>
+  <app-notes-list [notes]="teamNotes" *ngIf="segment === 'team-notes'"></app-notes-list>
+
+</ion-content>

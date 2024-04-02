@@ -1,0 +1,41 @@
+<ion-grid>
+  <ion-row style="padding-bottom: 15px">
+    <ion-col size-md="3" size-xs="1"></ion-col>
+    <ion-col>
+      <ion-label color="black" class="roofing-title">Scope of work</ion-label>
+    </ion-col>
+    <ion-col size-md="3" size-xs="1"></ion-col>
+  </ion-row>
+
+  <ion-row style="margin-left: -25px">
+    <ion-col size-md="3" size-xs="1"></ion-col>
+    <ion-col>
+      <div *ngFor="let building of buildings">
+        <ion-label>
+          <ion-label class="title">{{ building.description }}</ion-label>
+
+          <div *ngFor="let scope of building.pb_scopes">
+            <ion-item *ngIf="validateStatus(scope)" lines="none" class="ion-no-padding">
+              <ion-label>
+                <h2>
+                  {{ scope.is_architectural ? 'Architectural' : 'Luxury' }}
+                  <label style="color: rgb(142, 149, 156)">
+                    {{ scope.is_modified ? 'Has been modified' : 'Default' }}
+                  </label>
+                </h2>
+
+                <label
+                  (click)="onClickEdit(building, scope.is_architectural)"
+                  style="color: var(--ion-color-primary)"
+                  >Edit scope of work</label
+                >
+              </ion-label>
+              <ion-icon *ngIf="scope.is_verified" slot="end" color="success" name="checkmark-outline"></ion-icon>
+            </ion-item>
+          </div>
+        </ion-label>
+      </div>
+    </ion-col>
+    <ion-col size-md="3" size-xs="1"></ion-col>
+  </ion-row>
+</ion-grid>

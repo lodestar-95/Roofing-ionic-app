@@ -1,0 +1,91 @@
+<ion-item lines="none">
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+      <ion-col size="6" class="ion-text-start">
+        <ion-label>
+          <h3 class="sf-pro-semibold roofing-label">
+            {{ project.contact_address.contact.first_name }}
+            {{ project.contact_address.contact.last_name }}
+          </h3>
+        </ion-label>
+      </ion-col>
+      <ion-col size="6" class="ion-text-end">
+        <ion-label>
+          <h3>
+            <ion-chip color="medium" class="ion-no-margin">
+              <ion-icon name="alarm-outline"></ion-icon>
+              <ion-label color="tertiary" class="sf-pro-regular aling-left">{{
+                nextContactDate
+              }}</ion-label>
+            </ion-chip>
+          </h3>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-label class="sf-pro-regular roofing-subtitble ion-text-wrap">
+          {{ building?.description }}
+        </ion-label>
+      </ion-col>
+      <ion-col size="6" class="ion-text-end">
+        <ion-label>
+          <p>
+            Insection by: {{ project.user_saleman?.contact.first_name }}
+            {{ project.user_saleman?.contact.last_name }}
+          </p>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-item>
+
+<ion-list slot="content" *ngIf="showDetail">
+  <ion-item lines="none">
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col size="8">
+          <ion-label>
+            <p>{{ project.st_phone }}</p>
+            <p>{{ project.st_email }}</p>
+            <p><a (click)="goToMaps(project.st_address)">{{ project.st_address }}</a></p>
+            <p>{{ project.project_name }}</p>
+            <p>{{ text }}</p>
+            <p>
+              {{ project.contact_address.contact.customer_type?.customer_type }}
+            </p>
+          </ion-label>
+        </ion-col>
+        <ion-col size="4" class="ion-text-end">
+          <ion-label>
+            <p>{{ version.project_version }}</p>
+            <p *ngIf="isLastVersion">Last version</p>
+          </ion-label>
+          <ion-label color="primary" (click)="openPopoverVersion($event)"
+          *ngIf="allowChangeVersion"
+            >Change version</ion-label
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+</ion-list>
+
+<ion-item lines="none" *ngIf="canCollpase">
+  <ion-buttons slot="end" (click)="showDetail = !showDetail">
+    <ion-button>
+      <ion-icon
+        *ngIf="!showDetail"
+        color="medium"
+        slot="icon-only"
+        name="chevron-down-outline"
+      ></ion-icon>
+      <ion-icon
+        *ngIf="showDetail"
+        color="medium"
+        slot="icon-only"
+        name="chevron-up-outline"
+      ></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-item>

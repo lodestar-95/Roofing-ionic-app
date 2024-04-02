@@ -1,0 +1,32 @@
+<ion-popover
+  class="popover-custom-class"
+  side="start"
+  backdrop-dismiss="false"
+  alignment="center"
+  [isOpen]="isDatePopUpOpen"
+  (didDismiss)="closeMdlDate()"
+  size="auto">
+  <ng-template>
+    <div class="calendar-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="confirmDateSelected()" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+          <ion-title>{{ titleDateElement }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeMdlDate()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-datetime
+        [min]="minDateString"
+        presentation="date"
+        locale="en-US"
+        #datetime
+        [(ngModel)]="date"
+        (ionChange)="setDate($event)">
+      </ion-datetime>
+    </div>
+  </ng-template>
+</ion-popover>

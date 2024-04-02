@@ -1,0 +1,282 @@
+<ion-content>
+  <ion-item lines="none" class="ion-no-padding padding-left">
+    <ion-label class="roofing-title">Upgrades</ion-label>
+  </ion-item>
+
+  <form [formGroup]="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item
+            class="ion-no-padding"
+            lines="none"
+            button
+            (click)="noRequiredChange()"
+            detail="false">
+            <ion-icon
+              name="square-outline"
+              *ngIf="!noRequired"
+              class="ion-no-padding icon"></ion-icon>
+            <ion-icon
+              name="checkbox"
+              *ngIf="noRequired"
+              class="ion-no-padding icon"
+              color="success"></ion-icon>
+            <ion-label class="ion-padding Certain-Teed">No Required </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- Ridge Vent -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-text class="ion-text-nowrap">Ridge Vent</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="ridgeVents"
+              class="ion-text-right"
+              type="number"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- Metal Attic Vents to Replace -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-text class="ion-text-nowrap">Metal Attic Vents to Replace</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="atticReplace"
+              class="ion-text-right"
+              type="number"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">PC</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('atticReplace').invalid &&
+              (ngForm.get('atticReplace').dirty || ngForm.get('atticReplace').touched)
+            "
+            >Valid 0-999 value</ion-label
+          ></ion-col
+        >
+      </ion-row>
+
+      <!-- Metal Attic Vents to Remove -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-text class="ion-text-nowrap">Metal Attic Vents to Remove and Cover</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="atticRemove"
+              class="ion-text-right"
+              type="number"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">PC</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('atticRemove').invalid &&
+              (ngForm.get('atticRemove').dirty || ngForm.get('atticRemove').touched)
+            "
+            >Valid 0-999 value</ion-label
+          ></ion-col
+        >
+      </ion-row>
+
+      <!-- Cut in New Metal Attic Vents -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-text class="ion-text-nowrap">Cut in New Metal Attic Vents</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="atticCutin"
+              class="ion-text-right"
+              type="number"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">PC</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('atticCutin').invalid &&
+              (ngForm.get('atticCutin').dirty || ngForm.get('atticCutin').touched)
+            "
+            >Valid 0-999 value</ion-label
+          ></ion-col
+        >
+      </ion-row>
+
+      <!-- Solar Power Vent to be Deleted -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <div>
+              <ion-text class="ion-text-nowrap">Solar Power Vent to be Deleted</ion-text>
+              <ion-label color="medium"
+                >Keep
+                {{
+                  (building.psb_measure.vent_solar_power_vent_pc ?? 0) -
+                    ngForm.get('solarPVDel').value
+                }}
+                in place</ion-label
+              >
+            </div>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="solarPVDel"
+              class="ion-text-right"
+              type="number"
+              placeholder="00">
+            </ion-input>
+            <ion-label slot="end">PC</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('solarPVDel').invalid &&
+              (ngForm.get('solarPVDel').dirty || ngForm.get('solarPVDel').touched)
+            ">
+            Valid 0-{{ solarPowerVent }} value
+          </ion-label>
+        </ion-col>
+      </ion-row>
+
+      <!-- Power Vent to be Deleted -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <div>
+              <ion-text class="ion-text-nowrap">Power Vent to be Deleted</ion-text>
+              <ion-label color="medium"
+                >Keep
+                {{
+                  (building.psb_measure.vent_power_vent_pc ?? 0) -
+                    ngForm.get('pVDel').value
+                }}
+                in place</ion-label
+              >
+            </div>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="pVDel"
+              class="ion-text-right"
+              type="number"
+              placeholder="00">
+            </ion-input>
+            <ion-label slot="end">PC</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('pVDel').invalid &&
+              (ngForm.get('pVDel').dirty || ngForm.get('pVDel').touched)
+            ">
+            Valid 0-{{ powerVent }} value
+          </ion-label>
+        </ion-col>
+      </ion-row>
+
+      <!-- New Solar Power Vent -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-text class="ion-text-nowrap">New Solar Power Vent</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="solarPVNew"
+              class="ion-text-right"
+              type="number"
+              placeholder="00">
+            </ion-input>
+            <ion-label slot="end">PC</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('solarPVNew').invalid &&
+              (ngForm.get('solarPVNew').dirty || ngForm.get('solarPVNew').touched)
+            ">
+            Valid 0-99 value
+          </ion-label>
+        </ion-col>
+      </ion-row>
+
+      <!-- New Power Vent -->
+      <ion-row>
+        <ion-col size-md="9" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-text class="ion-text-nowrap">New Power Vent</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              formControlName="pVNew"
+              class="ion-text-right"
+              type="number"
+              placeholder="00">
+            </ion-input>
+            <ion-label slot="end">PC</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              ngForm.get('pVNew').invalid &&
+              (ngForm.get('pVNew').dirty || ngForm.get('pVNew').touched)
+            ">
+            Valid 0-99 value
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <ion-item>
+    <ion-button
+      class="sf-pro-semibold roofing-button"
+      expand="block"
+      color="primary"
+      (click)="confirm()"
+      [disabled]="ngForm.invalid">
+      Accept
+    </ion-button>
+  </ion-item>
+</ion-footer>

@@ -1,0 +1,24 @@
+<ion-segment
+  mode="md"
+  scrollable
+  [value]="segment"
+  (ionChange)="segmentChanged($event)"
+>
+  <ion-segment-button value="upgrades">
+    <ion-label>Upgrades</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="options">
+    <ion-label>Options</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="shingle-lines">
+    <ion-label>Shingle lines</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="costs">
+    <ion-label>Costs</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<app-upgrades-segment *ngIf="segment === 'upgrades'"></app-upgrades-segment>
+<app-options-segment *ngIf="segment === 'options'"></app-options-segment>
+<app-shingle-lines-segment *ngIf="segment === 'shingle-lines'"></app-shingle-lines-segment>
+<app-costs-segment *ngIf="segment === 'costs'"></app-costs-segment>

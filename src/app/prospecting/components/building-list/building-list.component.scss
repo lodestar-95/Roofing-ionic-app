@@ -1,0 +1,117 @@
+ion-icon {
+  width: 24px;
+  height: 24px;
+}
+
+ion-col {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.icon-col {
+  width: 5vw !important;
+  text-align: center;
+}
+.fs-l {
+  font-size: 14px !important;
+}
+.delete {
+  width: 50px !important;
+  --padding-start: 0px;
+  --padding-end: 0px;
+}
+
+.align-center {
+  align-items: center;
+  display: flex;
+}
+.row-title {
+  margin: 4vh 0 1.5vh 0;
+}
+
+.row-button {
+  margin: 1vh 0;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #c6c6c8;
+}
+
+.main-content {
+  padding-bottom: 400px;
+}
+
+.Select-shingle-brand {
+  font-family: SFProDisplay;
+  font-size: 20px;
+  font-style: normal;
+}
+.Certain-Teed {
+  font-family: SFProDisplay;
+  font-size: 17px;
+  font-style: normal;
+}
+
+.Validity-of-prices-u {
+  font-family: SFProDisplay;
+  font-size: 20px;
+  color: #34c759;
+  font-style: normal;
+}
+
+.Expected-acceptance {
+  font-family: SFProDisplay;
+  font-size: 20px;
+  font-style: normal;
+  color: #000;
+}
+.date {
+  font-size: 17px;
+  color: #34c759;
+  letter-spacing: normal;
+  font-style: normal;
+  line-height: 1.06;
+}
+
+.justify-content {
+  justify-content: center;
+  margin-top: -20px;
+}
+.ModalDatetime {
+  --width: 353px;
+  --height: 395px;
+}
+.margin-justify-content {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: -18px;
+}
+
+.bottom-container {
+  position: fixed !important;
+  bottom: 0 !important;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 170px;
+  background: #fff;
+}
+.btn-container {
+  position: absolute;
+  bottom: 30px !important;
+  width: 470px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+.btn-container ion-item {
+  width: 300px;
+  margin: auto;
+}
+
+
+:host .calendar-body .calendar-month .calendar-month-grid .calendar-day   {
+	background: white !important;
+	color: black !important;
+}

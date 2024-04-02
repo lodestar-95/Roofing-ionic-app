@@ -1,0 +1,16 @@
+{
+    "prospecting_material_types": [
+        {
+            "id_prospecting_material_type" : 1,
+            "prospecting_material_type" : "Shingle"
+        },
+        {
+            "id_prospecting_material_type" : 2,
+            "prospecting_material_type" : "Metal"
+        },
+        {
+            "id_prospecting_material_type" : 3,
+            "prospecting_material_type" : "TPO"
+        }
+    ]
+}

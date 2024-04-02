@@ -1,0 +1,40 @@
+<ion-text class="roofing-label px-24">
+  {{building.description}}
+</ion-text>
+
+<ion-grid class="px-24 ion-text-center">
+  <ion-row class="divider" style="width: 100%;">
+    <ion-col style="max-width: 25px;"></ion-col>
+    <ion-col class="sf-pro-semibold roofing-label">Material</ion-col>
+    <ion-col class="sf-pro-semibold roofing-label">Quantity</ion-col>
+    <ion-col class="sf-pro-semibold roofing-label">Price</ion-col>
+    <ion-col class="sf-pro-semibold roofing-label">Total</ion-col>
+    <ion-col style="max-width: 90px;"></ion-col>
+  </ion-row>
+  <ion-row class="row-concept ts-14 ion-text-center" style="align-items: center;"
+    *ngFor="let calculation of calculations">
+    <ion-col style="max-width: 25px;">
+      <div class="ion-float-left">
+        <ion-buttons>
+          <ion-icon *ngIf="!(calculation.from_original_proposal ?? true)" name="add" slot="icon-only"></ion-icon>
+          <ion-icon *ngIf="(calculation.from_original_proposal ?? true) && (calculation.is_updated ?? false)"
+            name="create" slot="icon-only"></ion-icon>
+        </ion-buttons>
+      </div>
+    </ion-col>
+    <ion-col>{{calculation.description}}</ion-col>
+    <ion-col>{{calculation.quantity | number}}</ion-col>
+    <ion-col>{{calculation.cost | currency}}</ion-col>
+    <ion-col>{{calculation.total | currency}}</ion-col>
+    <ion-col style="max-width: 90px;">
+      <div class="ion-float-right">
+        <ion-buttons style="max-width: 90px;">
+          <ion-button (click)="openMoveModal(calculation)"><ion-icon slot="icon-only"
+              name="swap-horizontal"></ion-icon></ion-button>
+          <ion-button color="danger" [disabled]="(calculation.from_original_proposal ?? true)" (click)="deleteMaterial(calculation)"><ion-icon slot="icon-only"
+              name="trash"></ion-icon></ion-button>
+        </ion-buttons>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

@@ -1,0 +1,126 @@
+<ion-content>
+  <ion-item lines="none" class="ion-no-padding">
+    <ion-label class="roofing-title">Steep slope</ion-label>
+  </ion-item>
+
+  <form #form="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-text-nowrap"> Linear Feet of eaves/starter </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input
+              name="evesstarter"
+              [(ngModel)]="evesstarter"
+              class="ion-text-right"
+              type="number"
+              required
+              pattern="^[1-9][0-9]{1,2}$|^\d$"
+              maxlength="3"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              (form?.controls?.evesstarter?.status !== 'VALID' &&
+                form?.controls?.evesstarter?.touched) ||
+              form?.controls?.evesstarter?.value === 0
+            "
+            >Valid 1-999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wrapper">Linear Feet of Valleys</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input
+              name="valleys"
+              [(ngModel)]="valleys"
+              class="ion-text-right"
+              type="number"
+              required
+              pattern="^[0-9][0-9]{1,2}$|^\d$"
+              maxlength="3"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              (form?.controls?.valleys?.status !== 'VALID' &&
+                form?.controls?.valleys?.touched) ||
+              form?.controls?.valleys?.value < 0
+            "
+            >Valid 0-999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wrapper">Linear Feet of Rakes</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input
+              name="rakes"
+              [(ngModel)]="rakes"
+              class="ion-text-right"
+              type="number"
+              required
+              pattern="^[0-9][0-9]{1,2}$|^\d$"
+              maxlength="3"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+          </ion-item>
+          <ion-label
+            color="danger"
+            class="roofing-error"
+            *ngIf="
+              (form?.controls?.rakes?.status !== 'VALID' &&
+                form?.controls?.rakes?.touched) ||
+              form?.controls?.rakes?.value < 0
+            "
+            >Valid 0-999 value</ion-label
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <ion-item>
+    <ion-button
+      class="sf-pro-semibold roofing-button"
+      expand="block"
+      color="primary"
+      (click)="confirm()"
+      [disabled]="
+        form.invalid ||
+        form?.controls?.evesstarter?.value === 0 ||
+        form?.controls?.valleys?.value < 0 ||
+        form?.controls?.rakes?.value < 0
+      ">
+      Accept
+    </ion-button>
+  </ion-item>
+</ion-footer>

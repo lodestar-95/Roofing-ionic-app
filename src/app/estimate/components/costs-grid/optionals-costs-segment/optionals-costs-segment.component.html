@@ -1,0 +1,22 @@
+<div class="bg">
+  <ion-grid fixed>
+    <ion-row *ngFor="let item of data" class="line">
+      <ion-col> {{ item.option }} </ion-col>
+      <ion-col size="3">
+        <ion-label style="color: #8e8e93">{{
+          item.total | currency
+        }}</ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col size="3" class="ion-text-end">
+        <ion-label style="font-weight: bold">Total:</ion-label>
+      </ion-col>
+      <ion-col size="3">
+        <ion-label style="font-weight: bold">{{ total | currency }}</ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>

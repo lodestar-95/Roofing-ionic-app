@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        slot="start"
+        defaultHref="home/prospecting"
+        text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="appMenu">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar class="pb-35">
+    <ion-title mode="md" class="roofing-large-title sf-pro-bold">Scope of work</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openPriceModal()">
+        <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="openNotesModal()">
+        <ion-icon slot="icon-only" name="clipboard-outline"></ion-icon>
+      </ion-button>
+       <ion-button (click)="openNewContactDateModal()">
+        <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="close-button" (click)="openRejectProposalModal()">
+        <ion-icon
+          slot="icon-only"
+          name="close-outline"
+          color="danger"
+          style="font-size: 50px" 
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-prospecting-detail
+    *ngIf="project"
+    (showBuildingsEmited)="showBuilding = $event"
+    (changeVersionEmited)="showBuilding = true"></app-prospecting-detail>
+  <app-scope-of-work-list></app-scope-of-work-list>
+</ion-content>
+
+<ion-footer mode="md" class="ion-no-border ion-padding">
+  <ion-grid>
+    <ion-row class="margin-justify-content">
+      <ion-col size-md="3" size-xs="1" class="ion-no-padding"></ion-col>
+      <ion-col class="ion-no-padding">
+        <ion-button
+          (click)="goToScope()"
+          color="primary"
+          expand="block"
+          class="roofing-button single-click">
+          View proposals
+        </ion-button>
+      </ion-col>
+      <ion-col size-md="3" size-xs="1" class="ion-no-padding"></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

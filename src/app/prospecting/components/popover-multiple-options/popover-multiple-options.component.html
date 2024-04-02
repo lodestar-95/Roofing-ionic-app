@@ -1,0 +1,7 @@
+<ion-list>
+  <ion-item [disabled]="option.disabled" *ngFor="let option of options">
+    <ion-checkbox slot="start" mode="md" color="success" [(ngModel)]="option.selected" (ngModelChange)="optionSelected(option)"></ion-checkbox>
+    <ion-label class="roofing-label">{{ option.option }}
+    </ion-label>
+  </ion-item>
+</ion-list>

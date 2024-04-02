@@ -1,0 +1,50 @@
+ion-menu {
+  --ion-background-color: #f2f2f7;
+  --width: 44vw;
+
+  ion-toolbar {
+    --background: #f2f2f7 !important;
+  }
+
+  ion-list ion-item {
+    --inner-padding-end: 1vw;
+    --inner-padding-start: 3vw;
+    --padding-start: 0px;
+    --padding-end: 0px;
+    margin: 0 20px;
+    &.active {
+      --background: var(--ion-color-primary);
+      color: var(--ion-color-light);
+      border-radius: 15px;
+    }
+  }
+}
+
+.pb {
+  padding-bottom: 35px;
+}
+
+.android {
+  .pt {
+    padding-top: 55px;
+  }
+}
+
+.ios {
+  .pt {
+    padding-top: 40px;
+  }
+}
+
+ion-icon {
+  color: rgba(60, 60, 67, 0.3);
+}
+  ion-header ion-toolbar:first-of-type {
+    padding-top: 6vh;
+    padding-bottom: 2vh;
+    --border-width: 0px;
+    ion-title{
+        padding: 3vw;
+        text-align: start;
+    }
+}

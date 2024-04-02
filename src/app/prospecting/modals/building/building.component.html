@@ -1,0 +1,55 @@
+<ion-content forceOverscroll="false">
+  <div class="center modal-container">
+    <ion-item class="modal-title-padding">
+      <ion-label class="roofing-title">Building</ion-label>
+    </ion-item>
+    <form [formGroup]="buildingForm">
+      <div class="center cont-button">
+        <ion-item>
+          <ion-input formControlName="description" class="roofing-label sf-pro-regular" type="text"
+            placeholder="Name"></ion-input>
+        </ion-item>
+        <ion-row *ngIf="!isValidBuildingName()">
+          <ion-col class="ion-no-padding">
+            <ion-item lines="none" class="ion-no-padding detail-item">
+              <ion-text class="ion-no-wraper" color="danger">Duplicate building name</ion-text>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+  
+        <p class="roofing-label sf-pro-regular parrafo">
+          Material
+        </p>
+
+        <ion-list>
+          <ion-radio-group formControlName="materialType">
+            <ion-item lines="none" *ngFor="let material of materialTypeList"
+              (click)="onClickMaterialType(material)">
+              <ion-label class="roofing-label sf-pro-regular">{{material.material}}</ion-label>
+              <ion-radio mode="md" color="primary" slot="start" [value]="material.material"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+
+        <p class="roofing-label sf-pro-regular parrafo">
+          Type of work
+        </p>
+        <ion-list>
+          <ion-radio-group formControlName="jobType">
+            <ion-item lines="none" *ngFor="let jobType of jobTypeList" (click)="onClickJobType(jobType)">
+              <ion-label style="margin:0px;" class="roofing-label sf-pro-regular">{{jobType.job_type}}</ion-label>
+              <ion-radio mode="md" color="primary" slot="start" [value]="jobType.job_type"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+    </div>
+      <ion-button class="sf-pro-semibold roofing-button button-padding" type="ngSubmit" expand="block" color="primary"
+        (click)="confirm()" [disabled]="!buildingForm.valid || !buildingForm.dirty" >
+        Accept
+      </ion-button>
+    </form>
+</div>
+
+
+
+</ion-content>

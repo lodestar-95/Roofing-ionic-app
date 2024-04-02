@@ -1,0 +1,28 @@
+<ion-radio-group mode="md" [value]="element.value">
+  <ion-label>{{ element?.title }}</ion-label>
+
+  <ion-grid class="border-bottom">
+    <ion-row style="margin-left: -25px">
+      <ion-col
+        size-xs="12"
+        size-md="4"
+        class="ion-no-padding"
+        *ngFor="let item of element.options"
+      >
+        <ion-item lines="none" [disabled]="disabled">
+          <ion-text class="ion-text-nowrap">{{ item.text }}</ion-text>
+          <ion-radio
+            slot="start"
+            [value]="item.id"
+            class="ion-no-margin"
+            style="margin-right: 10px"
+            (ionFocus)="onOptionChanged(item)"
+          ></ion-radio>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4" style="font-weight: bold">
+        Total: {{ element?.total | currency }}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-radio-group>

@@ -1,0 +1,94 @@
+<ion-grid  [class.div-disabled]="otherMeasuresActive || userDisabledPermision">
+  <ion-row>
+    <ion-col size="3" size="1" size-md="3"></ion-col>
+    <ion-col size="6" size="10" size-md="6">
+      <div class="modal-title-padding">
+        <ion-label class="roofing-title">Other measures</ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="3" size="1" size-md="3"></ion-col>
+  </ion-row>
+
+  <app-other-measures
+    description="Ridge Cap"
+    [active]="ridgeCapActive"
+    [showIconError]="false"
+    (modalEmited)="openModalRidgeCap()"
+    [otherMeasuresList]="ridgeCapList"
+  ></app-other-measures>
+
+  <app-other-measures
+    description="Flat roof"
+    [showIconError]="showIconError && validPitchAngleFlatRoof"
+    [active]="flatRoofActive"
+    (modalEmited)="openModalFlatRoof()"
+    [otherMeasuresList]="flatRoofList"
+  ></app-other-measures>
+
+  <app-other-measures
+  description="Low slope"
+  [active]="lowSlopeActive"
+  [showIconError]="showIconError && validPitchAngleLowSlope"
+  (modalEmited)="openModalLowSlope()"
+  [otherMeasuresList]="lowSlopeList"
+  ></app-other-measures>
+
+  <app-other-measures
+    description="Steep slope"
+    [active]="steepSlopeActive"
+    [showIconError]="showIconError && validPitchAngleSteepSlope"
+    (modalEmited)="openModalStepSlope()"
+    [otherMeasuresList]="stepSlopeList"
+  ></app-other-measures>
+
+  <app-other-measures *ngIf="!isOverlay"
+    description="D Metal"
+    [active]="dMetalActive"
+    [showIconError]="showIconError"
+    [otherMeasuresList]="dMetalList"
+    (modalEmited)="openModalDMetal()"
+    >
+  </app-other-measures>
+
+  <app-other-measures
+    description="Flashings"
+    [active]="flashingsActive"
+    [showIconError]="showIconError"
+    [otherMeasuresList]="flashingsList"
+    (modalEmited)="openModalFlashings()"
+    >
+  </app-other-measures>
+
+  <app-other-measures
+    description="Venting"
+    [active]="ventingActive"
+    [showIconError]="showIconError"
+    (modalEmited)="openModalVenting()"
+    [otherMeasuresList]="ventingList"
+  ></app-other-measures>
+
+  <app-other-measures
+    description="Miscellaneous"
+    [active]="miscellaneusActive"
+    [showIconError]="showIconError"
+    (modalEmited)="openModalMiscellaneus()"
+    [otherMeasuresList]="miscellaneusList"
+  ></app-other-measures>
+
+  <app-other-measures
+    description="Out of town expenses"
+    [active]="outOfTownExpensesActive"
+    [showIconError]="showIconError"
+    (modalEmited)="openModalOutOfTownExpenses()"
+    [otherMeasuresList]="outOfTownExpensesList"
+  ></app-other-measures>
+
+</ion-grid>
+
+<app-verified-information
+  [class.div-disabled]="userDisabledPermision || buildingVerified"
+  [isVerified]="otherMeasuresActive"
+  [showIconError]="showIconError"
+  (optionEmited)="onVerifiedCheked($event)"
+>
+</app-verified-information>

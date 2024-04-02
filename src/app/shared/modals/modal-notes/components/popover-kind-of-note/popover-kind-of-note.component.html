@@ -1,0 +1,12 @@
+<ion-list>
+  <ion-item lines="full" *ngFor="let item of kindOfNote" button (click)="selectKindOfNote(item)">
+    <ion-label class="ion-text-center option sf-pro-bold" [color]="item.color">
+      {{ item.name }}
+      <ion-icon name="checkmark-circle" slot="end" color="success" *ngIf="item.isSelected">
+      </ion-icon>
+    </ion-label>
+  </ion-item>
+</ion-list>
+<ion-button expand="block" color="primary" (click)="onClick()">
+  Accept
+</ion-button>

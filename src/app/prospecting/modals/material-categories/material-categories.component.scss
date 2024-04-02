@@ -1,0 +1,15 @@
+ion-item {
+  border-radius: 8px;
+  --min-height: 5vh;
+}
+
+.padding-left {
+  --padding-start: 38px;
+}
+
+ion-content {
+  --padding-start: 25px;
+  --padding-end: 40px;
+  --padding-top: 80px;
+  --padding-bottom: 40px;
+}

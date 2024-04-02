@@ -1,0 +1,60 @@
+<div
+  class="general-segment"
+  [class.div-disabled]="verifiedActive || userDisabledPermision">
+  <app-checkbox-list
+    *ngIf="warranties"
+    [options]="warranties"
+    title="Warranties"
+    subText="description"
+    text="project_warranty_option"
+    (optionEmited)="onOptionSelectedWarranties($event)"></app-checkbox-list>
+
+  <app-checkbox-list
+    *ngIf="costIntegrations  && validJobTypeForInW"
+    [options]="costIntegrations"
+    title="Wind warranties"
+    text="cost_integration"
+    (optionEmited)="onOptionSelectedCostIntegrations($event)"></app-checkbox-list>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="3" size-xs="1" class="ion-no-padding"></ion-col>
+      <ion-col size-md="6" size-xs="10" class="ion-no-padding">
+        <ion-label class="roofing-title">Wasting</ion-label>
+      </ion-col>
+      <ion-col size-md="3" size-xs="1" class="ion-no-padding"></ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-md="3" size-xs="1" class="ion-no-padding"></ion-col>
+      <ion-col size-md="9" size-xs="11" class="ion-no-padding">
+        <ion-item class="ion-no-padding">
+          <input
+            type="tel"
+            name="wasting"
+            [(ngModel)]="wasting"
+            (ngModelChange)="onWastingChanged()"
+            class="native-input sc-ion-input-ios"
+            placeholder="0-50%"
+            mask="99%"
+            suffix="%" />
+          <ion-input type="hidden" placeholder="Awesome Input"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-checkbox-list
+    *ngIf="inwshieldRows && validJobTypeForInW"
+    [options]="inwshieldRows"
+    title="Rows of Ice Water Shields"
+    text="inwsield_rows_option"
+    subText="sub_title"
+    (optionEmited)="onOptionSelectedInwshieldRows($event)"></app-checkbox-list>
+</div>
+
+<app-verified-information
+  [class.div-disabled]="userDisabledPermision || buildingVerified"
+  [isVerified]="verifiedActive"
+  (optionEmited)="confirm($event)">
+</app-verified-information>

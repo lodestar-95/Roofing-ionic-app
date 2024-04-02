@@ -1,0 +1,15 @@
+.popover-custom-class {
+    &::part(content) {
+      width: calc(100% - 10px) !important;
+      max-width: 360px;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+    }
+}
+.calendar-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

@@ -1,0 +1,10 @@
+<ion-list>
+  <ion-item *ngFor="let building of buildings">
+    <ion-checkbox
+      slot="start"
+      [(ngModel)]="building.selected"
+      (ngModelChange)="optionSelected(building)"
+    ></ion-checkbox>
+    <ion-label class="roofing-label">{{ building.description }} </ion-label>
+  </ion-item>
+</ion-list>

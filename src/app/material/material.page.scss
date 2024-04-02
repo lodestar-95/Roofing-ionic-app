@@ -1,0 +1,88 @@
+  .mr-6{
+    margin-right: 6px;
+}
+
+.divider{
+    background-color: rgba(116, 116, 128, 0.18);
+}
+
+.px-24{
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .row-concept{
+    border-bottom: 1px solid rgba(116, 116, 128, 0.18);
+  }
+
+  .total-concept{
+      width: 117px;
+      height: 25px;
+      margin: 0px;
+      font-family: SFProDisplay;
+      font-size: 17px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.29;
+      letter-spacing: normal;
+      text-align: right;
+      color: #34c759;
+    
+  }
+
+  .ts-12{
+    font-size: 13px;
+  }
+
+  .ts-14{
+    font-size: 14px;
+  }
+
+  .total-row{
+    margin-top: 5px;
+    margin-bottom: 8px;
+  }
+
+  .divider-line {
+    height: 1px;
+    background-color: rgba(116, 116, 128, 0.18);
+  }
+
+  ion-searchbar {
+    --color: var(--color-gray);
+    --placeholder-color: var(--color-gray);
+    --background: rgba(118, 118, 128, 0.12);
+    width: 80%;
+  }
+
+  .current {
+    
+    position: absolute;
+    margin-top: -17px;
+    margin-left: 5px;
+    align-content: center;
+    top: 50%;
+    
+  }
+
+  .check {
+    --size: 25px;
+    --checkbox-background-checked: #15ec32;
+      align-content: center;
+      margin-left: 5px;
+      margin-top: -15px;
+      top: 50%;
+  }
+  
+  ion-checkbox::part(container) {
+    border-radius: 6px;
+    border: 2px solid #3f4aeb;
+    
+  }
+
+  .barra{
+    position: relative;
+  }
+
+  

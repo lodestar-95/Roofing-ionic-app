@@ -1,0 +1,57 @@
+<ion-content>
+    <ion-item class="modal-title-padding">
+        <ion-label class="roofing-title">Import Bugs Report</ion-label>
+    </ion-item>
+
+    <ion-list >
+        <ion-item
+            *ngFor="let bugsReport of bugsReportList; index as i"
+            [ngClass]="{'highlight': selectedBugsReport?.id == bugsReport.id}"
+            (click)="selectBugsReport(bugsReport)"
+            style="cursor: pointer;">
+            <div style="display: flex; flex-direction: column; padding: 5px 0; width: 100%;">
+                <div style="display: flex; justify-content: end; margin-bottom: 10px;">
+                    #{{bugsReport.id }} {{ bugsReport.createdAt | date: 'MM/dd/yyyy' }}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Proposal:</strong> {{ bugsReport.proposal }}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Action:</strong> {{ bugsReport.action }}
+                </div>
+                <div style="margin-bottom: 10px;" *ngIf="bugsReport.url">
+                    <strong>Jira link:</strong><a *ngIf="bugsReport.url" (click)="goToJira(bugsReport.url)">{{ bugsReport.url }}</a>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Description:</strong>{{ bugsReport.description }}
+                </div>
+            </div>
+        </ion-item>  
+    </ion-list>
+</ion-content>
+  
+<ion-footer class="ion-padding">
+    <ion-item class="padding-left" style="padding-right: 38px">
+        <ion-button
+            class="sf-pro-semibold roofing-button"
+            expand="block"
+            color="primary"
+            (click)="onConfirm()"
+            [disabled]="!selectedBugsReport"
+        >
+            Load
+        </ion-button>
+    </ion-item>
+    <ion-item class="padding-left" style="padding-right: 38px">
+        <ion-button
+            class="sf-pro-semibold roofing-button"
+            expand="block"
+            color="danger"
+            (click)="onCancel()"
+            
+        >
+            Cancel
+        </ion-button>
+    </ion-item>
+</ion-footer>
+  

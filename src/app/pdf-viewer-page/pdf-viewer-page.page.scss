@@ -1,0 +1,35 @@
+.row{
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+.grid{
+    width: 100%;
+    height: 100%;
+}
+
+ion-icon{
+    height: 45px;
+    width: 45px;
+}
+.toolbar-background{
+    --background: white;
+}
+
+.Final-proposal {
+    font-family: Helvetica;
+    font-size: 28px;  
+    margin: 10px 0px 0px 20px;  
+}
+
+.Title {
+    font-family: SFProDisplay;
+    font-size: 20px;
+    color: black;
+}
+
+.TitleSel {
+    font-family: SFProDisplay;
+    font-size: 20px;
+}
+

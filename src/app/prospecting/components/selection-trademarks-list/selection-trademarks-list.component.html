@@ -1,0 +1,25 @@
+<ion-row *ngFor="let item of trademarks">
+  <ion-col size="3"> </ion-col>
+  <ion-col size="6">
+    <ion-item
+      lines="none"
+      color="light"
+      class="roofing-label sf-pro-regular"
+      button
+      (click)="getMaterialCategories(item)">
+      {{ item.trademark }}
+    </ion-item>
+    <p *ngFor="let material of item.materialTypes">
+      <ion-label style="font-weight: bold" class="ion-no-margin">
+        {{ material.category }}:
+      </ion-label>
+      <label>
+        {{
+          material.id_material_category === categoryRidgecapId
+            ? material.size + '"'
+            : material.material_type
+        }}
+      </label>
+    </p>
+  </ion-col>
+</ion-row>

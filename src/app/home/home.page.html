@@ -1,0 +1,51 @@
+<ion-tabs *ngIf="menuFooter?.data.length > 0">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button
+      [attr.tab]="item.component == 'report_bug' ? null : item.component"
+      (click)="openBugsReportModal(item.component)"
+      *ngFor="let item of menuFooter?.data"
+      layout="icon-start">
+      <ion-icon name="{{item.icon}}" class="ion-padding"></ion-icon>
+      <ion-label>{{ item.resource == 'Prospecting'?'Home': item.resource }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="syncOffline()">
+      <ion-icon name="refresh-outline"></ion-icon>
+      <ion-badge color="primary" *ngIf="numberProjectsToSync != 0"
+        >{{ numberProjectsToSync }}</ion-badge
+      >
+    </ion-tab-button>
+
+    <ion-tab-button (click)="presentPopover($event)">
+      <ion-icon name="cog-outline"></ion-icon>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
+
+<ion-popover
+  #popover
+  class="settings"
+  [isOpen]="isOpen"
+  (didDismiss)="isOpen = false"
+  [dismissOnSelect]="true"
+  side="top"
+  size="auto"
+  alignment="center">
+  <ng-template>
+    <ion-content forceOverscroll="false">
+      <ion-list>
+        <ion-list-header fill="outline">
+          <ion-label class="roofing-title-popup">Settings</ion-label>
+        </ion-list-header>
+        <ion-item class="option-default" [button]="false">
+          <ion-label class="roofing-title-popup">Select an option</ion-label>
+        </ion-item>
+        <ion-item [button]="true" [detail]="false" (click)="openBugsReportImportModal()">
+          <ion-label class="roofing-title-popup">Import bugs report</ion-label>
+        </ion-item>
+        <ion-item [button]="true" [detail]="false" (click)="logout()">
+          <ion-label color="danger" class="roofing-option-popup">Log Out</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-popover>

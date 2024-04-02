@@ -1,0 +1,58 @@
+<ion-content class="content-bg">
+
+  <div class="valign">
+    <img class="logo-image" src="../../assets/imgs/eHRoofingLogoBlue.png" />
+  </div>
+
+  <div class="content-form">
+    <form [formGroup]="loginForm">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label class="roofing-label" position="fixed" id="login-label">
+              Email
+            </ion-label>
+            <ion-input class="roofing-label" clearInput id="login-input" formControlName="username" type="text" placeholder="Enter your E&H e-mail account">
+            </ion-input>
+          </ion-item>
+          <p class="roofing-error p-error"
+            *ngIf="loginForm.get('username').invalid && (loginForm.get('username').dirty || loginForm.get('username').touched)">
+            Email format is incorrect
+          </p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label class="roofing-label" position="fixed" id="password-label">Password</ion-label>
+            <ion-input class="roofing-label" clearInput id="password-input" formControlName="password" type="password" placeholder="Insert your password">
+            </ion-input>
+          </ion-item>
+          <p class="roofing-error p-error"
+            *ngIf="loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched)">
+            Email is required.
+          </p>
+        </ion-col>
+      </ion-row>
+    </form>
+    <div class="btn-container">
+      <ion-button id="btnLogin" [disabled]="!loginForm.valid" (click)="login()" color="primary"
+        class="roofing-button single-click">
+        Log in
+      </ion-button>
+    </div>
+    <div class="btn-container btn-container-forget">
+      <ion-button fill="clean" color="dark" (click)="forgotPass()" id="login-need-help" type="button">
+        Forget password?
+      </ion-button>
+    </div>
+
+    <div class="btn-container">
+      <ion-toggle
+        style="margin:0px auto"
+        (ionChange)="changeNetwork($event)"
+        [checked]="networkService.isConnected"
+      ></ion-toggle>
+    </div>
+  </div>
+</ion-content>

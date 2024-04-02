@@ -1,0 +1,19 @@
+ion-item{
+    --color-activated:red;
+    --color: green;
+}
+
+ion-list ion-item {
+    --padding-start: 0px;  
+    ion-label {
+        text-align: center;
+        &.active {
+            color: var(--ion-color-secondary);
+        }
+    }
+   
+}
+
+.cont-button{
+    margin: 3vh 5vw;
+}

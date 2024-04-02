@@ -1,0 +1,47 @@
+<ion-content>
+  <p *ngIf="idRole != 3" class="sf-pro-semibold roofing-large-subtitle parrafo">
+    Asigned inspector
+  </p>
+  <ion-list *ngIf="idRole != 3">
+    <ion-item color="light" *ngFor="let user of userList" (click)="onClickUser(user, $event)">
+      <ion-label class="roofing-label sf-pro-regular">{{user.option}}</ion-label>
+      <ion-checkbox slot="end" color="light" [checked]="user.selected"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <p *ngIf="false" class="sf-pro-semibold roofing-large-subtitle parrafo">
+    Type Estimation
+  </p>
+  <ion-list *ngIf="false">
+    <ion-item color="light" *ngFor="let type of typesList" (click)="onClickObject(type, $event)">
+      <ion-label class="roofing-label sf-pro-regular">{{type.option}}</ion-label>
+      <ion-checkbox slot="end" color="light" [checked]="type.selected"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <p *ngIf="false" class="sf-pro-semibold roofing-large-subtitle parrafo">
+    Material
+  </p>
+  <ion-list *ngIf="false" >
+    <ion-item color="light" *ngFor="let material of materialTypesList" (click)="onClickObject(material, $event)">
+      <ion-label class="roofing-label sf-pro-regular">{{material.option}}</ion-label>
+      <ion-checkbox slot="end" color="light" [checked]="material.selected"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <p class="sf-pro-semibold roofing-large-subtitle parrafo">
+    Type of work
+  </p>
+  <ion-list>
+    <ion-item color="light" *ngFor="let jobType of jobTypesList" (click)="onClickObject(jobType, $event)">
+      <ion-label class="roofing-label sf-pro-regular">{{jobType.option}}</ion-label>
+      <ion-checkbox slot="end" color="light" [checked]="jobType.selected"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <div class="center cont-button">
+    <ion-button class="sf-pro-semibold roofing-button" type="ngSubmit" expand="block"
+      color="primary" (click)="confirm()">
+      Aceptar
+    </ion-button>
+  </div>
+</ion-content>

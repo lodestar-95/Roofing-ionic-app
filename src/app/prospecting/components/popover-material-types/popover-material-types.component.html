@@ -1,0 +1,15 @@
+<ion-list>
+  <ion-item *ngFor="let item of materialTypes">
+    <ion-checkbox
+      slot="start"
+      [(ngModel)]="item.selected"
+      (ngModelChange)="optionSelected(item)"></ion-checkbox>
+    <ion-label class="roofing-label"
+      >{{
+        item.id_material_category === categoryRidgecapId
+          ? item.size + '"'
+          : item.material_type
+      }}
+    </ion-label>
+  </ion-item>
+</ion-list>

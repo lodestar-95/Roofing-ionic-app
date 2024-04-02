@@ -1,0 +1,47 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        slot="start"
+        defaultHref="home/prospecting"
+        text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar [class.pt-15]="!building">
+    <ion-title mode="md" class="roofing-large-title sf-pro-bold"
+      >Price List</ion-title
+    >
+
+    
+
+    <ion-buttons slot="end">
+      <ion-button fill="solid" slot="end"><ion-icon name="add-outline"></ion-icon>
+    </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar class = "barra">
+    <ion-searchbar mode="ios" class="sf-pro-bold roofing-label" slot = "start" (ionChange) = "searchPricelist($event)"></ion-searchbar>
+    <ion-checkbox  class="check" [(ngModel)]="chkOnlyCurrent" (ngModelChange)="onlyCurrentSelected()">  </ion-checkbox>
+    <ion-text class ="current" >Only Current</ion-text>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content>
+  <ion-grid class="px-24 ion-text-center">
+    <ion-row class="divider" style="width: 100%;">
+      <ion-col class="sf-pro-semibold roofing-label">Supplier</ion-col>
+      <ion-col class="sf-pro-semibold roofing-label">Start Date</ion-col>
+      <ion-col class="sf-pro-semibold roofing-label">Currents</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let pricelist of searchResult">
+      <ion-col class="row-concept ts-14 ion-text-center" style="align-items: center;">{{pricelist.supplier}}</ion-col>
+      <ion-col class="row-concept ts-14 ion-text-center" style="align-items: center;">{{pricelist.start_date}}</ion-col>
+      <ion-col class="row-concept ts-14 ion-text-center" style="align-items: center;">{{pricelist.is_current}}</ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

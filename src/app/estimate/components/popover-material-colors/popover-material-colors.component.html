@@ -1,0 +1,10 @@
+<ion-list>
+  <ion-item *ngFor="let item of colors">
+    <ion-checkbox
+      slot="start"
+      [(ngModel)]="item.selected"
+      (ngModelChange)="optionSelected(item)"
+    ></ion-checkbox>
+    <ion-label class="roofing-label">{{ item.color }} </ion-label>
+  </ion-item>
+</ion-list>

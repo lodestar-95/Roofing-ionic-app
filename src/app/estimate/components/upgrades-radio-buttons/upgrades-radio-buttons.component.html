@@ -1,0 +1,26 @@
+<ion-radio-group [value]="element?.psbUpgrade?.id_cost_integration" mode="md">
+  <ion-label style="font-weight: bold">{{ element?.title }}</ion-label>
+  <ion-label>{{ element?.subTitle }}</ion-label>
+
+  <ion-grid>
+    <ion-row style="margin-left: -25px">
+      <ion-col
+        size-xs="12"
+        size-md="4"
+        class="ion-no-padding"
+        *ngFor="let item of element.options"
+      >
+        <ion-item lines="none" [disabled]="disabled">
+          <ion-text class="ion-text-nowrap">{{ item.text }}</ion-text>
+          <ion-radio
+            slot="start"
+            [value]="item.id"
+            class="ion-no-margin"
+            style="margin-right: 10px"
+            (ionFocus)="onSelected(item, element)"
+          ></ion-radio>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-radio-group>

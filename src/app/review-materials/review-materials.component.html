@@ -1,0 +1,64 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button slot="start" defaultHref="home/prospecting" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="appMenu">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar [class.pt-15]="!building">
+    <ion-title mode="md" class="roofing-large-title sf-pro-bold">Review</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="openNotesModal()">
+        <ion-icon slot="icon-only" name="clipboard-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="content-detail">
+  <app-prospecting-detail *ngIf="project" (showBuildingsEmited)="showBuilding = $event"
+  [allowChangeVersion]="false"></app-prospecting-detail>
+ 
+  <ion-button class="ion-float-right" (click)="addMaterial()">New Material
+    <ion-icon slot="end" name="add" style="color:lightgreen"></ion-icon>
+  </ion-button>
+
+  <ion-accordion-group class="accordion-details" multiple="true" (ionChange)="accordionGroupChange($event)" #accordionGroup>
+    <div *ngFor="let supplier of suppliers">
+      <ion-accordion expand="inset" *ngIf="isNumber(supplier.id)" [value]="supplier.id">
+        <ion-item slot="header" color="white">
+          <ion-label style="font-size: 19px; font-weight: bold">
+            {{supplier.supplier}} ({{materialCount[supplier.id]}})
+          </ion-label>
+        </ion-item>
+        <div slot="content">
+          <app-accordion-detail [supplierId]="supplier.id" [projectVersion]="version" [project]="project"></app-accordion-detail>
+        </div>
+      </ion-accordion>
+    </div>
+
+
+    <ion-accordion expand="inset" [value]="-1">
+      <ion-item slot="header" color="white">
+        <ion-label style="font-size: 19px; font-weight: bold">
+          No Defined ({{materialCount[-1]}})
+        </ion-label>
+      </ion-item>
+    </ion-accordion>
+    <ion-accordion expand="inset" [value]="-2">
+      <ion-item slot="header" color="white">
+        <ion-label style="font-size: 19px; font-weight: bold">
+          New Suppliers ({{materialCount[0]}})
+        </ion-label>
+      </ion-item>
+      <div slot="content">
+        <app-accordion-detail [supplierId]="0" [projectVersion]="version" [project]="project"></app-accordion-detail>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</ion-content>

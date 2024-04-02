@@ -1,0 +1,10 @@
+<div class="ion-float-right" *ngIf="hasBuildings">
+  <ion-buttons slot="end">  
+    <ion-button [disabled]="supplierId==0" (click)="preview()"><ion-icon slot="icon-only" name="document-text"></ion-icon></ion-button>
+    <ion-button [disabled]="supplierId==0" (click)="sendEmail()"><ion-icon slot="icon-only" name="mail"></ion-icon></ion-button>
+    <ion-button (click)="addMaterial()"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+  </ion-buttons>
+</div>
+<div *ngFor="let building of projectVersion?.buildings">
+  <app-material-table [building]="building" [supplierId]="supplierId"></app-material-table>
+</div>

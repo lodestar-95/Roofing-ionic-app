@@ -1,0 +1,23 @@
+{
+    "job_types": [
+        {
+            "job_type" : "New construction",
+            "id_job_type_parent" : null,
+            "id_job_type" : 11
+        },
+        {
+            "job_type" : "Reroof",
+            "id_job_type_parent" : null,
+            "id_job_type" : 12
+        },
+        {
+            "job_type" : "Remove & replace",
+            "id_job_type_parent" : 2,
+            "id_job_type" : 13
+        },
+        {
+            "job_type" : "Overlay",
+            "id_job_type_parent" : 2,
+            "id_job_type" : 14
+        }
+    ]}

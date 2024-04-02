@@ -1,0 +1,18 @@
+ion-content {
+    --padding-start: 40px;
+    --padding-end: 40px;
+    --padding-top: 40px;
+    --padding-bottom: 40px;
+}
+
+.divider-line {
+    height: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: rgba(116, 116, 128, 0.18);
+  }
+
+  .divider-line-light {
+    height: 1px;
+    background-color: rgba(116, 116, 128, 0.18);
+  }

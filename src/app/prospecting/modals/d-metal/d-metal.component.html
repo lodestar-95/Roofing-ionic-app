@@ -1,0 +1,26 @@
+<ion-content>
+  <ion-item lines="none" class="ion-no-padding">
+    <ion-text class="roofing-title">D Metal</ion-text>
+  </ion-item>
+  <form #form="ngForm">
+    <app-checkbox-list *ngIf="materialsEvesRakes" [options]="materialsEvesRakes"
+      subTitleDesc="Eaves & rakes on Flat Roof" text="material_type" [isLeft]="true" [isValid]="validEvesRakesInFlatRoof"
+      (optionEmited)="onOptionSelectedMaterialEvesRakes($event)"></app-checkbox-list>
+
+    <app-checkbox-list *ngIf="materialsEvesStarters" [options]="materialsEvesStarters"
+      subTitleDesc="Eaves & starters on Low and Step slope" text="material_type" [isLeft]="true"
+      [isValid]="validEvesStartersInLowOrSteepSlope"
+      (optionEmited)="onOptionSelectedMaterialEvesStarters($event)"></app-checkbox-list>
+
+    <app-checkbox-list *ngIf="materialsRakes" [options]="materialsRakes" subTitleDesc="Rakes on Low and Step slope"
+      text="material_type" [isLeft]="true" [isValid]="validRakesInLowOrSteepSlope"
+      (optionEmited)="onOptionSelectedMaterialRakes($event)"></app-checkbox-list>
+
+    <ion-button class="sf-pro-semibold roofing-button button-padding" expand="block" color="primary" (click)="confirm()"
+      [disabled]="(validEvesRakesInFlatRoof && !materialEvesRakesOption) ||
+    (validEvesStartersInLowOrSteepSlope && !materialEvesStartersOption) ||
+    (validRakesInLowOrSteepSlope && !materialRakesOption)">
+      Accept
+    </ion-button>
+  </form>
+</ion-content>

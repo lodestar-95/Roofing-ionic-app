@@ -1,0 +1,75 @@
+<ion-content>
+  <ion-toolbar>
+    <ion-title>Contact Date</ion-title>
+    <ion-buttons class="hidden-xs" slot="end">
+      <ion-button color="danger" (click)="modal.dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-item (click)="openModalDatetime()">
+        <ion-grid>
+          <ion-row>
+            <ion-label>Select new contact date</ion-label>
+          </ion-row>
+          <ion-row>
+            <ion-icon color="medium" name="create-outline"></ion-icon>
+            <ion-label color="success">{{
+                project?.next_contact_date | date : 'd MMMM y'
+            }}</ion-label>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      
+      <ion-list *ngIf="(dates$ | async)?.length > 0; else noDates">
+        <ion-item>
+          <ion-label>
+            <h2>Latest contact dates</h2>
+          </ion-label>
+        </ion-item>
+        <ng-container *ngFor="let date of dates$ | async; index as i">
+          <ion-item>
+            <ion-label>
+              <p>{{ date.contact_date | date : 'd MMMM y' }}</p>
+            </ion-label>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+
+      <ng-template #noDates>
+        <ion-item>
+            <ion-label>
+              <h2>No Contact date</h2>
+            </ion-label>
+          </ion-item>
+      </ng-template>
+   
+    </ion-card-content>
+  </ion-card>
+  <section></section>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col> </ion-col>
+
+      <ion-button
+        size="default"
+        class="full-width"
+        expand="full"
+        (click)="saveNewContactDate()"
+        >Accept</ion-button
+      >
+
+      <ion-col> </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <app-calendar-modals 
+        [titleDateElement]="mdlDateTitle"
+        [isDatePopUpOpen]="isMdlDateOpen" 
+        [minDateString]="minDateString" 
+        (mdlResponse)="mdlResponsePayload($event)">
+    </app-calendar-modals>
+</ion-content>

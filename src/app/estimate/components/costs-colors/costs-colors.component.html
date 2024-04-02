@@ -1,0 +1,30 @@
+<ion-row>
+  <ion-col size-md="3" size-xs="1" class="ion-no-padding"></ion-col>
+  <ion-col>
+    <ion-label color="black" class="roofing-title">Colors</ion-label>
+  </ion-col>
+  <ion-col size-md="3" size-xs="1" class="ion-no-padding"></ion-col>
+</ion-row>
+
+<ion-row *ngFor="let item of groups">
+  <ion-col size="3"> </ion-col>
+  <ion-col size="6">
+    <ion-item
+      lines="none"
+      color="light"
+      class="roofing-label sf-pro-regular"
+      button
+      (click)="openPopoverColors($event, item.id)"
+      [disabled]="(!canModifyProposal || userDisabledPermision) && !alwaysAllowModification"
+    >
+      {{ item.group }}
+    </ion-item>
+    <ion-item lines="none" *ngIf="item.groupColor">
+      <ion-label style="font-weight: bold">{{
+        item.groupColor.color
+      }}</ion-label>
+    </ion-item>
+    <!-- HTML donde se muestra el color seleccionado -->
+
+  </ion-col>
+</ion-row>

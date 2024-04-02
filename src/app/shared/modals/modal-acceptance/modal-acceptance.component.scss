@@ -1,0 +1,45 @@
+ion-content {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.accept-button{
+    font-size: large;
+    color:black;
+}
+ion-modal::part(backdrop) {
+  background: rgba(209, 213, 219);
+  opacity: 1;
+}
+
+.accept-button{  
+  font-weight: 700!important;
+  margin-top: 2rem;
+  color:black!important;
+  font-size: 16px;
+}
+
+.button-native {
+    font-size: 16px!important;
+    font-weight: 700;
+    color: black!important;
+  }
+ion-toolbar{
+  --background: white:
+}
+
+::-webkit-scrollbar, *::-webkit-scrollbar {
+  display: none !important;
+  overflow: hidden;
+}
+
+ion-segment-button {
+  --indicator-color: white;
+  --color-checked: dark;
+}
+
+@media screen and (min-width: 768px) {
+  .hidden-xs {
+      display:none;
+  }
+}

@@ -1,0 +1,17 @@
+<ion-list *ngIf="projects.length > 0">
+  <app-prospecting-item [project]="project" [daysProposalDelayed]="daysProposalDelayed" [idUserRole]="idUserRole" *ngFor="
+  let project of projects | searchFilter: 
+  { 
+    st_name: searchText, 
+    st_address: searchText, 
+    st_phone: searchText, 
+    st_prospecting_type: searchText, 
+    st_prospecting_material_type: searchText,
+    st_email: searchText,
+    st_project_status: searchText
+  }" (click)="onClick(project)">
+  </app-prospecting-item>
+</ion-list>
+<ion-content *ngIf="projects.length == 0">
+  <ion-label class="sf-pro-regular roofing-subtitble">No proposals in existence</ion-label>
+</ion-content>

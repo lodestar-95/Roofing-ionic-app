@@ -1,0 +1,48 @@
+<ion-row *ngFor="let chimney of psbChimneys">
+    <ion-col class="ion-no-padding">
+        <app-button-option-simple [description]="chimney.chimneys" [active]="true" (modalEmited)="openModalCricket(chimney)">
+        </app-button-option-simple>
+        <ion-item style="--inner-padding-end: 0px" class="detail-padding">
+            <ion-grid>
+                <ion-row>
+                    <ion-col class="ion-no-padding">
+                        <ion-label class="roofing-subtitble sf-pro-regular">
+                            <ion-text *ngIf="chimney.id_wall_material">{{getNameWallMaterial(chimney.id_wall_material)}}, </ion-text>
+                            <ion-text *ngIf="chimney.width">{{chimney.width}} ({{chimney.f_width}}) </ion-text>
+                            <ion-text *ngIf="chimney.lenght">x {{chimney.lenght}} ({{chimney.f_lenght}})</ion-text>
+                            <ion-text>In ({{(chimney.width * chimney.lenght) > 1000 ? 'Large' : 'Small'}})</ion-text>
+                            <ion-text *ngIf="chimney.cricket_exists==false && chimney.width >= 30"> ,with new cricket</ion-text>
+
+                        </ion-label>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col class="ion-no-padding">
+                        <ion-label style="text-transform: uppercase" class="roofing-title-popup sf-pro-regular"
+                            color="medium">
+                            <ion-text *ngIf="chimney.cricket_height">HEIGHT {{chimney.cricket_height}} {{chimney.f_height}}</ion-text>
+                            <ion-text *ngIf="chimney.pitch"> ON {{chimney.pitch}} /12 ROOF SLOPE</ion-text>
+                        </ion-label>
+                    </ion-col>
+                </ion-row>
+                <ion-row *ngIf="chimney.note && chimney.note != ''">
+                    <ion-col class="ion-no-padding">
+                        <ion-label class="roofing-subtitble sf-pro-regular">
+                            Added note
+                        </ion-label>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col class="ion-no-padding">
+                        <ion-text style="float: right" color="tertiary"
+                            class="roofing-subtitble sf-pro-regular" (click)="openModalDelete(chimney)">Delete
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-item>
+    </ion-col>
+</ion-row>
+<app-add-new-or-not-required btnText="Add new Chimney" chkBText="No chimneys required" [isNoRequired]="isNoRequired"
+    [activeNoRequired]="activeNoRequired" (addEmited)="openModalCricket()"
+    (optionEmited)="onNoRequiredCheked($event, 2)"></app-add-new-or-not-required>

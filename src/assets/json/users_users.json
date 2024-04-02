@@ -1,0 +1,128 @@
+{
+    "users": [
+        {
+            "id_user" : 7,
+            "id_contact" : 3,
+            "id_role" : 1,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : "2022-05-26T01:13:37.662Z",
+            "updatedAt" : "2022-05-26T01:13:37.662Z",
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 8,
+            "id_contact" : 3,
+            "id_role" : 1,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : "2022-05-26T01:26:37.307Z",
+            "updatedAt" : "2022-05-26T01:26:37.307Z",
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 9,
+            "id_contact" : 7,
+            "contact":
+            {
+                "id_contact" : 7,
+                "first_name" : "John",
+                "last_name" : "Fidanza",
+                "id_contact_type" : 1,
+                "phone" : "2341234123"
+            },
+            "id_role" : 3,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : "2022-05-26T02:27:18.023Z",
+            "updatedAt" : "2022-05-26T02:27:18.023Z",
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 10,
+            "id_contact" : 5,
+            "id_role" : 1,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : "2022-05-26T02:27:45.812Z",
+            "updatedAt" : "2022-05-26T02:27:45.812Z",
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 11,
+            "id_contact" : 6,
+            "id_role" : 4,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : "2022-05-26T02:28:23.699Z",
+            "updatedAt" : "2022-05-26T02:28:23.699Z",
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 4,
+            "id_contact" : 2,
+            "id_role" : 1,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : null,
+            "updatedAt" : null,
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 3,
+            "id_contact" : 2,
+            "id_role" : 1,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : null,
+            "updatedAt" : "2022-05-26T03:20:18.445Z",
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 2,
+            "id_contact" : 2,
+            "id_role" : 4,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : null,
+            "updatedAt" : null,
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 5,
+            "id_contact" : 2,
+            "contact": {
+                "id_contact" : 2,
+                "first_name" : "Eren",
+                "last_name" : "Jeager",
+                "id_contact_type" : 1,
+                "phone" : "1234567892"
+            },
+            "id_role" : 3,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : null,
+            "updatedAt" : null,
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 1,
+            "id_contact" : 2,
+            "id_role" : 2,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : "2022-05-20T22:17:04.325Z",
+            "updatedAt" : "2022-05-20T22:17:04.325Z",
+            "deletedAt" : null
+        },
+        {
+            "id_user" : 6,
+            "id_contact" : 2,
+            "id_role" : 1,
+            "modification_date" : null,
+            "login_online_date" : null,
+            "createdAt" : null,
+            "updatedAt" : "2022-05-25T03:38:18.110Z",
+            "deletedAt" : null
+        }
+    ]}

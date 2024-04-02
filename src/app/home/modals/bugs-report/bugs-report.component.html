@@ -1,0 +1,65 @@
+<ion-content>
+  <ion-item class="modal-title-padding">
+    <ion-label class="roofing-title">Bugs Report</ion-label>
+  </ion-item>
+
+  <form [formGroup]="bugsReportForm">
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating" id="action-label">
+            What I was doing:
+          </ion-label>
+          <ion-input
+            id="action-input"
+            clearInput
+            formControlName="action"
+            type="text"
+            placeholder="Action that I was doing inside the app">
+          </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating" id="description-label">
+            Description:
+          </ion-label>
+          <ion-textarea
+            id="description-input"
+            clearInput
+            formControlName="description"
+            placeholder="Describe what is the problem and what is the expected result instead of">
+          </ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label id="description-label">
+            Image:
+          </ion-label>
+          <img [src]="caption" style="width:80%">
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+  </form>
+</ion-content>
+<ion-footer class="ion-padding">
+  <ion-item class="padding-left" style="padding-right: 38px">
+    <ion-button
+      class="sf-pro-semibold roofing-button"
+      expand="block"
+      color="primary"
+      (click)="onConfirm()"
+      [disabled]="!bugsReportForm.valid"
+    >
+      Send
+    </ion-button>
+  </ion-item>
+</ion-footer>

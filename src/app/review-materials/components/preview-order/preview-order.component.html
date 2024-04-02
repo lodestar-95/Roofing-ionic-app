@@ -1,0 +1,23 @@
+<ion-content>
+  <ion-item class="ion-no-padding">
+    <ion-text class="roofing-title">Purchase Order</ion-text>
+  </ion-item>
+
+  <ion-grid>
+    <div style="border: 1px; width: 100%; height: 80vh;">
+      <pdf-viewer
+          *ngIf="pdfSrc != undefined"
+          [show-all]="true"
+          [src]="pdfSrc"
+          [render-text]="true"
+          [original-size]="false"
+          [autoresize]="true"
+          [zoom]="1"
+          [show-borders]="false"
+          style="width: 100%; height: 100%; display: block"></pdf-viewer>
+    </div>
+    <ion-button class="sf-pro-semibold roofing-button button-padding" expand="block" color="primary" (click)="close()">
+      Close
+    </ion-button>
+  </ion-grid>
+</ion-content>

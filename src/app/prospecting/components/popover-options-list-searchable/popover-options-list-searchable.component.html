@@ -1,0 +1,8 @@
+<ion-searchbar animated="true" [debounce]="1000" (ionInput)="handleInput($event)"></ion-searchbar>
+<ion-list>
+  <ion-item *ngFor="let option of filtered">
+    <ion-checkbox slot="start" [(ngModel)]="option.selected" (ngModelChange)="optionSelected(option)"></ion-checkbox>
+    <ion-label class="roofing-label">{{ option.option }}
+    </ion-label>
+  </ion-item>
+</ion-list>

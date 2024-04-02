@@ -1,0 +1,11 @@
+<ion-content>
+  <ion-item>
+    <ion-textarea [(ngModel)]="note" minlength="5" placeholder="Write a note"></ion-textarea>
+  </ion-item>
+
+  <ion-button class="sf-pro-semibold roofing-button button-padding" expand="block" color="primary" (click)="confirm()"
+    [disabled]="!note">
+    Add note
+  </ion-button>
+
+</ion-content>

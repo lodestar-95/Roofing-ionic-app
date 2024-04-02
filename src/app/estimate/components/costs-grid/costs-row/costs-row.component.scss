@@ -1,0 +1,17 @@
+ion-row {
+  border-bottom: 1px solid #c6c6c8;
+}
+
+ion-col {
+  padding-bottom: 0px;
+}
+
+ion-segment {
+  background-color: rgba(249, 249, 249, 0.94);
+}
+
+ion-segment-button {
+  --indicator-color: transparent;
+  --color-checked: black;
+  text-transform: capitalize;
+}

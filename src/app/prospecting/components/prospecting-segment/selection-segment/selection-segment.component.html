@@ -1,0 +1,40 @@
+<div [class.div-disabled]="verifiedActive || userDisabledPermision">
+  <ion-grid>
+    <ion-row class="row-title">
+      <ion-col size="3"></ion-col>
+      <ion-col>
+        <div class="modal-title-padding">
+          <ion-label class="roofing-title">Selection</ion-label>
+        </div>
+        <p class="mssg" *ngIf="!trademarksSelected || trademarksSelected?.length == 0">You need select some shingle trademarks before this step.</p>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-selection-trademarks-list></app-selection-trademarks-list>
+</div>
+
+<ion-grid style="margin-bottom: 20px" *ngIf="isAllSegmentsOk">
+  <ion-row class="margin-justify-content">
+    <ion-col size="6">
+      <ion-item>
+        <ion-button
+          class="sf-pro-semibold roofing-button"
+          expand="block"
+          color="primary"
+          (click)="showBuildings()">
+          Next building
+        </ion-button>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<app-verified-information
+  [class.div-disabled]="userDisabledPermision || buildingVerified"
+  [isVerified]="verifiedActive"
+  [showIconError]="showIconError"
+  (optionEmited)="onVerifiedCheked($event)"
+>
+</app-verified-information>

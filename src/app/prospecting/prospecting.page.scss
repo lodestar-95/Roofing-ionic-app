@@ -1,0 +1,20 @@
+.filter-icon {
+  margin: 0 3vw 0 1.5vw;
+}
+
+ion-segment {
+  --background: white;
+}
+
+.item-s {
+  --min-height: 70px;
+  --padding-start: 1px;
+  --padding-end: 1px;
+  --inner-padding-end: 0px;
+}
+
+ion-searchbar {
+  --color: var(--color-gray);
+  --placeholder-color: var(--color-gray);
+  --background: rgba(118, 118, 128, 0.12);
+}

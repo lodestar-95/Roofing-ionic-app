@@ -1,0 +1,22 @@
+ion-list ion-item {
+    --padding-start: 0px;
+}
+.icon {
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+ion-item {
+    --min-height: auto;
+}
+
+.icon-error {
+    width: 35px;
+    height: 35px;
+    margin: auto;
+}
+
+.aling-item {
+    display: flex;
+    margin: auto;
+}

@@ -1,0 +1,255 @@
+<ion-content>
+  <ion-item class="ion-no-padding">
+    <ion-text class="roofing-title">Crickets</ion-text>
+  </ion-item>
+
+  <form [formGroup]="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-xs="12">
+          <ion-item style="--padding-start: 0px;">
+            <ion-input formControlName="cricket" class="roofing-label sf-pro-regular"
+            placeholder="Cricket name"></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="ion-no-padding item-error" *ngIf="ngForm.get('cricket').invalid && (ngForm.get('cricket').dirty || ngForm.get('cricket').touched)">
+            <ion-label color="danger" style="text-align:center" class="roofing-error">Name is a required field and it could be up 30 characteres</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Area
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="area" class="ion-text-right"
+              (keypress)="allowNumbers($event, 'area')" placeholder="00">
+            </ion-input>
+            <ion-label slot="end">SQ</ion-label>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('area').invalid  &&
+            (ngForm.get('area').touched || ngForm.get('area').dirty)
+          ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wrapper">Pitch</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="pitch" class="ion-text-right"
+              (keypress)="allowNumbers($event, 'pitch')" placeholder="00">
+            </ion-input>
+            <ion-label slot="end">/12</ion-label>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('pitch').invalid  &&
+            (ngForm.get('pitch').touched || ngForm.get('pitch').dirty)
+          ">Valid 1.0 - 24.0 value</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wrapper">First valley length</ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="firstValley" class="ion-text-right" type="number"
+              (keypress)="allowNumbers($event)" placeholder="00"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('firstValley').invalid  &&
+            (ngForm.get('firstValley').touched || ngForm.get('firstValley').dirty)
+          ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item class="ion-no-padding" lines="none" (click)="optionSelected(1)">
+            <ion-checkbox slot="start" [checked]="optionSecondValley"></ion-checkbox>
+
+            <ion-text class="ion-no-wraper">Second valley</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="secondValley" class="ion-text-right" inputmode="decimal"
+              (keypress)="allowNumbers($event, 'secondValley')" placeholder="00"
+              [disabled]="!optionSecondValley"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('secondValley').invalid  &&
+            (ngForm.get('secondValley').touched || ngForm.get('secondValley').dirty)
+            ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item class="ion-no-padding" lines="none" (click)="optionSelected(2)">
+            <ion-checkbox slot="start" [checked]="optionSideWall"></ion-checkbox>
+
+            <ion-text class="ion-no-wraper">Side wall</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="sideWall" class="ion-text-right"
+              (keypress)="allowNumbers($event, 'sideWall')" placeholder="00"
+              [disabled]="!optionSideWall"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('sideWall').invalid  &&
+            (ngForm.get('sideWall').touched || ngForm.get('sideWall').dirty)
+            ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+
+      <app-button-option-simple
+        description="Side wall material"
+        [active]="optionSideWall"
+        (modalEmited)="openPopoverWallMaterials($event, 1)"
+      ></app-button-option-simple>
+
+      <ion-row *ngIf="sideWallMaterial">
+        <ion-col class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding detail-item">
+            <ion-text class="ion-no-wraper">
+              {{sideWallMaterial.option}}
+            </ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <app-button-option-simple
+        description="Side wall specs"
+        [active]="optionSideWall"
+        (modalEmited)="openPopoverWallSpecs($event, 1)"
+      ></app-button-option-simple>
+
+      <ion-row *ngIf="sideWallSpecsDesc">
+        <ion-col class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding detail-item">
+            <ion-text class="ion-no-wraper">
+              {{sideWallSpecsDesc}}
+            </ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item class="ion-no-padding" lines="none" (click)="optionSelectedEndWall()">
+            <ion-checkbox slot="start" color="success" [checked]="optionEndWallOnCricket" mode="md"></ion-checkbox>
+
+            <ion-text class="ion-no-wraper">End wall on cricket</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="endWall" class="ion-text-right"
+              (keypress)="allowNumbers($event, 'endWall')" [disabled]="!optionEndWallOnCricket"
+              placeholder="00"></ion-input>
+            <ion-label slot="end">LF</ion-label>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('endWall').invalid  &&
+            (ngForm.get('endWall').touched || ngForm.get('endWall').dirty)
+            ">Required field</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <app-button-option-simple
+        description="End wall material"
+        [active]="optionEndWallOnCricket"
+        (modalEmited)="openPopoverWallMaterials($event, 2)"
+      ></app-button-option-simple>
+
+      <ion-row *ngIf="endWallMaterial">
+        <ion-col class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding detail-item">
+            <ion-text class="ion-no-wraper">
+              {{endWallMaterial.option}}
+            </ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <app-button-option-simple
+        description="End wall specs"
+        [active]="optionEndWallOnCricket"
+        (modalEmited)="openPopoverWallSpecs($event, 2)"
+      ></app-button-option-simple>
+
+      <ion-row *ngIf="endWallSpecsDesc">
+        <ion-col class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding detail-item">
+            <ion-text class="ion-no-wraper">
+              {{endWallSpecsDesc}}
+            </ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Adittional cost
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-label slot="start" class="lbl-left">$</ion-label>
+            <ion-input formControlName="adittionalCost" class="ion-text-left"
+              (keypress)="allowNumbers($event, 'adittionalCost')" placeholder="00">
+            </ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('adittionalCost').invalid  &&
+            (ngForm.get('adittionalCost').touched || ngForm.get('adittionalCost').dirty)
+          ">Valid value</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <app-button-option-simple
+        description="Add note (consult)"
+        [active]="true"
+        (modalEmited)="openNote($event)"
+      ></app-button-option-simple>
+
+      <!--ion-label>{{(optionSideWall && !sideWallSpecsDesc)}} 88 {{(optionEndWallOnCricket && !endWallSpecsDesc)}} --- {{optionEndWallOnCricket}}/{{!endWallSpecsDesc}}</ion-label-->
+
+    </ion-grid>
+    <ion-button class="sf-pro-semibold roofing-button button-padding" expand="block" color="primary" (click)="confirm()"
+      [disabled]="!ngForm.valid || !ngForm.dirty || (optionEndWallOnCricket && !endWallSpecsDesc)">
+      Accept
+    </ion-button>
+  </form>
+</ion-content>

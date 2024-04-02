@@ -1,0 +1,109 @@
+<ion-row *ngFor="let item of shingleLines; let i = index">
+  <ion-col size="2.5" class="ion-text-center segment-titles">
+    <ion-item
+      (click)="onShowSegment(item.id)"
+      lines="none"
+      button
+      detail="false"
+    >
+      <ion-icon
+        *ngIf="!item.show"
+        slot="start"
+        name="add-circle-outline"
+        style="margin-right: 10px"
+        color="success"
+      ></ion-icon>
+
+      <ion-icon
+        *ngIf="item.show"
+        slot="start"
+        name="remove-circle-outline"
+        style="margin-right: 10px"
+        color="danger"
+      ></ion-icon>
+      <label [style]="item?.trademark?.color">
+        {{ item?.materialType?.material_type }}
+      </label>
+    </ion-item>
+  </ion-col>
+
+  <ion-col size="2.5" class="ion-text-center segment-titles">
+    <ion-item
+      (click)="openPopopMaterialColors($event, item)"
+      button
+      detail="false"
+      lines="none"
+      [disabled]="!canModifyProposal && !alwaysAllowModification"
+    >
+      <ion-icon
+        slot="start"
+        name="color-palette-outline"
+        color="primary"
+      ></ion-icon>
+      <label>{{ item?.color?.color }}</label>
+    </ion-item>
+  </ion-col>
+
+  <ion-col size="2" class="ion-text-center segment-titles">
+    <div style="margin-top: 20px">
+      {{ item?.cost?.subtotal ?? 0 | currency }}
+    </div>
+  </ion-col>
+
+  <ion-col size="2" class="ion-text-center segment-titles">
+    <div style="margin-top: 20px">
+      {{
+        (i > 0 ? item?.cost?.total - shingleLines[i - 1]?.cost?.total : 0)
+          | currency
+      }}
+    </div>
+  </ion-col>
+
+  <ion-col size="3" class="ion-text-center segment-titles">
+    <ion-button (click)="showBidSheet(item.materialType)" fill="clear">
+      <ion-icon slot="end" name="eye-off-outline" color="medium"></ion-icon>
+      <ion-label slot="start">{{
+        item?.cost?.total ?? 0 | currency
+      }}</ion-label>
+    </ion-button>
+  </ion-col>
+
+  <ion-col size="12">
+    <ion-segment
+      [value]="segment"
+      (ionChange)="segmentChanged($event)"
+      mode="md"
+      *ngIf="item.show"
+      scrollable
+    >
+      <ion-segment-button value="built-in">
+        <ion-label>Built In</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="upgrades">
+        <ion-label>Upgrades</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="optionals">
+        <ion-label>Optionals</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <app-builtin-costs-segment
+      *ngIf="segment == 'built-in' && item.show"
+      [data]="builtins"
+      [materialTypeId]="item?.id_material_type"
+      [total]="item?.cost?.builtins"
+    ></app-builtin-costs-segment>
+    <app-optionals-costs-segment
+      *ngIf="segment == 'optionals' && item.show"
+      [data]="options"
+      [materialTypeId]="item?.id_material_type"
+      [total]="item?.cost?.options"
+    ></app-optionals-costs-segment>
+    <app-upgrades-costs-segment
+      *ngIf="segment == 'upgrades' && item.show"
+      [data]="upgrades"
+      [materialTypeId]="item?.id_material_type"
+      [total]="item?.cost?.upgrades"
+    ></app-upgrades-costs-segment>
+  </ion-col>
+</ion-row>

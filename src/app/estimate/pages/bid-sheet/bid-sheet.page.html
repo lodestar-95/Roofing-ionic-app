@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar class="py-toolbar">
+    <ion-title mode="md" class="roofing-large-title sf-pro-bold">Bid sheet</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="close-button" (click)="closePage()">
+        <ion-icon
+          slot="icon-only"
+          name="close-outline"
+          color="dark"
+          style="font-size: 50px"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div ngClass="error">{{message}}</div>
+  <app-prospecting-detail *ngIf="project"></app-prospecting-detail>
+  <ion-grid class="px-24">
+    <ion-row>
+      <ion-col size="7">
+        <ion-text class="roofing-large-title sf-pro-bold ion-padding-end"
+          >{{trademark?.trademark}}</ion-text
+        >
+        <ion-text class="roofing-title">{{materialType?.material_type}}</ion-text>
+      </ion-col>
+      <ion-col size="5">
+        <ion-item lines="none">
+          <ion-icon color="primary" class="mr-6" name="filter" slot="start"></ion-icon>
+          <ion-label
+            class="roofing-large-subtitle"
+            (click)="openPopoverBuildings($event)">
+            <ion-text color="primary">Building:</ion-text>
+            <ion-text>{{building?.description}}</ion-text>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div *ngFor="let table of tables;let i=index">
+    <app-bid-sheet-table
+      [tableData]="table"
+      [showHeaders]="i===0 || table.columnNames.length>0"></app-bid-sheet-table>
+  </div>
+</ion-content>

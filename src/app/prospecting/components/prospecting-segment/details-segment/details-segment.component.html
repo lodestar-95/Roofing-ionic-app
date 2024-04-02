@@ -1,0 +1,57 @@
+<ion-accordion-group class="accordion-details" [class.div-disabled]="detailsActive || userDisabledPermision" multiple="true" 
+  [value]="openTargets" (ionChange)="accordionGroupChange($event)">
+  <ion-accordion value="crickets" expand="inset">
+    <ion-item slot="header" color="white">
+      <ion-icon *ngIf="showIconError && (!cricketsNoRequired && totalCrickets == 0)" name="star"
+        name="alert-circle-outline"
+        color="tertiary"></ion-icon>
+      <ion-label [color]="(totalCrickets == 0 && cricketsNoRequired === false) ? 'black': 'medium'">
+        <ion-text class="roofing-title">Crickets </ion-text>
+        <ion-text class="roofing-label">({{totalCrickets}})</ion-text>
+      </ion-label>
+    </ion-item>
+    <div slot="content">
+      <app-cricket-list></app-cricket-list>
+      <app-add-new-or-not-required btnText="Add new Cricket" chkBText="No crickets required"
+        [isNoRequired]="cricketsNoRequired" [activeNoRequired]="totalCrickets==0" (addEmited)="openModalCricket()" (optionEmited)="onNoRequiredCheked($event, 1)"></app-add-new-or-not-required>
+    </div>
+  </ion-accordion>
+  <ion-accordion value="chimneys">
+    <ion-item slot="header" color="white">
+      <ion-icon *ngIf="showIconError && (!chimneysNoRequired && totalChimneys == 0)" name="star"
+        name="alert-circle-outline"
+        color="tertiary"></ion-icon>
+      <ion-label [color]="(totalChimneys == 0 && chimneysNoRequired === false) ? 'black' : 'medium'">
+        <ion-text class="roofing-title">Chimneys </ion-text>
+        <ion-text class="roofing-label">({{totalChimneys}})</ion-text>
+      </ion-label>
+    </ion-item>
+    <div slot="content">
+      <app-chimney-list [isNoRequired]="chimneysNoRequired" [activeNoRequired]="totalChimneys==0"
+      (optionEmited)="onNoRequiredCheked($event, 2)" ></app-chimney-list>
+    </div>
+  </ion-accordion>
+  <ion-accordion value="skylights">
+    <ion-item slot="header" color="white">
+      <ion-icon *ngIf="showIconError && (!skylightsNoRequired && totalSkylights == 0)" name="star"
+        name="alert-circle-outline"
+        color="tertiary"></ion-icon>
+      <ion-label [color]="(totalSkylights == 0 && skylightsNoRequired === false) ? 'black' : 'medium'">
+        <ion-text class="roofing-title">Skylights </ion-text>
+        <ion-text class="roofing-label">({{totalSkylights}})</ion-text>
+      </ion-label>
+    </ion-item>
+    <div slot="content">
+      <app-skylight-list [isNoRequired]="skylightsNoRequired" [activeNoRequired]="totalSkylights==0"
+      (optionEmited)="onNoRequiredCheked($event, 3)" ></app-skylight-list>
+    </div>
+  </ion-accordion>
+</ion-accordion-group>
+
+<app-verified-information
+  [class.div-disabled]="userDisabledPermision || buildingVerified"
+  [isVerified]="detailsActive"
+  [showIconError]="showIconError"
+  (optionEmited)="onVerifiedCheked($event)"
+>
+</app-verified-information>

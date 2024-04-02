@@ -1,0 +1,51 @@
+<ion-content>
+  <ion-item lines="none" class="ion-no-padding">
+    <ion-text class="roofing-title"
+      >Scope of work: {{ building.description }} /
+      {{ isArchitectural ? "Architectural" : "Luxury" }}</ion-text
+    >
+  </ion-item>
+
+  <textarea [(ngModel)]="text" rows="18" style="overflow:auto;" [class.div-disabled]="scope?.is_verified"></textarea>
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <app-verified-information
+    [isVerified]="scope.is_verified"
+    (optionEmited)="onVerifiedClick($event, scope.id)"
+    title="Verified"
+  >
+  </app-verified-information>
+
+  <ion-item class="padding-left" style="padding-right: 38px; padding-bottom: 5px;">
+    <ion-button
+      class="sf-pro-semibold roofing-button"
+      color="primary"
+      (click)="generate()"
+    >
+      Generate
+    </ion-button>
+  </ion-item>
+
+  <ion-item class="padding-left" style="padding-right: 38px; padding-bottom: 5px;">
+    <ion-button
+      class="sf-pro-semibold roofing-button"
+      expand="block"
+      color="secondary"
+      (click)="save()"
+    >
+      Save
+    </ion-button>
+  </ion-item>
+
+    <ion-item class="padding-left" style="padding-right: 38px">
+      <ion-button
+        class="sf-pro-semibold roofing-button"
+        expand="block"
+        color="danger"
+        (click)="cancel()"
+      >
+        Cancel
+      </ion-button>
+  </ion-item>
+</ion-footer>

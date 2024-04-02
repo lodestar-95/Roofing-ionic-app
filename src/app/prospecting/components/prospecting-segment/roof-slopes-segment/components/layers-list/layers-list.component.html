@@ -1,0 +1,38 @@
+<ion-grid>
+  <ion-row class="row-title">
+    <ion-col size="3"></ion-col>
+
+    <ion-col size="6">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item
+              (click)="openModalLayers()"
+              lines="none"
+              color="light"
+              class="roofing-label sf-pro-regular"
+              button>
+              Layers
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let layer of projectShingleLayers; let i = index">
+          <ion-col class="ion-no-padding">
+            <ion-item lines="full">
+              <ion-label class="roofing-subtitble sf-pro-regular ion-text-wrap">
+                <ion-text style="display: block">
+                  Layer {{ layer.layer + (i == 0 ? ' (Top)' : '') }}
+                </ion-text>
+                <ion-text style="display: block" color="medium">{{
+                  layer.name
+                }}</ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-col>
+
+    <ion-col size="3"></ion-col>
+  </ion-row>
+</ion-grid>

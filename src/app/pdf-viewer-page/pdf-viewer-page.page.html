@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar class="toolbar-background">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+      <div *ngIf="totalPages != undefined">
+        <ion-button (click)="selectPage(false)" *ngIf="false">
+          <img src="../../assets/imgs/arrow-back.svg" color="primary" />
+        </ion-button>
+        <ion-button disabled class="button">
+          <label class="Title">Page {{page}} - {{totalPages}}</label>
+        </ion-button>
+        <ion-button (click)="selectPage(true)" *ngIf="false">
+          <img src="../../assets/imgs/arrow-forward.svg" alt="" />
+        </ion-button>
+      </div>
+      <div>
+        <ion-button (click)="openPopover($event,1)">
+          <label class="TitleSel">Building: </label>
+          <label class="Title">{{buildinTxt}}</label>
+        </ion-button>
+        <ion-button (click)="openPopover($event,2)">
+          <label class="TitleSel">Type: </label>
+          <label class="Title">{{typeTxt}}</label>
+        </ion-button>
+      </div>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <!--<ion-icon name="checkmark-circle-outline" style="color: gray;"></ion-icon>-->
+      <ion-button (click)="openEmailClient()" [disabled]="!canSendEmail">
+        <img src="../../assets/imgs/mail_icon2.svg" height="30px" />
+      </ion-button>
+      <ion-button (click)="changeProjectStatus()" [disabled]="!canChangeStatus">
+        <img src="../../assets/imgs/arrow-forward.svg" alt="" />
+        <img src="../../assets/imgs/arrow-forward.svg" alt="" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scroll-y="false">
+  <ion-grid class="grid">
+    <ion-row>
+      <ion-col size="12" style="height: 45px">
+        <span class="Final-proposal">Proposal Preview</span>
+      </ion-col>
+    </ion-row>
+    <ion-row class="row">
+      <ion-col size="12">
+        <pdf-viewer
+          *ngIf="pdfSrc != undefined"
+          [show-all]="true"
+          [src]="pdfSrc"
+          [render-text]="true"
+          [original-size]="false"
+          [autoresize]="true"
+          [zoom]="1"
+          [show-borders]="false"
+          [(page)]="page"
+          (after-load-complete)="afterLoadComplete($event)"
+          style="width: 100%; height: 90%; display: block"></pdf-viewer>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

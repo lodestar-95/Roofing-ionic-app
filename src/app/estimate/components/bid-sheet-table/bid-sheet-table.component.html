@@ -1,0 +1,51 @@
+<ion-grid class="px-24 ion-text-center">
+  <ion-row *ngIf="showHeaders">
+    <ng-container
+      *ngIf="
+        tableData.columnNames &&
+        tableData.columnNames.length > 0 &&
+        tableData.sections.length > 0
+      ">
+      <ion-col *ngFor="let colName of tableData.columnNames">{{ colName }}</ion-col>
+    </ng-container>
+    <ng-container *ngIf="!tableData.columnNames || tableData.columnNames.length === 0">
+      <ion-col></ion-col>
+      <ion-col>SQ/LF</ion-col>
+      <ion-col>Coverage</ion-col>
+      <ion-col>Quantity</ion-col>
+      <ion-col>Unit</ion-col>
+      <ion-col>Price</ion-col>
+      <ion-col></ion-col>
+    </ng-container>
+  </ion-row>
+  <div *ngFor="let section of tableData.sections">
+    <ion-row class="divider">
+      <ion-col size="10" class="sf-pro-semibold roofing-label ion-text-start">{{
+        section.title | titlecase
+      }}</ion-col>
+      <ion-col size="2" class="sf-pro-semibold roofing-label">Total</ion-col>
+    </ion-row>
+    <ion-row class="row-concept ts-14" *ngFor="let concept of section.concepts">
+      <ion-col [ngClass]="concept.description == 'ERROR' ? 'error' : 'ion-text-start ts-12' ">{{
+        concept.description | titlecase
+      }}</ion-col>
+      <ion-col [ngClass]="concept.description == 'ERROR' ? 'error' : '' ">{{ concept.sqlf }}</ion-col>
+      <ion-col [ngClass]="concept.description == 'ERROR' ? 'error' : '' ">{{ concept.coverage_description ?? concept.coverage }}</ion-col>
+      <ion-col>{{ concept.quantity ?? 0 | number }}</ion-col>
+      <ion-col>{{ concept.unit | titlecase }}</ion-col>
+      <ion-col [ngClass]="concept.description == 'ERROR' ? 'error' : '' ">{{ concept.price ?? 0 | currency }}</ion-col>
+      <ion-col>{{ concept.total ?? 0 | currency }}</ion-col>
+    </ion-row>
+  </div>
+  <div *ngIf="tableData.sections.length == 0" class="divider-line"></div>
+  <ion-row *ngFor="let total of tableData.totals" class="total-row">
+    <ion-col size="4" offset="6" class="total-concept">{{
+      total.description | titlecase
+    }}</ion-col>
+    <ion-col size="2">{{
+      total.description === 'Quantity' || total.description.includes('Qty')
+        ? (total.value ?? 0 | number)
+        : (total.value ?? 0 | currency)
+    }}</ion-col>
+  </ion-row>
+</ion-grid>

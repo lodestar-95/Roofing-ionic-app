@@ -1,0 +1,9 @@
+
+.lbl_gray{
+    --ion-color-contrast: var(--color-gray) !important;
+}
+
+ion-item {
+    border-radius: 8px;
+    --min-height: 5vh;
+}

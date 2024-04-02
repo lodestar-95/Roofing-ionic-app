@@ -1,0 +1,92 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title mode="md" class="roofing-large-title sf-pro-bold"> Home </ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      mode="ios"
+      class="sf-pro-bold roofing-label"
+      [(ngModel)]="searchText"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="openFilterModal()">
+        <ion-icon class="filter-icon" name="filter" color="dark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-item lines="none" class="sf-pro-regular item-s">
+    <ion-segment
+      mode="ios"
+      type="reset"
+      value="pending-acceptance"
+      mode="ios"
+      (ionChange)="segmentChanged($event)">
+      <ion-segment-button
+        class="roofing-subtitble segment-text"
+        value="pending-acceptance">
+        <ion-label
+          >Leads          <ion-text color="tertiary"
+            >({{listPendingAcceptance.length}})</ion-text
+          ></ion-label
+        >
+      </ion-segment-button>
+      <!--      <ion-segment-button
+        class="roofing-subtitble segment-text"
+        value="acceptance-in-progress">
+        <ion-label
+          >Acceptance in progress
+          <ion-text color="tertiary"
+            >({{listAcceptanceInProgress.length}})</ion-text
+          ></ion-label
+        >
+      </ion-segment-button>
+    -->
+      <ion-segment-button class="roofing-subtitble segment-text" value="acepted">
+        <ion-label
+          >Acepted
+          <ion-text color="secondary">({{listAcepte.length}})</ion-text></ion-label
+        >
+      </ion-segment-button>
+
+      <ion-segment-button class="roofing-subtitble segment-text" value="rejected">
+        <ion-label
+          >Declined
+          <ion-text color="tertiary">({{listRejected.length}})</ion-text>
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-item>
+
+  <app-prospecting-list
+    [searchText]="searchText"
+    [projects]="listPendingAcceptance"
+    [daysProposalDelayed]="daysProposalDelayed"
+    [idUserRole]="idUserRole"
+    *ngIf="segment === 'pending-acceptance'">
+  </app-prospecting-list>
+  <app-prospecting-list
+    [searchText]="searchText"
+    [projects]="listAcceptanceInProgress"
+    [daysProposalDelayed]="daysProposalDelayed"
+    [idUserRole]="idUserRole"
+    *ngIf="segment === 'acceptance-in-progress'">
+  </app-prospecting-list>
+  <app-prospecting-list
+    [searchText]="searchText"
+    [projects]="listAcepte"
+    [daysProposalDelayed]="daysProposalDelayed"
+    [idUserRole]="idUserRole"
+    *ngIf="segment === 'acepted'"></app-prospecting-list>
+  <app-prospecting-list
+    [searchText]="searchText"
+    [projects]="listRejected"
+    [daysProposalDelayed]="daysProposalDelayed"
+    [idUserRole]="idUserRole"
+    *ngIf="segment === 'rejected'"></app-prospecting-list>
+</ion-content>

@@ -1,0 +1,19 @@
+ion-content {
+    --padding-start: 40px;
+    --padding-end: 40px;
+    --padding-top: 40px;
+    --padding-bottom: 40px;
+    --background: var(--ion-color-light);
+    --backdrop-opacity: 0;
+}
+ion-textarea{
+    height: 400px;
+    --border-style: none;
+}
+
+.textarea-wrapper.sc-ion-textarea-ios, textarea {
+    height: 100% !important;
+}
+.button-padding{
+    padding-top: 20px;
+}

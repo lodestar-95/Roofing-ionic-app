@@ -1,0 +1,100 @@
+<div [class.div-disabled]="roofSlopesActive || userDisabledPermision">
+  <ion-grid disabled="true">
+    <ion-row class="row-title">
+      <ion-col size="3"></ion-col>
+
+      <ion-col size="6">
+        <ion-grid>
+          <ion-row class="row-title">
+            <ion-col>
+              <div class="modal-title-padding">
+                <ion-label class="roofing-title">Roof slopes</ion-label>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let slope of psb_slopes">
+            <ion-col>
+              <ion-item
+                (click)="openModalRoofSlope(slope)"
+                lines="none"
+                color="light"
+                class="roofing-label sf-pro-regular"
+                button>
+                {{ slope.name }}
+              </ion-item>
+              <ion-item style="--inner-padding-end: 0px" class="detail-padding">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="ion-no-padding">
+                      <ion-label class="roofing-subtitble sf-pro-regular">
+                        <ion-text>Pitch {{ slope.pitch }}/12 </ion-text>
+                        <ion-text>Area {{ slope.shingle_area }} SQ</ion-text>
+                      </ion-label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="ion-no-padding">
+                      <ion-label
+                        style="text-transform: uppercase"
+                        class="roofing-title-popup sf-pro-regular"
+                        color="medium">
+                        <ion-text *ngIf="jobType == 13 || jobType == 16"
+                          >{{ slope.layers }} layers</ion-text
+                        >
+                        <ion-text *ngIf="jobType == 13 || jobType == 16">/</ion-text>
+                        <ion-text>Floor {{ slope.floor }}</ion-text>
+                      </ion-label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="ion-no-padding">
+                      <ion-label class="roofing-subtitble sf-pro-regular">
+                        <ion-text
+                          *ngIf="jobType == 13 && slope.osb_area && slope.osb_area > 0"
+                          style="text-transform: uppercase">
+                          OSB {{ slope.osb_area }} SQ
+                        </ion-text>
+                        <ion-text
+                          *ngIf="psb_slopes.length > 1"
+                          style="float: right"
+                          color="tertiary"
+                          (click)="openModalDelete(slope)"
+                          >Delete</ion-text
+                        >
+                      </ion-label>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="auto">
+              <ion-item
+                lines="none"
+                class="align-center"
+                (click)="openModalRoofSlope(null)">
+                <ion-icon color="primary" name="add-outline"></ion-icon>
+                <ion-label color="primary" class="roofing-subtitble"
+                  >Add new Roof slope</ion-label
+                >
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+
+      <ion-col size="3"></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-layers-list
+    *ngIf="(jobType == 13 || jobType == 16) && psb_slopes.length > 0"
+    [maxLayers]="maxLayers"></app-layers-list>
+</div>
+
+<app-verified-information
+  [class.div-disabled]="userDisabledPermision || buildingVerified"
+  [isVerified]="roofSlopesActive"
+  (optionEmited)="onVerifiedCheked($event)">
+</app-verified-information>

@@ -1,0 +1,19 @@
+{
+    "general": [
+        {
+            "key" : "days_proposal_delayed",
+            "value" : "3",
+            "id" : 1
+        },
+        {
+            "key" : "hotel_id",
+            "value" : "1",
+            "id" : 2
+        },
+        {
+            "key" : "airBnB_id",
+            "value" : "2",
+            "id" : 3
+        }
+    ]
+}

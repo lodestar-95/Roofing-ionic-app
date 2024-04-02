@@ -1,0 +1,365 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import '~@ionic/angular/css/core.css';
+
+/* Basic CSS for apps built with Ionic */
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+
+@font-face {
+  font-family: SFProDisplay;
+  src: url('assets/fonts/SF-Pro-Text-Bold.otf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+@font-face {
+  font-family: SFProDisplay;
+  src: url('assets/fonts/SF-Pro-Text-Light.otf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+@font-face {
+  font-family: SFProDisplay;
+  src: url('assets/fonts/SF-Pro-Text-Medium.otf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+@font-face {
+  font-family: SFProDisplay;
+  src: url('assets/fonts/SF-Pro-Text-Regular.otf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+@font-face {
+  font-family: SFProDisplay;
+  src: url('assets/fonts/SF-Pro-Text-Semibold.otf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+.content-bg {
+  background-image: url(./assets/imgs/loginBg@3x.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  --background: transparent;
+  --padding-bottom: 0vh;
+  --padding-end: 0vh;
+  --padding-start: 0vw;
+  --padding-top: 0vw;
+}
+
+.roofing-button {
+  font-size: 17px;
+  width: 100%;
+  --border-radius: 8px;
+  height: auto;
+  --padding-bottom: 1.4vh;
+  --padding-top: 1.4vh;
+  margin: 0px;
+  font-family: var(--font-sf-pro-bold);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.btn-container {
+  margin-top: 0.9985vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.btn-container-forget {
+  margin-top: 0vh;
+
+  ion-button {
+    color: var(--ion-color-primary);
+    width: 100%;
+  }
+}
+
+ion-modal.delete {
+  --width: 50%;
+  --height: 25%;
+}
+ion-modal.delete-border {
+  --height: 300px;
+  --width: 450px;
+  .ion-page {
+    border: 3px solid var(--ion-color-tertiary);
+  }
+}
+
+ion-modal.building {
+  --width: 70%;
+  --height: 69%;
+}
+
+ion-modal.modal-sm {
+  --width: 70%;
+  --height: 42%;
+}
+
+ion-modal {
+  .modal-container {
+    margin: 4vh 10vw;
+  }
+  .modal-title-padding ion-label {
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
+  .button-padding {
+    padding-top: 3vh;
+  }
+}
+
+.btn-container > ion-button .button-native {
+  background: transparent;
+}
+
+.item-interactive.ion-invalid,
+.item-interactive.ion-valid {
+  --highlight-background: var(--ion-color-primary);
+  --show-full-highlight: 0;
+  --border-width: 0;
+}
+
+.item-interactive.ion-invalid.ion-touched {
+  --border-color: var(--ion-color-danger);
+}
+
+.alert-custom .alert-wrapper {
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  --background: rgba(242, 242, 242, 0.8);
+}
+
+.large-title {
+  width: 192px;
+  height: 41px;
+  margin: 9px 0 0 24px;
+  font-family: SFPro;
+  font-size: 34px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  color: var(--label-1-primary);
+}
+
+.content-form {
+  ion-icon {
+    color: var(--color-gray);
+  }
+  ion-item {
+    --background: var(--ion-color-light);
+    --padding-start: 0px;
+    --inner-padding-start: 10px;
+  }
+  .p-error {
+    color: var(--ion-color-danger);
+    font-size: 11px;
+    margin-block-start: 0.25em;
+    margin-block-end: 0.25em;
+    text-align: left;
+  }
+  ion-col {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+  .label-fixed {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 10.888888vw;
+    -ms-flex: 0 0 10.888888vw;
+    flex: 0 0 10.888888vw;
+    width: 10.888888vw;
+    min-width: 10.888888vw;
+  }
+}
+
+.settings {
+  --width: 50vw;
+  --backdrop-opacity: 0.4;
+  popover-content {
+    top: -10px !important;
+  }
+  ion-list {
+    ion-list-header {
+      padding-left: 0px;
+      padding-inline-start: 0px;
+      text-align: center;
+      color: var(--color-text-gray);
+      ion-label {
+        margin-top: 0.7rem;
+        margin-bottom: 0.4rem;
+      }
+    }
+    ion-item {
+      --padding-start: 0px;
+      --inner-padding-end: 0px;
+      --min-height: 56px;
+      text-align: center;
+    }
+    .option-default {
+      --min-height: auto;
+      ion-label {
+        margin: 0px 0px 1.8rem 0px;
+        color: var(--color-gray) !important;
+      }
+    }
+  }
+}
+
+.item-error {
+  --min-height: 2.2vh;
+  --inner-padding-end: 0px;
+  ion-label {
+    margin-top: 0px;
+    margin-bottom: 3px;
+    margin-right: 0px;
+    text-align: right;
+  }
+}
+
+.bg-color-gray {
+  --background: var(--color-bg-gray);
+}
+
+.div-disabled {
+  pointer-events: none;
+  opacity: 0.7;
+  cursor: default;
+  .roofing-subtitle-not-requiered {
+    color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.4);
+  }
+}
+
+ion-accordion.accordion-animated > [slot='header'] .ion-accordion-toggle-icon {
+  margin-inline: 0px;
+}
+
+/* iPads (portrait & landscape) */
+//@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+.roofing-large-title {
+  font-size: 200% !important; //34px
+}
+
+.roofing-title {
+  font-size: 164.7% !important; //28px
+}
+
+.roofing-subtitble {
+  font-size: 88.23% !important; //15px
+}
+
+.roofing-large-subtitle {
+  font-size: 141.17% !important; //24px
+}
+
+.roofing-error {
+  font-size: 64.7% !important; //11px
+}
+
+.roofing-title-popup {
+  font-size: 76.47% !important; // 13px
+}
+.roofing-option-popup {
+  font-size: 117.64% !important; // 20px
+}
+
+.roofing-label,
+.roofing-button {
+  font-size: 100% !important; //17px;
+}
+
+.segment-text {
+  font-size: 76% !important; //15px
+}
+//}
+
+// Modal sizes
+//@media screen and (max-width: 768px) {
+ion-modal.fullscreen {
+  --width: 90%;
+  --height: 90%;
+}
+
+ion-modal.screen-300 {
+  --height: 300px;
+}
+
+ion-modal.screen-400 {
+  --height: 400px;
+}
+
+ion-modal.screen-350 {
+  --height: 350px;
+}
+
+ion-modal.screen-450 {
+  --height: 450px;
+}
+
+ion-modal.screen-500 {
+  --height: 500px;
+}
+
+ion-modal.screen-550 {
+  --height: 550px;
+}
+
+ion-modal.screen-650 {
+  --height: 650px;
+}
+
+ion-modal.screen-750 {
+  --height: 750px;
+}
+
+ion-modal.mediascreen {
+  --width: 70%;
+  --height: 80%;
+}
+
+ion-popover.screen-width-400 {
+  --width: 400px;
+}
+
+ion-popover.add-note {
+  --width: 700px;
+}
+//}
+.button-native{
+    font-size: larger;
+    font-weight: 500;
+}
+
+:host .calendar-body .calendar-month .calendar-month-grid .calendar-day   {
+	background: white !important;
+	color: black !important;
+}
+

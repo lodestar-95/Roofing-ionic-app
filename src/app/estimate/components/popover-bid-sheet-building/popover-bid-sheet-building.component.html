@@ -1,0 +1,8 @@
+<ion-list>
+  <ion-radio-group [value]="currentBuildingId">
+    <ion-item *ngFor="let building of activeBuldings" (click)="selectBuilding([building])">
+      <ion-label>{{ building.description }}</ion-label>
+      <ion-radio mode="md" slot="start" [value]="building.id"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+</ion-list>

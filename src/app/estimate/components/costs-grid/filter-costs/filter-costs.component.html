@@ -1,0 +1,37 @@
+<ion-radio-group mode="md" value="brand">
+  <ion-grid class="border-bottom">
+    <ion-row style="margin-left: -25px">
+      <ion-col size-xs="12" size-md="7.5" class="ion-no-padding">
+        <ion-item lines="none">
+          <ion-label slot="end" class="ion-text-nowrap">Order by:</ion-label>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size-xs="12" size-md="2.5" class="ion-no-padding">
+        <ion-item lines="none">
+          <ion-text class="ion-text-nowrap">Lower price</ion-text>
+          <ion-radio
+            value="price"
+            slot="start"
+            class="ion-no-margin"
+            style="margin-right: 10px"
+            (ionFocus)="onOptionChanged('price')"
+          ></ion-radio>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size-xs="12" size-md="2" class="ion-no-padding">
+        <ion-item lines="none">
+          <ion-text class="ion-text-nowrap">Brand</ion-text>
+          <ion-radio
+            value="brand"
+            slot="start"
+            class="ion-no-margin"
+            style="margin-right: 10px"
+            (ionFocus)="onOptionChanged('brand')"
+          ></ion-radio>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-radio-group>

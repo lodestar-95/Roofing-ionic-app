@@ -1,0 +1,186 @@
+<div class="main-content">
+    <app-calendar-component
+        titleDateElement="Select a Date"
+        [isDatePopUpOpen]="isModalOpen"
+        (mdlResponse)="mdlResponsePayload($event)">
+    </app-calendar-component>
+
+  <ion-grid *ngIf="projectBuildings != null">
+    <ion-row class="row-title">
+      <ion-col size="3"></ion-col>
+      <ion-col size="auto" class="icon-col"></ion-col>
+      <ion-col size="auto">
+        <ion-label class="Select-shingle-brand"
+          >Select shingle manufacturers to be estimated</ion-label
+        >
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="justify-content">
+      <ion-col *ngFor="let trademark of trademarks" size="auto">
+        <ion-item
+          lines="none"
+          button
+          (click)="selectCheckBox(trademark.id)"
+          detail="false"
+          [disabled]="isDisabledBrand()">
+          <ion-icon
+            name="square-outline"
+            *ngIf="!trademark.checked"
+            class="ion-padding icon"></ion-icon>
+          <ion-icon
+            name="checkbox"
+            *ngIf="trademark.checked"
+            class="ion-padding icon"
+            color="success"></ion-icon>
+          <ion-label class="Certain-Teed" [ngStyle]="{ color: trademark.color }"
+            >{{ trademark.trademark }}
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="3"></ion-col>
+      <ion-col size="auto" class="icon-col"></ion-col>
+      <ion-col size="auto">
+        <ion-label class="Validity-of-prices-u"
+          >Price list valid until {{ pricesUntilDate }}</ion-label
+        >
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="3"></ion-col>
+      <ion-col size="auto" class="icon-col"></ion-col>
+      <ion-col size="auto">
+        <ion-label class="Expected-acceptance"
+          >Expected acceptance date:
+          <button
+            (click)="openModalDatetime(true)"
+            style="background: none"
+            [disabled]="isDisabledBrand() || !canModifyProposal">
+            <ion-icon color="medium" name="create-outline"></ion-icon>
+            <label class="date">{{ dateTxt }}</label>
+          </button>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="row-title">
+      <ion-col size="3"></ion-col>
+      <ion-col size="auto" class="icon-col"></ion-col>
+      <ion-col size="auto" class="roofing-title">Buildings</ion-col>
+    </ion-row>
+
+    <ion-row *ngFor="let building of projectBuildings">
+      <ion-col size="3"></ion-col>
+
+      <ion-col size="auto" class="icon-col align-center">
+        <button
+          (click)="makeMainBuilding(building.id)"
+          style="background: none"
+          [disabled]="validCheckbox">
+          <ion-icon
+            *ngIf="building.is_main_building"
+            color="primary"
+            name="star"></ion-icon>
+          <ion-icon
+            *ngIf="!building.is_main_building"
+            color="medium"
+            name="star-outline"></ion-icon>
+        </button>
+      </ion-col>
+
+      <ion-col size="4" class="border-bottom align-center">
+        <button
+          (click)="showBuildings(false, building)"
+          style="background: none">
+          <ion-label color="primary" class="roofing-label sf-pro-regular fs-l"
+            >{{ building.description }}
+            <ion-text
+              color="medium"
+              class="roofing-subtitble sf-pro-regular"
+              *ngIf="building.is_main_building">
+              Main building</ion-text
+            >
+          </ion-label>
+        </button>
+      </ion-col>
+
+      <ion-col size="1" class="icon-col border-bottom align-center">
+        <button
+          (click)="openModalBuilding(building)"
+          style="background: none"
+          [disabled]="validCheckbox || userDisabledPermision">
+          <ion-icon color="medium" name="create-outline"></ion-icon>
+        </button>
+      </ion-col>
+
+      <ion-col size="1" class="border-bottom align-center delete">
+        <button
+          (click)="openModalDelete(building)"
+          style="background: none"
+          [disabled]="validCheckbox || userDisabledPermision">
+          <ion-label
+            *ngIf="!building.is_main_building"
+            class="roofing-subtitble"
+            color="tertiary"
+            >Delete</ion-label
+          >
+        </button>
+      </ion-col>
+
+      <ion-col
+        size="1"
+        *ngIf="building.psb_measure?.isAllSegmentsVerified"
+        class="icon-col ion-no-border align-center">
+        <ion-icon
+          name="checkmark-outline"
+          class="icon_success"
+          color="secondary"></ion-icon>
+      </ion-col>
+
+      <ion-col size="2"></ion-col>
+    </ion-row>
+    <ion-row class="row-button">
+      <ion-col size="3"></ion-col>
+      <ion-col size="auto" class="icon-col"></ion-col>
+      <ion-col size="auto">
+        <button
+          class="align-center"
+          (click)="openModalBuilding()"
+          style="background: none"
+          [disabled]="validCheckbox || userDisabledPermision">
+          <ion-icon color="primary" name="add-outline"></ion-icon>
+          <ion-label color="primary" class="roofing-subtitble"
+            >Add new building</ion-label
+          >
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
+<div class="bottom-container">
+  <div class="btn-container">
+    <ion-button
+      [disabled]="!validCheckbox"
+      (click)="gotoGenerate()"
+      color="primary"
+      class="roofing-button single-click">
+      Go To Estimate
+    </ion-button>
+    <ion-item lines="none" button (click)="onVerifiedCheked()" detail="false" [disabled]="(!canModifyProposal || userDisabledPermision) && !alwaysAllowModification">
+      <ion-icon
+        name="square-outline"
+        *ngIf="!validCheckbox"
+        class="ion-padding icon"></ion-icon>
+      <ion-icon
+        name="checkbox"
+        *ngIf="validCheckbox"
+        class="ion-padding icon"
+        color="success"></ion-icon>
+      <ion-label class="ion-text-nowrap">Verified information</ion-label>
+    </ion-item>
+  </div>
+</div>

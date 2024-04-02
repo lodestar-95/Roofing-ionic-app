@@ -1,0 +1,18 @@
+ion-toolbar{
+    --background: white:
+}
+
+::-webkit-scrollbar, *::-webkit-scrollbar {
+    display: none !important;
+    overflow: hidden;
+}
+
+ion-segment-button {
+    --indicator-color: white;
+    --color-checked: dark;
+}
+
+
+.p-accepted{
+    background-color: darkgray;
+}

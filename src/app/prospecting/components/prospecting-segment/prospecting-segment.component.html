@@ -1,0 +1,66 @@
+<ion-segment
+  (ionChange)="segmentChanged($event)"
+  [value]="segment"
+  *ngIf="projectShingleBuilding"
+  mode="md"
+  scrollable>
+  <!-- General -->
+  <ion-segment-button value="general">
+    <ion-label [color]="generalActive ? 'secondary' : ''"> General</ion-label>
+  </ion-segment-button>
+
+  <!-- Roof Slopes -->
+  <ion-segment-button value="roof-slopes" [disabled]="!generalActive">
+    <ion-label [color]="roofSlopesActive ? 'secondary' : ''"> Roof Slopes</ion-label>
+  </ion-segment-button>
+
+  <!-- Details -->
+  <ion-segment-button value="details" [disabled]="!roofSlopesActive || !generalActive">
+    <ion-label [color]="detailsActive ? 'secondary' : ''">Details</ion-label>
+  </ion-segment-button>
+
+  <!-- Other measures -->
+  <ion-segment-button
+    value="other-measures"
+    [disabled]="!roofSlopesActive || !generalActive">
+    <ion-label [color]="otherMeasuresActive ? 'secondary' : ''">Other measures</ion-label>
+  </ion-segment-button>
+
+  <!-- Options -->
+  <ion-segment-button value="options" [disabled]="!generalActive">
+    <ion-label [color]="optionsActive ? 'secondary' : ''">Options</ion-label>
+  </ion-segment-button>
+
+  <!-- Upgrade -->
+  <ion-segment-button value="upgrade" [disabled]="!roofSlopesActive || !generalActive">
+    <ion-label [color]="upgradesActive ? 'secondary' : ''">Upgrades</ion-label>
+  </ion-segment-button>
+
+  <!-- Selection -->
+  <ion-segment-button value="selection" [disabled]="!upgradesActive || !generalActive">
+    <ion-label [color]="selectionActive ? 'secondary' : ''">Selection</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<app-general-segment
+  *ngIf="segment === 'general'"
+  (changeSegmentEmmited)="changeSegment($event)"></app-general-segment>
+<app-roof-slopes-list
+  *ngIf="segment === 'roof-slopes'"
+  (changeSegmentEmmited)="changeSegment($event)"></app-roof-slopes-list>
+<app-other-measures-segment
+  *ngIf="segment === 'other-measures'"
+  (changeSegmentEmmited)="changeSegment($event)"></app-other-measures-segment>
+<app-details-segment
+  *ngIf="segment === 'details'"
+  (changeSegmentEmmited)="changeSegment($event)"></app-details-segment>
+<app-options-segment
+  *ngIf="segment === 'options'"
+  (changeSegmentEmmited)="changeSegment($event)"></app-options-segment>
+<app-upgrades-segment
+  *ngIf="segment === 'upgrade'"
+  (changeSegmentEmmited)="changeSegment($event)"></app-upgrades-segment>
+<app-selection-segment
+  *ngIf="segment === 'selection'"
+  (showBuildingsEmmited)="showBuiildings()"
+  (changeSegmentEmmited)="changeSegment($event)"></app-selection-segment>

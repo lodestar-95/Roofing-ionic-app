@@ -1,0 +1,11 @@
+::-webkit-scrollbar, *::-webkit-scrollbar {
+    display: none !important;
+    overflow: hidden;
+}
+
+ion-segment-button {
+    --indicator-color: black;
+    --color-checked: black;
+    text-transform: capitalize;
+}
+

@@ -1,0 +1,40 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <!-- <ion-title>message</ion-title> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-slides [options]="sliderOpts">
+    <ion-slide>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <img src="../../../../assets/imgs/eHRoofingLogoBlue.png" />
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-label class="sf-pro-bold roofing-title">{{ message.title }}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label class="sf-pro-semibold roofing-subtitble">{{ message.subTitle }}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row style="padding-top: 10px;">
+          <ion-col>
+            <ion-icon *ngIf="message.icon === 'success'" size="large" name="checkmark-circle-outline" class="icon-success"></ion-icon>
+            <ion-icon *ngIf="message.icon !== 'success'" size="large" name="sad-outline" class="icon-error"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ion-slide>
+  </ion-slides>
+
+</ion-content>

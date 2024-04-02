@@ -1,0 +1,45 @@
+<ion-content>
+  <form #form="ngForm">
+    <ion-item lines="none" class="ion-no-padding padding-left">
+      <ion-label class="roofing-title">Parameters</ion-label>
+    </ion-item>
+
+    <ion-list>
+      <ion-radio-group name="auto" [value]="option" mode="md">
+        <ion-item lines="none" class="ion-no-padding padding-left">
+          <ion-label>Price type</ion-label>
+        </ion-item>
+
+        <ion-item
+          lines="none"
+          class="padding-left"
+          *ngFor="let item of costTypes"
+        >
+          <ion-label>{{ item.cost_type }}</ion-label>
+          <ion-radio
+            slot="start"
+            [value]="item.id"
+            (ionBlur)="changeOption(item)"
+          ></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </form>
+
+  <ion-button fill="clear" shape="round" *ngIf="false">
+    Advance
+  </ion-button>
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <ion-item class="padding-left" style="padding-right: 38px">
+    <ion-button
+      class="sf-pro-semibold roofing-button"
+      expand="block"
+      color="primary"
+      (click)="onConfirm()"
+    >
+      Accept
+    </ion-button>
+  </ion-item>
+</ion-footer>

@@ -1,0 +1,115 @@
+<ion-content>
+  <form #form="ngForm">
+    <ion-item lines="none" class="ion-no-padding padding-left">
+      <ion-label class="roofing-title">Options</ion-label>
+    </ion-item>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-no-padding padding-left">
+            <ion-textarea
+              name="name"
+              [(ngModel)]="name"
+              placeholder="Name"
+              maxlength="100"
+              required></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-md="8" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-text class="ion-text-nowrap">Time</ion-text>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="4" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              name="time"
+              [(ngModel)]="time"
+              (ngModelChange)="calculateTotal()"
+              class="ion-text-right"
+              type="number"
+              pattern="^[1-9][0-9]{1,2}$|^\d$"
+              maxlength="3"
+              placeholder="00"
+              required></ion-input>
+            <ion-label slot="end">Hrs</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-md="8" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-label>Price per hour</ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="4" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              name="price"
+              [(ngModel)]="price"
+              maxlength="7"
+              (ngModelChange)="calculateTotal()"
+              type="number"
+              pattern="^\d{0,4}(\.\d{1,2})?$"
+              placeholder="00"
+              required></ion-input>
+            <ion-label slot="start" class="ion-text-end">$</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-md="8" size-xs="7">
+          <ion-item lines="none" class="ion-no-padding padding-left">
+            <ion-label>Total</ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="4" size-xs="5">
+          <ion-item color="light" lines="none">
+            <ion-input
+              name="total"
+              disabled
+              [(ngModel)]="total"
+              type="number"
+              pattern="^\d{0,4}(\.\d{1,2})?$"
+              placeholder="00"
+              required></ion-input>
+            <ion-label slot="start" class="ion-text-end">$</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-list>
+        <ion-item
+          *ngFor="let option of options"
+          lines="none"
+          class="ion-no-padding padding-left">
+          <ion-checkbox
+            [name]="option.name"
+            slot="start"
+            [(ngModel)]="option.isChecked"
+            (ngModelChange)="optionSelcted(option)"></ion-checkbox>
+          <ion-label>{{ option.val }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-grid>
+  </form>
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <ion-item>
+    <ion-button
+      class="sf-pro-semibold roofing-button"
+      expand="block"
+      color="primary"
+      (click)="confirm()"
+      [disabled]="!isValidForm(form)">
+      Accept
+    </ion-button>
+  </ion-item>
+</ion-footer>

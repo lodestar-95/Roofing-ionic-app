@@ -1,0 +1,8 @@
+{
+  "name": "roofing",
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
+  "type": "angular"
+}
