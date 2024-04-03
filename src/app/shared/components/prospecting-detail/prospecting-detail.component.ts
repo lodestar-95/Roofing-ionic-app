@@ -11,6 +11,7 @@ import { Project } from 'src/app/models/project.model';
 import { ProjectsService } from 'src/app/services/projects.service';
 import { PopoverProspectingVersionComponent } from '../../../prospecting/components/popover-prospecting-version/popover-prospecting-version.component';
 import { Subscription } from 'rxjs';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 @Component({
   selector: 'app-prospecting-detail',
@@ -253,6 +254,8 @@ export class ProspectingDetailComponent implements OnInit {
 
   goToMaps(adress: string){
     adress = adress.replace(' ', '+');
-    window.open('https://www.google.com/maps/place/' + adress, '_blank');
+    // window.open('https://www.google.com/maps/place/' + adress, '_blank');
+    const url = `https://www.google.com/maps/place/${encodeURIComponent(adress)}`;
+    InAppBrowser.create(url, '_system');
   }
 }
