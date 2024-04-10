@@ -234,7 +234,8 @@ export class ModalAcceptanceComponent implements OnInit {
     loading.dismiss();
     await this.presentToastOk();
     this.modalCtrl.dismiss({
-        redirect: true
+        redirect: true,
+        saveDb:true
     });
   }
 
@@ -294,6 +295,9 @@ export class ModalAcceptanceComponent implements OnInit {
       component: PopoverGroupColorsComponent,
       event,
       side: 'top',
+      size:'auto',
+      mode:'md',
+      alignment:'center',
       componentProps: {
         colors
       }

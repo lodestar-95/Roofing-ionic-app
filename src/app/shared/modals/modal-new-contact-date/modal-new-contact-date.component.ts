@@ -90,7 +90,10 @@ export class ModalNewContactDateComponent implements OnInit {
         this.projectService.update(id_project, { ...this.project, project_contact_dates });
         this.presentToastOk();
     }
-    this.modal.dismiss();
+    this.modal.dismiss({
+        redirect: false,
+        saveDb:true
+    });
   }
 
   /** */

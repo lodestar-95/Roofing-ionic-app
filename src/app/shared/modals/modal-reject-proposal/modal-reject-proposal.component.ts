@@ -70,7 +70,8 @@ export class ModalRejectProposalComponent implements OnInit {
     this.projectService.update(project.id, project)
     await this.presentToastOk()
     this.modalCtrl.dismiss({
-        redirect: true
+        redirect: true,
+        saveDb:true
     });
   }
   /**

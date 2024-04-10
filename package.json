@@ -111,7 +111,8 @@
         "ANDROIDX_WEBKIT_VERSION": "1.4.0"
       },
       "cordova-plugin-email-composer": {},
-      "cordova-plugin-media-capture": {}
+      "cordova-plugin-media-capture": {},
+      "cordova-plugin-inappbrowser": {}
     },
     "platforms": [
       "ios",

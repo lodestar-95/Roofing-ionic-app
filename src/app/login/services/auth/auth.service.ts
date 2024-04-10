@@ -219,7 +219,7 @@ export class AuthService {
   getAuthUser(): Promise<User> {
     return new Promise((resolve, reject) => {
       this.repository.findAll().then((result) => {
-        if (result.data?.length > 0) {
+        if (result?.data?.length > 0) {
           resolve(result.data[0]);
         } else {
           resolve(null);

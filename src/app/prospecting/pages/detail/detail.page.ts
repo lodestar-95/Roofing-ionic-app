@@ -11,6 +11,7 @@ import { Building } from 'src/app/models/building.model';
 import { ModalNewContactDateComponent } from 'src/app/shared/modals/modal-new-contact-date/modal-new-contact-date.component';
 import { ModalRejectProposalComponent } from 'src/app/shared/modals/modal-reject-proposal/modal-reject-proposal.component';
 import { ModalAcceptanceComponent } from 'src/app/shared/modals/modal-acceptance/modal-acceptance.component';
+import { SyncProjectsService } from 'src/app/services/sync-projects.service';
 
 @Component({
   selector: 'app-detail',
@@ -35,7 +36,8 @@ export class DetailPage implements OnInit, OnDestroy {
     private modalController: ModalController,
     private store: Store<AppState>,
     private menu: MenuController,
-    private routerOutlet: IonRouterOutlet
+    private routerOutlet: IonRouterOutlet,
+    private synProjects: SyncProjectsService
   ) {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'));
     localStorage.setItem('idProject', this.id + '');
@@ -114,6 +116,13 @@ export class DetailPage implements OnInit, OnDestroy {
       component: ModalNewContactDateComponent,
       cssClass: 'small-screen',
     });
+
+    modal.onDidDismiss().then((data) => {
+        if (data?.data?.saveDb) {
+            setTimeout(() => { this.synProjects.syncOffline();}, 500);
+        }
+    });
+
     await modal.present();
   }
   /**
@@ -127,6 +136,9 @@ export class DetailPage implements OnInit, OnDestroy {
     });
     // Escuchar el evento cuando se cierra la modal
     modal.onDidDismiss().then((data) => {
+        if (data?.data?.saveDb) {
+            setTimeout(() => { this.synProjects.syncOffline();}, 500);
+        }
         if (data?.data?.redirect) {
           this.router.navigate(['/home/prospecting']);
         }
@@ -144,11 +156,14 @@ export class DetailPage implements OnInit, OnDestroy {
         cssClass: 'fullscreen',
       });
       // Escuchar el evento cuando se cierra la modal
-    modal.onDidDismiss().then((data) => {
-        if (data?.data?.redirect) {
-          this.router.navigate(['/home/prospecting']);
-        }
-    });
+        modal.onDidDismiss().then((data) => {
+            if (data?.data?.saveDb) {
+                setTimeout(() => { this.synProjects.syncOffline();}, 500);
+            }
+            if (data?.data?.redirect) {
+                this.router.navigate(['/home/prospecting']);
+            }
+        });
       await modal.present();
     }
   onBuildingSelected(event) {

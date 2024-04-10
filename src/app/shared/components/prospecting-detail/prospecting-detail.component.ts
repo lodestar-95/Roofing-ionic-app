@@ -255,7 +255,9 @@ export class ProspectingDetailComponent implements OnInit {
   goToMaps(adress: string){
     adress = adress.replace(' ', '+');
     // window.open('https://www.google.com/maps/place/' + adress, '_blank');
-    const url = `https://www.google.com/maps/place/${encodeURIComponent(adress)}`;
-    InAppBrowser.create(url, '_system');
+    const url = `maps://maps.apple.com/?daddr=${encodeURIComponent(adress)}`;
+    //InAppBrowser.create(url, '_system');
+    const browser = InAppBrowser.create(url, '_system');
+    browser.show();
   }
 }

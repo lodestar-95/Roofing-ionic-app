@@ -257,15 +257,16 @@ export class ProspectingPage implements OnInit, OnDestroy {
     this.listRejected = [];
 
     projects.forEach(project => {
+      if (project.st_job_type?.startsWith('Repair')) {
+        return;
+      }
       // Clasificación por estado
       switch (project.project_status?.id) {
         case 1:
-          this.listPendingAcceptance.push(project);
         case 2:
-          this.listPendingAcceptance.push(project);
-          break;
         case 3:
-          this.listAcceptanceInProgress.push(project);
+          this.listPendingAcceptance.push(project);
+          this.listPendingAcceptance.push(project);
           break;
         case 4:
           this.listAcepte.push(project);
@@ -279,7 +280,7 @@ export class ProspectingPage implements OnInit, OnDestroy {
       if (!project.st_job_type?.startsWith('Repair')) {
         // Si no es un trabajo de reparación, y aún no está clasificado, entonces agrégalo a la lista de pendientes de aceptación
         if (project.project_status?.id !== 1 && project.project_status?.id !== 2) {
-          this.listPendingAcceptance.push(project);
+          //this.listPendingAcceptance.push(project);
         }
       }
     });

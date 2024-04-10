@@ -19,10 +19,9 @@ export class ProspectingListComponent implements OnInit {
 
   onClick(project: Project) {
     switch (project.id_project_status){
-      case 4:
-        this.nav.navigateForward(`/home/review-materials/${project.id}`);
-      break;
-
+      //case 4:
+      //  this.nav.navigateForward(`/home/review-materials/${project.id}`);
+      //break;
       default:
       this.nav.navigateForward(`/home/prospecting/detail/${project.id}`);
     }
