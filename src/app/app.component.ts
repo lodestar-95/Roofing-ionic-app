@@ -55,25 +55,25 @@ export class AppComponent {
   }
 
   validateSessionToken() {
-   interval(60000).subscribe(async ()=>{
-    const token = localStorage.getItem('token');
+    interval(60000).subscribe(async () => {
+      const token = localStorage.getItem('token');
 
-    if(!token) return;
+      if (!token) return;
 
-    const isValid = this.jwtService.isDateValid(token);
-    if (!isValid) {
+      const isValid = this.jwtService.isDateValid(token);
+      if (!isValid) {
 
-      const toast = await this.toastController.create({
-        message: 'Session expired',
-        duration: 8000,
-        color: 'dark',
-        position: 'bottom',
-      });
+        const toast = await this.toastController.create({
+          message: 'Session expired',
+          duration: 8000,
+          color: 'dark',
+          position: 'bottom',
+        });
 
-      await toast.present();
-      this.auth.logout();
-      return;
-    }
+        await toast.present();
+        this.auth.logout();
+        return;
+      }
     });
   }
 
@@ -109,6 +109,9 @@ export class AppComponent {
   }
 
   clickOption(menu) {
+    console.log("menu", menu);
+    console.log("project", this.project);
+
     this.menuOptions = this.menuOptions.map((item) => ({
       ...item,
       active: item.id === menu.id ? true : false,
@@ -139,6 +142,7 @@ export class AppComponent {
 
       return;
     }
+
     if (opt == 'Generate proposals' && !verifiedEstimate) {
       if (this.version.is_verified && this.proposalDoesntHaveChanges()) {
         this.nav.navigateForward('home/scope-of-work');
@@ -150,11 +154,10 @@ export class AppComponent {
       return;
     }
 
-
-    if (opt == 'Proposal Preview' && !verifiedEstimate) {
+    if ((opt == 'Proposal Preview' && !verifiedEstimate)) {
       if (this.version.is_verified && this.proposalDoesntHaveChanges()) {
 
-    //this.project = this.activatedRoute.snapshot.queryParams.project;
+        //this.project = this.activatedRoute.snapshot.queryParams.project;
         this.nav.navigateForward('/pdf-viewer-page', {
           queryParams: { project: this.project }
         });

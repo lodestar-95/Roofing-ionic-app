@@ -266,7 +266,6 @@ export class ProspectingPage implements OnInit, OnDestroy {
         case 2:
         case 3:
           this.listPendingAcceptance.push(project);
-          this.listPendingAcceptance.push(project);
           break;
         case 4:
           this.listAcepte.push(project);
