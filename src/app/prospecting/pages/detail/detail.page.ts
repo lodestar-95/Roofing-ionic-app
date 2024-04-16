@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit,EventEmitter,Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonRouterOutlet, MenuController, ModalController } from '@ionic/angular';
 import { Project } from 'src/app/models/project.model';
@@ -13,9 +13,14 @@ import { ModalRejectProposalComponent } from 'src/app/shared/modals/modal-reject
 import { ModalAcceptanceComponent } from 'src/app/shared/modals/modal-acceptance/modal-acceptance.component';
 import { SyncProjectsService } from 'src/app/services/sync-projects.service';
 import { AuthService } from 'src/app/login/services/auth/auth.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { PopoverController } from '@ionic/angular';
+
+// create new version
+import { Version } from 'src/app/models/version.model';
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Component({
   selector: 'app-detail',
@@ -26,19 +31,24 @@ import { PopoverController } from '@ionic/angular';
  * @author: Carlos Rodríguez
  */
 export class DetailPage implements OnInit, OnDestroy {
+  @Output() changeVersionEmited = new EventEmitter<boolean>();
+
   id: number;
   project: Project;
   building: Building;
   showBuilding: boolean = true;
   idUserRole: number;
   showPreview: boolean = false;
-  showMdlAcceptance: boolean = false;
+  showMdlAcceptance: boolean = true;
+  currentUserRoleId: number;
+  currentUserId: number;
+
+  version: Version;
 
   constructor(
     private auth: AuthService,
     private alertController: AlertController,
     private projectService: ProjectsService,
-    private popoverController: PopoverController,
     private router: Router,
     private route: ActivatedRoute,
     private modalController: ModalController,
@@ -69,8 +79,12 @@ export class DetailPage implements OnInit, OnDestroy {
 
       this.auth.getAuthUser().then(user => {
         this.idUserRole = parseInt(user.role.id_role);
+        console.log(this.project.id_project_status);
 
-        this.showMdlAcceptance = ((this.project.id_project_status >= 3 ||  this.idUserRole > 2) && shingle_lines) ? true : false;
+
+        if (this.project.id_project_status === 5 || this.project.id_project_status < 3 || this.idUserRole > 2 || shingle_lines) {
+          this.showMdlAcceptance = false
+        }
       });
       this.showPreview = this.project.id_project_status >= 3 ? true : false;
     });
@@ -82,6 +96,11 @@ export class DetailPage implements OnInit, OnDestroy {
     this.menu.enable(true);
     this.getProject();
     this.routerOutlet.swipeGesture = false;
+
+    this.auth.getAuthUser().then((user) => {
+      this.currentUserRoleId = parseInt(user.role.id_role);
+      this.currentUserId = user.id;
+    });
   }
 
   ngOnDestroy() {
@@ -114,6 +133,12 @@ export class DetailPage implements OnInit, OnDestroy {
       }
     );
   }
+
+  getNextProjectVersion(projectVersion: string) {
+    let versionNumber = +projectVersion.toLowerCase().match(/v(\d+)/)[1];
+    return `V${++versionNumber}-${new Date().toLocaleDateString()}`;
+  }
+
 
   /**
    * Show notes modal
@@ -271,7 +296,98 @@ export class DetailPage implements OnInit, OnDestroy {
       active: false,
     });
   }
-  createVersion() {
-    this.popoverController.dismiss({ createNew: true });
+
+  private createNewVersion(activeVersion: Version) {
+    this.projectService.saveVersion({ ...this.version, active: false, is_current_version: false });
+
+    const lastVersion = this.project.versions[this.project.versions.length - 1];
+    const nextProjectVersion = this.getNextProjectVersion(lastVersion.project_version);
+    const newVersionId = uuidv4();
+
+    return {
+      ...activeVersion,
+      id: newVersionId,
+      project_version: nextProjectVersion,
+      active: true,
+      is_current_version: true,
+      isModified: true,
+      id_cost_type: activeVersion.id_cost_type ?? 1,
+      shingle_lines: activeVersion.shingle_lines.map(x => ({ ...x, id: uuidv4(), id_version: newVersionId, isModified: true })),
+      pv_trademarks: activeVersion.pv_trademarks.map(x => ({ ...x, id: uuidv4(), id_version: newVersionId, isModified: true })),
+      buildings: activeVersion.buildings.map((building) => {
+        const newBuildingId = uuidv4();
+        let newMeasure = null;
+        if (building.psb_measure) {
+          const newMeasureId = uuidv4();
+          const newVerifies = building.psb_measure.psb_verifieds?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newNoRequireds = building.psb_measure.psb_no_requireds?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newSlopes = building.psb_measure.psb_slopes?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newLayers = building.psb_measure.psb_layers?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newOptions = building.psb_measure.psb_options?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newCrickets = building.psb_measure.psb_crickets?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newChimneys = building.psb_measure.psb_chimneys?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newSkylights = building.psb_measure.psb_skylights?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newMaterials = building.psb_measure.psb_selected_materials?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newUpgrades = building.psb_measure.psb_upgrades?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+
+          newMeasure = {
+            ...building.psb_measure,
+            id: newMeasureId,
+            id_project_building: newBuildingId,
+            psb_verifieds: newVerifies,
+            psb_no_requireds: newNoRequireds,
+            psb_slopes: newSlopes,
+            psb_layers: newLayers,
+            psb_options: newOptions,
+            psb_crickets: newCrickets,
+            psb_chimneys: newChimneys,
+            psb_skylights: newSkylights,
+            psb_selected_materials: newMaterials,
+            psb_upgrades: newUpgrades,
+            isModified: true
+          };
+        }
+
+        return { ...building, pb_scopes: [], id: newBuildingId, psb_measure: newMeasure, isModified: true };
+      })
+    };
   }
+
+
+  async clickCreateVersion () {
+    const alert = await this.alertController.create({
+      header: 'Are you sure you want create a new version?',
+      message: 'This proposal was marked as locker',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Accept',
+          handler: () => {
+            this.createVersion();
+          }
+        }
+      ]
+    });
+    await alert.present()
+  }
+
+  async createVersion() {
+    let versions: Version[];
+    const activeVersion = this.project.versions.find(x => x.active);
+    const newVersion = this.createNewVersion(activeVersion);
+
+    versions = [...this.project.versions.map((x) => {
+      return { ...x, active: false, is_current_version: false, isModified: true };
+    }), newVersion];
+
+    const projectUpdated = { ...this.project, versions: versions, isModified: true };
+    await this.projectService.update(this.project.id, projectUpdated);
+    this.changeVersionEmited.emit(true);
+  }
+
 }

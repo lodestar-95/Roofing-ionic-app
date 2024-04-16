@@ -2,6 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { AuthService } from 'src/app/login/services/auth/auth.service';
 import { Version } from 'src/app/models/version.model';
+import { AlertController } from '@ionic/angular';
+import { Project } from 'src/app/models/project.model';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.reducer';
 
 @Component({
   selector: 'app-popover-prospecting-version',
@@ -10,12 +14,16 @@ import { Version } from 'src/app/models/version.model';
 })
 export class PopoverProspectingVersionComponent implements OnInit {
   @Input() versions: Version[];
-  @Input() salesManId:number;
+  @Input() salesManId: number;
   currentVersionId: number;
   currentUserRoleId: number;
   currentUserId: number;
+  project: Project;
 
-  constructor(private popoverController: PopoverController,
+  constructor(
+    private popoverController: PopoverController,
+    private alertController: AlertController,
+    private store: Store<AppState>,
     private auth: AuthService) { }
 
   ngOnInit() {
@@ -43,7 +51,36 @@ export class PopoverProspectingVersionComponent implements OnInit {
     this.popoverController.dismiss(version);
   }
 
-  createVersion() {
-    this.popoverController.dismiss({ createNew: true });
+  async createVersion() {
+
+    this.store.select('projects').subscribe(state => {
+      this.project = state.project;
+
+    });
+
+    if (this.project.id_project_status === 5) {
+      const alert = await this.alertController.create({
+        header: 'Are you sure you want create a new version?',
+        message: 'This proposal was marked as locker',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+            }
+          }, {
+            text: 'Accept',
+            handler: () => {
+              this.popoverController.dismiss({ createNew: true });
+            }
+          }
+        ]
+      });
+      await alert.present()
+    }
+    else
+      this.popoverController.dismiss({ createNew: true });
   }
+
 }
