@@ -48,25 +48,3 @@ ion-icon {
         text-align: start;
     }
 }
-
-
-.offline-toolbar {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important; 
-  height: 30px; /* Adjust the height as needed */
-  min-height: unset;
-  display: flex; /* Use flexbox to easily center the content */
-  align-items: center; /* Vertically center the content */
-  justify-content: center; /* Horizontally center the content */
-}
-
-.offline-title {
-  padding-bottom: 0px !important;
-  padding-top: 0px !important;
-  font-size: 14px; /* Adjust font size as needed */
-  text-align: center !important;
-  width: 100%; /* Ensure the title takes up the full width */
-  line-height: 30px; /* Match this with the toolbar height for vertical centering */
-}
-
-

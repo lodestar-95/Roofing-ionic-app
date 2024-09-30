@@ -5,7 +5,7 @@ import { Sync } from '../shared/interfaces/sync';
 import { PbScope } from './pb-scope.model';
 
 export interface Building extends Sync {
-  id: number;
+  id?: number;
   id_job_material_type: number;
   job_material_type: JobMaterialType;
   description: string;

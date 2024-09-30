@@ -38,11 +38,6 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
   buildingVerified = false;
   withOutRidge:boolean;
   notRequired:boolean = false;
-
-  selectionJobType:number|null = null;
-  selectionWindWarrantyDeclined:boolean = false;
-  selectionHasRidgecap:boolean = false;
-  selectionHasSlopes:boolean = false;
   constructor(
     private store: Store<AppState>,
     private projectService: ProjectsService,
@@ -83,176 +78,63 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
   /**
    * Initial info
    */
-  getJobType(){
-    this.selectionJobType = this.building.id_job_type;
-    return this.building.id_job_type;
+  initData() {
+    this.verifiedActive = this.findResource(12);//Check if the resource is validated.
+    if(!this.isNotRequired()){
+        //Revisamos si existen trademarks
+        if (!this.version?.pv_trademarks) {
+          return;
+        }
+    
+        //recuperamos todos los trademarks que estan seleccionados
+        this.trademarksSelected = this.version.pv_trademarks.filter(
+          (x) => x.selected == true
+        );
+    
+        console.log('this.trademarksSelected', this.trademarksSelected)
+        console.log('this.building.psb_measure.psb_selected_materials', this.building.psb_measure.psb_selected_materials)
+        
+        if (!this.building.psb_measure.psb_selected_materials) {
+          return;
+        }
+        this.isCompleted = this.trademarksSelected?.length > 0;
+        this.trademarksSelected.forEach((element) => {
+          const materials = this.building.psb_measure.psb_selected_materials.filter(
+            (x) => x.id_trademark_shingle == element.id_trademarks
+          );
+    
+          const materialCount = materials.filter(x => !x.deletedAt && x.id_material_category !== 15).length;
+          const hasLowS = this.hasLowSlope();
+          if (
+            materialCount == 3 ||
+            (this.isRidgeVentsDeclined() && materialCount == 2) ||
+            (this.isRidgeVentsDeclined() && this.withOutRidge && materialCount == 1) ||
+            (this.building.psb_measure.id_inwshield_rows == 3 && ((materialCount == 2 && !hasLowS) || (materialCount == 3 && hasLowS))) ||
+            (this.building.psb_measure.id_inwshield_rows == 4 && materialCount == 2) ||
+            ((!hasLowS && this.isOverlay()) && materialCount == 1) ||
+            (hasLowS && this.isOverlay() && materialCount == 2)
+          ) {
+            this.isCompleted = this.isCompleted && true;
+          } else {
+            this.isCompleted = false;
+          }
+        });
+    }
   }
-  getWindWarranty(){
-    const hasWindWarrantyDeclined = this.building.psb_measure.id_inwshield_rows==3?true:false;
-    this.selectionWindWarrantyDeclined = hasWindWarrantyDeclined;
-    return hasWindWarrantyDeclined;
-  }
-  getRidgecap(){
+
+  isNotRequired(){
     if(
         (this.building.psb_measure.ridge_lf && this.building.psb_measure.ridge_lf > 0) ||
         (this.building.psb_measure.hips_lf && this.building.psb_measure.hips_lf > 0)
     ){
         //hay RidgeCap seleccionado, por lo tanto si se requiere la seleccion
-        this.selectionHasRidgecap = true;
-        return true;
-    }
-    return false;
-  }
-  getLowSlope(): boolean {
-    const hasLowSlopes = this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 2 && x.pitch < 4 && !x.deletedAt) ?? false
-    this.selectionHasSlopes = hasLowSlopes
-    return hasLowSlopes;
-  }
-  getStepSlope(): boolean {
-    const hasStepSlopes = this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 4 && !x.deletedAt) ?? false
-    this.selectionHasSlopes = hasStepSlopes;
-    return hasStepSlopes;
-  }
-
-  initData() {
-    this.selectionJobType = this.getJobType();
-    this.selectionWindWarrantyDeclined = this.getWindWarranty();
-    this.selectionHasRidgecap = this.getRidgecap();
-//    this.selectionHasSlopes = this.getLowSlope();
-    this.selectionHasSlopes = this.getStepSlope();
-
-    this.verifiedActive = this.findResource(12);//Check if the resource is validated.
-    if(this.isRequired()){
-        //Revisamos si existen trademarks
-        if (!this.version?.pv_trademarks) {
-          return;
-        }
-
-        //recuperamos todos los trademarks que estan seleccionados
-        console.log('this.version.pv_trademarks', this.version.pv_trademarks)
-        const pv_trademarks = this.removeDuplicateTradeMarks(this.version.pv_trademarks);
-
-        console.log('_pv_trademarks', pv_trademarks)
-        
-        this.trademarksSelected = pv_trademarks.filter(
-          (x) => x.selected == true
-        );
-
-        if (!this.building.psb_measure.psb_selected_materials) {
-          return;
-        }
-
-        const materialSelected = this.removeDuplicateMaterialSelected(this.building.psb_measure.psb_selected_materials);
-
-        this.isCompleted = this.trademarksSelected?.length > 0;
-        this.trademarksSelected.forEach((element) => {
-          const materials = materialSelected.filter(
-            (x) => x.id_trademark_shingle == element.id_trademarks
-          );
-
-          const materialCount = materials.filter(x => !x.deletedAt && x.id_material_category !== 15).length;
-          this.isCompleted = this.validateMaterialCount(materialCount);
-        });
-    }
-  }
-
-  removeDuplicateTradeMarks(arr) {
-    const seen = new Map();
-  
-    return arr.filter(item => {
-      if (seen.has(item.id_trademarks)) {
-        return false;
-      } else {
-        seen.set(item.id_trademarks, true);
-        return true;
-      }
-    });
-  }
-
-  removeDuplicateMaterialSelected(arr) {
-        const seen = new Map();
-
-        return arr.filter(item => {
-            const key = `${item.id_trademark_shingle}-${item.id_material_type_selected}`;
-            if (seen.has(key)) {
-                return false;
-            } else {
-                seen.set(key, true);
-                return true;
-            }
-        });
-    }
-
-
-  validateMaterialCount(materialCount:number){
-    const isThreeMaterials = materialCount == 3;
-    const isRidgeVentsDeclined = this.isRidgeVentsDeclined();
-    const isWithoutRidge = this.withOutRidge;
-    const inwshieldRows = this.building.psb_measure.id_inwshield_rows;
-    const isOverlay = this.isOverlay();
-    const hasLowS = this.hasLowSlope();
-
-    const condition1 = isThreeMaterials;
-    const condition2 = isRidgeVentsDeclined && materialCount == 2;
-    const condition3 = isRidgeVentsDeclined && isWithoutRidge && materialCount == 1;
-    const condition4 = inwshieldRows == 3 && ((materialCount == 2 && !hasLowS) || (materialCount == 3 && hasLowS));
-    const condition5 = inwshieldRows == 4 && materialCount == 2;
-    const condition6 = ((!this.isInWShieldCompleteRoof() && !hasLowS) || isOverlay) && materialCount == 1;
-    const condition7 = (hasLowS || isOverlay) && materialCount == 2;
-
-    if (condition1 || condition2 || condition3 || condition4 || condition5 || condition6 || condition7) {
-        return this.isCompleted && true;
-    } else {
-        return  false;
-    }
-  }
-
-  isRequired(){
-    let needRidgecap = true;
-    let needUnderlayment = true;
-    let needIWShields = true;
-    //RidgeCap
-    if (this.selectionJobType === 16 || !this.selectionHasRidgecap){
-        needRidgecap = false;
-    }
-
-    //Uderlayment
-    /*if (!this.selectionHasSlopes && !this.selectionWindWarrantyDeclined) {
-        needUnderlayment = false;
-    }*/
-    if (!this.selectionHasSlopes) {
-      needUnderlayment = false;
-    }
-
-    if (this.selectionJobType === 16 || this.selectionJobType === 14) {
-        needUnderlayment = false;
-    }
-    if (this.isInWShieldCompleteRoof()) {
-        needUnderlayment = false;
-    }
-
-    //Ice and Water Shields
-    if (this.selectionWindWarrantyDeclined) {
-        needIWShields = false
-    }
-    if (this.selectionJobType === 16 || this.selectionJobType === 14) {
-        needIWShields = false
-    }
-
-    if(needRidgecap || needUnderlayment || needIWShields){
-        return true;
-    }else{
-        //No se requiere
-        this.setAsNoRequired(12)
         return false;
     }
 
-
+    //No se requiere
+    this.setAsNoRequired(12)
+    return true;
   }
-  setAsNoRequired(idResource: number){
-    this.isCompleted = true;
-    this.notRequired = true;
-}
 
   findResource(idResource: number) {
     if (!this.building.psb_measure.psb_verifieds) {
@@ -266,7 +148,11 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
     return verifiedInformation ? verifiedInformation.is_verified : false;
   }
 
-
+  setAsNoRequired(idResource: number){
+        this.isCompleted = true;
+        this.notRequired = true;
+        //this.verifiedActive = true;
+  }
 
   hasLowSlope(): boolean {
     return this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 2 && x.pitch < 4 && !x.deletedAt) ?? false;
@@ -274,9 +160,6 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
 
   isOverlay(): boolean {
     return this.building.id_job_type == 14;
-  }
-  isInWShieldCompleteRoof(): boolean {
-    return this.building.psb_measure.id_inwshield_rows == 4;
   }
 
   /**
@@ -308,7 +191,7 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  
 
   /**
    * Show buildings list

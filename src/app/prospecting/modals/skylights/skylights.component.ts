@@ -389,6 +389,7 @@ export class SkylightsComponent implements OnInit, OnDestroy {
   }
 
   confirm() {
+    console.log('this.skylight', this.skylight)
     if (this.skylight) {
       this.updateSkylight();
     } else {
@@ -439,6 +440,8 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       ...this.psbMeasures,
       psb_skylights: psb_skylights_updated,
     };
+
+    console.log('project_shingle_building update::', psbMeasuresUpdated);
 
     this.projectService.saveProjectShingleBuilding(psbMeasuresUpdated);
     this.modalCtrl.dismiss();

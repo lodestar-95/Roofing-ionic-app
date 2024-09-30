@@ -47,18 +47,24 @@ export class DropboxApiService {
       //await this.createFolderIfNeeded(finalPath);
   
       // Ahora que las carpetas están aseguradas, sube el archivo
+      console.log(`Subir archivo a Carpeta: ${finalPath}`);
       const response = await this.dbx.filesUpload({ path: `${finalPath}/${file.name}`, contents: file });
+      console.log('Archivo subido con éxito', response);
       return response;
     } catch (error) {
+      console.error('Error al subir archivo', error);
       throw error; // Esto permitirá que el error sea capturado por el llamador de la función
     }
   }
 
   async createFolderIfNeeded(path: string): Promise<void> {
     try {
+        console.log(`Crear Carpeta: ${path}`);
       await this.dbx.filesCreateFolderV2({ path });
+      console.log(`Carpeta creada: ${path}`);
     } catch (error) {
       if (error.error && error.error.error_summary.startsWith('path/conflict/folder/')) {
+        console.log(`La carpeta ya existe: ${path}`);
         // La carpeta ya existe, maneja este caso como necesario
       } else {
         // Otro tipo de error

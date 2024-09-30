@@ -43,7 +43,6 @@ import { MaterialCategory } from 'src/app/models/material-category.model';*/
 import { AuthService } from 'src/app/login/services/auth/auth.service';
 import { User } from 'src/app/models/user.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -62,7 +61,6 @@ export class BugsReportModalComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private projectService: ProjectsService,
     private catalogService: CatalogsService,
-    private router: Router,
     //private proposalDescriptionsService: ProposalDescriptionsService,
     //private materialService: MaterialService,
     //private usersService: UsersService,
@@ -130,9 +128,6 @@ export class BugsReportModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm()
 
-
-
-
     this.caption = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
     + this.navParams.data.caption);
 
@@ -155,19 +150,15 @@ export class BugsReportModalComponent implements OnInit, OnDestroy {
    */
   async onConfirm() {
     const { idProject } = localStorage;
-
-    const currentUrl = this.router.url
-    console.log("currentUrl", currentUrl === '/home/prospecting');
-
     let localDBCopy = {}
     let proposal;
-    if (idProject && currentUrl !== '/home/prospecting')
+    if (idProject)
     {
       const { data: project } = await this.projectService.get(idProject)
       localDBCopy['projects'] =  [project]
       proposal = `${project.project_name} ${idProject}`
     } else {
-      proposal = 'N/A';
+      proposal = 'Sin proyecto definido';
     }
 
 

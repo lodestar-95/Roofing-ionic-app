@@ -7,14 +7,14 @@ import { LoadingService } from 'src/app/shared/helpers/loading.service';
   templateUrl: './import-modal.component.html',
   styleUrls: ['./import-modal.component.scss']
 })
-export class ImportModalComponent implements OnInit, OnDestroy  {
+export class ImportModalComponent implements OnInit, OnDestroy {
   bugsReportList: any[] = [];
   selectedBugsReport: any;
-  offset: number = 0;
-  limit: number = 10;
-  hasMore: boolean = true;
+  offset = 0;
+  limit = 10;
+  hasMore = true;
   loading = false;
-  iconHeight:number = 1
+  iconHeight = 1;
 
   constructor(
     private modalController: ModalController,
@@ -29,14 +29,15 @@ export class ImportModalComponent implements OnInit, OnDestroy  {
     this.getBugsReportsList();
   }
 
-  onScroll(event: Event): void {
-    // Get the current scroll position and threshold values.
-    const ionScrollEvent = event as CustomEvent;
+  onScroll(event: any): void {
+    // Get the current scroll position and threshold values
+    console.log(event.detail);
 
-    const scrollTop = ionScrollEvent.detail.scrollTop;
-    const scrollHeight = document.getElementById("reportbugs").scrollHeight 
+    const scrollTop = event.detail.scrollTop;
+    const scrollHeight = document.getElementById('reportbugs').scrollHeight;
+
     // Check if we are near the bottom of the content
-    if (scrollHeight - scrollTop < 1000   && this.hasMore && !this.loading) {
+    if (scrollTop >= 1000 * this.iconHeight && this.hasMore && !this.loading) {
       this.getBugsReportsList();
       this.iconHeight += 1;
     }
@@ -48,7 +49,7 @@ export class ImportModalComponent implements OnInit, OnDestroy  {
     console.log('getBugsReportsList');
 
     const { data } = await this.bugsReportsService.list(this.offset);
-    let newlist = data.map(item => {
+    const newlist = data.map(item => {
       const url = item?.description?.split(' ')[0];
       if (url?.includes('https://ehroofing.atlassian.net/browse/KAN-')) {
         item.url = url;

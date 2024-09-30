@@ -126,8 +126,20 @@ export class BuildingComponent implements OnInit {
   }
 
   saveBuilding() {
+    
+    
+    const lastversion = this.project.versions[this.project.versions.length - 1];
+    let newItemId;
+    try {
+      newItemId = lastversion.buildings[ lastversion.buildings.length - 1].id + 1;
+    } catch (error) {
+      newItemId = 1
+    }
+
+    console.log("newItemId", lastversion.buildings);
+    
     const building: Building = {
-      id: uuidv4(),
+      // id: newItemId,
       id_job_material_type: this.materialType.id,
       job_material_type: this.materialType,
       description: this.buildingForm.get('description').value,

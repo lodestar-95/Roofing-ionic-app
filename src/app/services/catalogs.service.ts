@@ -72,9 +72,6 @@ import { RoleResource } from '../models/role-resource.model';
 import { SyncDateRepository } from '../db/sync-date.repository';
 import { User } from '../models/user.model';
 import { WarrantyType } from '../models/warranty-type.model';
-import Pako from 'pako';
-import { Buffer } from 'buffer';
-
 
 @Injectable({
   providedIn: 'root',
@@ -310,83 +307,71 @@ export class CatalogsService {
    */
   getInitialcatalogs() {
     this.http
-      .get<string>(`${this.url}/catalogs/initial-catalogs`)
+      .get<InitialCatalogs>(`${this.url}/catalogs/initial-catalogs`)
       .subscribe(
-        (res) => {
-          const compressedData = Buffer.from(res, 'base64');
-          const inflatorString = new Pako.Inflate({ to: 'string' });
-          inflatorString.push(compressedData, true);
-          let decompressedData = inflatorString.result as string;
+        (result) => {
+          this.jobTypeRepository.createSeveral(result.jobTypes);
+          this.prospectingMaterialTypeRepository.createSeveral(
+            result.jobMaterialTypes
+          );
+          this.prospectingTypeRepository.createSeveral(result.prospectingTypes);
+          this.warrantyTypeRepository.createSeveral(result.warrantyTypes);
+          this.usersRepository.createSeveral(result.users);
+          this.roleResourcesRepository.createSeveral(result.roleResources);
+          this.inwshieldRowsRepository.createSeveral(result.inwshieldRows);
+          this.costIntegrationsRepository.createSeveral(
+            result.costIntegrations
+          );
+          this.warrantyOptionsRepository.createSeveral(result.warrantyOptions);
+          this.shingleTypesRemovesRepository.createSeveral(
+            result.shingleTypesRemoves
+          );
+          this.measuresMaterialTypeRepository.createSeveral(
+            result.materialTypes
+          );
+          this.wallMaterialsRepository.createSeveral(result.wallMaterial);
+          this.generalRepository.createSeveral(result.general);
+          this.trademarksRepository.createSeveral(result.trademarks);
+          this.materialColorsRepository.createSeveral(result.materialColors);
+          this.groupsRepository.createSeveral(result.groups);
+          this.groupColorsRepository.createSeveral(result.groupColors);
+          this.costTypeRepository.createSeveral(result.costTypes);
+          this.compabilitiesRepository.createSeveral(result.compatibilities);
+          this.expensesRepository.createSeveral(result.expenses);
+          this.upgradesRepository.createSeveral(result.upgrades);
+          this.materialPricesRepository.createSeveral(result.materialPrices);
+          this.conceptTypesRepository.createSeveral(result.conceptTypes);
+          this.laborPricesRepository.createSeveral(result.laborPrices);
+          this.materialUnitsRepository.createSeveral(result.materialUnits);
+          this.suppliersRepository.createSeveral(result.suppilers);
+          this.inspectorCostTypesRepository.createSeveral(result.inspectorCostTypes);
+          this.laborPitchPricesRepository.createSeveral(result.laborPitchPrices);
+          this.warrantiesRepository.createSeveral(result.warranties);
+          this.priceListRepository.createSeveral(result.priceList);
 
-          let result: InitialCatalogs;
-          result = JSON.parse(decompressedData)
-          setTimeout(() => {
-            this.setInitialCatalog(result);
-          }, 500);
+          this.materialCategoryRepository.createSeveral([
+            {
+              id: 7,
+              material_category: 'Flat Ridge Cap Size',
+            },
+            {
+              id: 34,
+              material_category: 'Underlayment',
+            },
+            {
+              id: 30,
+              material_category: 'Ice and Water Shields',
+            },
+            // {
+            //   id: 15,
+            //   material_category: 'Ridge Vent',
+            // },
+          ]);
         },
         (error) => {}
       );
   }
 
-  setInitialCatalog(result: any) {
-    this.jobTypeRepository.createSeveral(result.jobTypes);
-    this.prospectingMaterialTypeRepository.createSeveral(
-      result.jobMaterialTypes
-    );
-    this.prospectingTypeRepository.createSeveral(result.prospectingTypes);
-    this.warrantyTypeRepository.createSeveral(result.warrantyTypes);
-    this.usersRepository.createSeveral(result.users);
-    this.roleResourcesRepository.createSeveral(result.roleResources);
-    this.inwshieldRowsRepository.createSeveral(result.inwshieldRows);
-    this.costIntegrationsRepository.createSeveral(
-      result.costIntegrations
-    );
-    this.warrantyOptionsRepository.createSeveral(result.warrantyOptions);
-    this.shingleTypesRemovesRepository.createSeveral(
-      result.shingleTypesRemoves
-    );
-    this.measuresMaterialTypeRepository.createSeveral(
-      result.materialTypes
-    );
-    this.wallMaterialsRepository.createSeveral(result.wallMaterial);
-    this.generalRepository.createSeveral(result.general);
-    this.trademarksRepository.createSeveral(result.trademarks);
-    this.materialColorsRepository.createSeveral(result.materialColors);
-    this.groupsRepository.createSeveral(result.groups);
-    this.groupColorsRepository.createSeveral(result.groupColors);
-    this.costTypeRepository.createSeveral(result.costTypes);
-    this.compabilitiesRepository.createSeveral(result.compatibilities);
-    this.expensesRepository.createSeveral(result.expenses);
-    this.upgradesRepository.createSeveral(result.upgrades);
-    this.materialPricesRepository.createSeveral(result.materialPrices);
-    this.conceptTypesRepository.createSeveral(result.conceptTypes);
-    this.laborPricesRepository.createSeveral(result.laborPrices);
-    this.materialUnitsRepository.createSeveral(result.materialUnits);
-    this.suppliersRepository.createSeveral(result.suppilers);
-    this.inspectorCostTypesRepository.createSeveral(result.inspectorCostTypes);
-    this.laborPitchPricesRepository.createSeveral(result.laborPitchPrices);
-    this.warrantiesRepository.createSeveral(result.warranties);
-    this.priceListRepository.createSeveral(result.priceList);
-
-    this.materialCategoryRepository.createSeveral([
-      {
-        id: 7,
-        material_category: 'Flat Ridge Cap Size',
-      },
-      {
-        id: 34,
-        material_category: 'Underlayment',
-      },
-      {
-        id: 30,
-        material_category: 'Ice and Water Shields',
-      },
-      // {
-      //   id: 15,
-      //   material_category: 'Ridge Vent',
-      // },
-    ]);
-  }
   /**
    * Get MaterialType catalog
    * @returns
@@ -706,7 +691,7 @@ export class CatalogsService {
     }
 
     createUser(data): void {
-
+      
         this.userRepository.createSeveral(data)
     }
     createUsers(data): void {

@@ -12,6 +12,8 @@ import { PsbSlope } from './psb-slope.model';
 import { PsbLayer } from './psb-layer.model';
 import { PsbSelectedMaterial } from './psb_selected_material.model';
 import { PsbMaterialCalculation } from './psb-material-calculation.model';
+import { PsbLouveredVent } from './psb-louvrevents.model';
+import { PsbSoffitVent } from './psb-soffitvents.model';
 
 export class PsbMeasures implements Sync {
   id?: any;
@@ -44,15 +46,34 @@ export class PsbMeasures implements Sync {
   misc_miscellaneous_dll: number;
   misc_permit_dll: number;
   misc_contingency_fund_dll: number;
+  
+  isVent_modify: boolean;
   vent_j_vent_4_pc: number;
+  vent_j_vent_4_pc_remove: number;
+  vent_j_vent_4_pc_add: number;
   vent_j_vent_6_pc: number;
+  vent_j_vent_6_pc_remove: number;
+  vent_j_vent_6_pc_add: number;
+  
   vent_is_ridgevent_in_place: boolean;
+  vent_is_ridgevent_add: boolean;
+  vent_is_ridgevent_be_replace: boolean;
+
   vent_ridgevent_lf: number;
+  vent_metal_artict: number;
   vent_metal_artict_replace_pc: number;
   vent_metal_artict_remove_pc: number;
   vent_metal_artict_cut_in_pc: number;
+
   vent_solar_power_vent_pc: number;
+  vent_solar_power_vent_pc_add: number;
+  vent_solar_power_vent_pc_remove: number;
+
   vent_power_vent_pc: number;
+  vent_power_vent_pc_add: number;
+  vent_power_vent_pc_remove: number;
+
+  isridgeVent: boolean;
   flash_step_4_4_8_lf: number;
   flash_rolled_metal_20_50_lf: number;
   flash_end_wall_metal_3_5_10_lf: number;
@@ -82,6 +103,8 @@ export class PsbMeasures implements Sync {
   isAllSegmentsVerified?: boolean;
   psb_selected_materials: PsbSelectedMaterial[];
   psb_material_calculations: PsbMaterialCalculation[];
+  psb_louvrevents: PsbLouveredVent
+  psb_soffitvents: PsbSoffitVent
 
   constructor() {
     this.id = null;

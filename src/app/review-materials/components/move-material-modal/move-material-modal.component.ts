@@ -39,6 +39,7 @@ export class MoveMaterialModalComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+    console.log('Material', this.material);
   }
 
   async loadData() {
@@ -114,6 +115,7 @@ export class MoveMaterialModalComponent implements OnInit {
 
     const priceIds = this.priceLists.filter(x => x.id_supplier == this.selectedSupplierId).map(x => '' + x.id); //TODO: check the current list
     const materialPriceList = this.materialPriceLists.find(x => x.id_material == this.material.id_concept && priceIds.includes('' + x.id_price_list))
+    console.log(materialPriceList);
 
     if (materialPriceList)
       this.ngForm.get('price').setValue(materialPriceList.cost);

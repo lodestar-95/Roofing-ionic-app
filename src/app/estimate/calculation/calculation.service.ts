@@ -118,7 +118,7 @@ export class CalculationService {
     const ids = priceListDate.flatMap(dates => dates.id);
     const materialPrices = (await this.catalogsService.getMaterialPrices()).data;
 
-
+    
 
     const custom_skylight_id_material = await this.general.getConstValue('custom_skylight_id_material');
     const materialPrice = materialPrices.filter(material => ids.includes(material.id_price_list) || material.id === custom_skylight_id_material);

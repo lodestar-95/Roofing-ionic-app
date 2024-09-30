@@ -216,34 +216,35 @@ export class ProspectingDetailComponent implements OnInit {
     const newVersionId = uuidv4();
     return {
       ...activeVersion,
-      id: newVersionId,
+      // id: newVersionId,
       project_version: nextProjectVersion,
       active: true,
       is_current_version: true,
       isModified: true,
       id_cost_type: activeVersion.id_cost_type ?? 1,
-      shingle_lines: activeVersion.shingle_lines.map(x => ({ ...x, id: uuidv4(), id_version: newVersionId, isModified: true })),
-      pv_trademarks: activeVersion.pv_trademarks.map(x => ({ ...x, id: uuidv4(), id_version: newVersionId, isModified: true })),
+      shingle_lines: activeVersion.shingle_lines.map(x => ({ ...x, isModified: true })),
+      pv_trademarks: activeVersion.pv_trademarks.map(x => ({ ...x, isModified: true })),
       buildings: activeVersion.buildings.map((building) => {
-        const newBuildingId = uuidv4();
+        // const newBuildingId = uuidv4();
         let newMeasure = null;
         if (building.psb_measure) {
-          const newMeasureId = uuidv4();
-          const newVerifies = building.psb_measure.psb_verifieds?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newNoRequireds = building.psb_measure.psb_no_requireds?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newSlopes = building.psb_measure.psb_slopes?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newLayers = building.psb_measure.psb_layers?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newOptions = building.psb_measure.psb_options?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newCrickets = building.psb_measure.psb_crickets?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newChimneys = building.psb_measure.psb_chimneys?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newSkylights = building.psb_measure.psb_skylights?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newMaterials = building.psb_measure.psb_selected_materials?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
-          const newUpgrades = building.psb_measure.psb_upgrades?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          // const newMeasureId = uuidv4();
+          // const newVerifies = building.psb_measure.psb_verifieds?.map((v) => ({ ...v, id: uuidv4(), id_psb_measure: newMeasureId, isModified: true }));
+          const newVerifies = building.psb_measure.psb_verifieds?.map((v) => ({ ...v, isModified: true }));
+          const newNoRequireds = building.psb_measure.psb_no_requireds?.map((v) => ({ ...v, isModified: true }));
+          const newSlopes = building.psb_measure.psb_slopes?.map((v) => ({ ...v, isModified: true }));
+          const newLayers = building.psb_measure.psb_layers?.map((v) => ({ ...v, isModified: true }));
+          const newOptions = building.psb_measure.psb_options?.map((v) => ({ ...v, isModified: true }));
+          const newCrickets = building.psb_measure.psb_crickets?.map((v) => ({ ...v, isModified: true }));
+          const newChimneys = building.psb_measure.psb_chimneys?.map((v) => ({ ...v, isModified: true }));
+          const newSkylights = building.psb_measure.psb_skylights?.map((v) => ({ ...v, isModified: true }));
+          const newMaterials = building.psb_measure.psb_selected_materials?.map((v) => ({ ...v, isModified: true }));
+          const newUpgrades = building.psb_measure.psb_upgrades?.map((v) => ({ ...v, isModified: true }));
 
           newMeasure = {
             ...building.psb_measure,
-            id: newMeasureId,
-            id_project_building: newBuildingId,
+            // id: newMeasureId,
+            // id_project_building: newBuildingId,
             psb_verifieds: newVerifies,
             psb_no_requireds: newNoRequireds,
             psb_slopes: newSlopes,
@@ -258,7 +259,7 @@ export class ProspectingDetailComponent implements OnInit {
           };
         }
 
-        return { ...building, pb_scopes: [], id: newBuildingId, psb_measure: newMeasure, isModified: true };
+        return { ...building, pb_scopes: [], psb_measure: newMeasure, isModified: true };
       })
     };
   }

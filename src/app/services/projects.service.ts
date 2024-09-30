@@ -18,8 +18,6 @@ import { PsbNoRequired } from '../models/psb_no_required.model';
 import { Version } from '../models/version.model';
 import { AuthService } from '../login/services/auth/auth.service';
 import { User } from '../models/user.model';
-import Pako from 'pako';
-import { Buffer } from 'buffer';
 
 @Injectable({
   providedIn: 'root'
@@ -70,6 +68,7 @@ export class ProjectsService {
     return new Promise((resolve, reject) => {
       this.repository.findAll().then(result => {
         if (result) {
+            console.log('getLocalProjects', result)
           result.data.map(x => {
             this.returnProjectsMaped(x);
           });
@@ -102,51 +101,14 @@ export class ProjectsService {
     return new Promise((resolve, reject) => {
       if (this.networkService.isConnected) {
         this.http
-          .post<ApiResponse<string>>(
-            `${this.url}/projects/getProjects/`,
-            body
-          )
-          // .post<ApiResponse<string>>(
-          //   `${this.url}/projects/getProjects/`,
-          //   body
-          // )
+          .post<ApiResponse<Project[]>>(`${this.url}/projects/getProjects/`, body)
           .subscribe(
-            response => {
-              console.log("response", response);
-
-              const compressedData = Buffer.from(response.data, 'base64'); // Decode from base64
-              const inflator = new Pako.Inflate({ to: 'string' });
-              inflator.push(compressedData, true);
-              const decompressedData = inflator.result as string;
-
-              let parsedResponse: Project[];
-              if (decompressedData) {
-                parsedResponse = JSON.parse(decompressedData);
-                console.log("parsedResponse", parsedResponse);
-
-                parsedResponse.map(x => {
-                  this.returnProjectsMaped(x);
-                });
-                resolve(
-                  new ApiResponse(
-                    parsedResponse.length,
-                    parsedResponse,
-                    true,
-                    response.messagge
-                  )
-                );
-              } else {
-                resolve(
-                  new ApiResponse(
-                    0,
-                    parsedResponse,
-                    true,
-                    response.messagge
-                  )
-                );
-              }
-
-
+            result => {
+                console.log('getOnlineProjects', result)
+              result.data.map(x => {
+                this.returnProjectsMaped(x);
+              });
+              resolve(result);
               this.storage.set('syncDate_' + this.user.id, new Date());
             },
             error => reject(error)
@@ -171,7 +133,7 @@ export class ProjectsService {
       } else {
         this.repository.findOne(id).then(
           result => {
-            result.data = this.returnProjectsMaped(result.data);
+              result.data = this.returnProjectsMaped(result.data);
             resolve(result);
           },
           error => reject(error)
@@ -189,15 +151,15 @@ export class ProjectsService {
    */
   update(id: number, project: Project, withRedux: boolean = true): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this.repository.update(id, project).then(
-        result => {
-          if (withRedux) {
-            this.reduxUpdate(project);
-          }
-          resolve(result);
-        },
-        error => reject(error)
-      );
+        this.repository.update(id, project).then(
+            result => {
+              if (withRedux) {
+                this.reduxUpdate(project);
+              }
+              resolve(result);
+            },
+            error => reject(error)
+        );
     });
   }
 
@@ -207,40 +169,24 @@ export class ProjectsService {
    * @returns
    */
   post(projects: Project[]): Promise<Project[]> {
-    const jsonString = JSON.stringify(projects);
 
-    const deflator = new Pako.Deflate({
-      level: 6,
-      //to: 'string',
-      gzip: true,
-      header: {
-        text: true,
-        time: +new Date(),
-        comment: ''
-      }
-    });
 
-    deflator.push(jsonString, true);
-    console.log("post");
-
-    // Obtain the compressed data as a Uint8Array
-    const compressedData = deflator.result;
-
-    const base64Data = Buffer.from(compressedData).toString('base64');
-    console.log("base64Data", base64Data);
+console.log("projects", projects);
 
     return new Promise((resolve, reject) => {
       if (this.networkService.isConnected) {
         this.http
-          // .post<Project[]>(`${this.url}/projects/postProjects/`, base64Data)
-          .post<Project[]>(`${this.url}/projects/postProjects/`, { base: base64Data})
+          // .post<Project[]>(`${this.url}/projects/postProjects/`, projects)
+         
+          .post<Project[]>(` http://localhost:8000/api/projects/postProjects/`, projects)
+
           .subscribe(
             async result => {
               if (result) {
-                console.log("base64Data", base64Data);
+                // const projects = (await this.getOnlineProjects([])).data;
+                // resolve(projects);
+                resolve(null);
 
-                const projects = (await this.getOnlineProjects([])).data;
-                resolve(projects);
               } else {
                 resolve(null);
               }
@@ -292,45 +238,32 @@ export class ProjectsService {
     }
   }
 
-  getShingleVerifiedInformation(
-    idResource: number,
-    isVerified = true,
-    building: Building = this.building
-  ): PsbVerified[] {
+  getShingleVerifiedInformation(idResourse: number, isVerified = true, building: Building = this.building) {
     const psbVerifieds = building.psb_measure.psb_verifieds
-      ? this.removeDuplicateResources([...building.psb_measure.psb_verifieds])
+      ? [...building.psb_measure.psb_verifieds]
       : [];
-
-    const element = psbVerifieds.find(element => element.id_resource === idResource);
+    const element = psbVerifieds.find(element => element.id_resource == idResourse);
 
     if (!element) {
-      // Crear nueva entrada si no existe
       const shingleVerifiedInfo: PsbVerified = {
         id: uuidv4(),
         id_psb_measure: building.psb_measure.id,
-        id_resource: idResource,
+        id_resource: idResourse,
         is_verified: isVerified
       };
-      return [...psbVerifieds, shingleVerifiedInfo];
+      psbVerifieds.push(shingleVerifiedInfo);
+      return psbVerifieds;
     } else {
-      // Actualizar entrada existente
-      return psbVerifieds.map(x =>
-        x.id_resource === idResource ? { ...x, is_verified: isVerified } : { ...x }
-      );
+      const psbVerifiedsUpdated = psbVerifieds.map(x => {
+        if (x.id_resource == idResourse) {
+          return { ...x, is_verified: isVerified };
+        } else {
+          return { ...x };
+        }
+      });
+
+      return psbVerifiedsUpdated;
     }
-  }
-
-  removeDuplicateResources(arr) {
-    const seen = new Map();
-
-    return arr.filter(item => {
-      if (seen.has(item.id_resource)) {
-        return false;
-      } else {
-        seen.set(item.id_resource, true);
-        return true;
-      }
-    });
   }
 
   findResourceId(idResource: number) {
@@ -354,7 +287,6 @@ export class ProjectsService {
         psb_measure: { ...psb_measure, isModified: true }
       };
 
-      console.log('saveProjectShingleBuilding PsbMeasures : ', psb_measure);
       const buildingsUpdated = this.buildings.map(x => {
         if (x.id == buildingUpdated.id) {
           return { ...buildingUpdated };
@@ -489,43 +421,35 @@ export class ProjectsService {
    * Modificaciones Yunuel Jun, 2024
    */
 
-  returnProjectsMaped(project) {
+  returnProjectsMaped(project){
     let projectModel = project;
     projectModel.st_prospecting_material_type = '';
     projectModel.st_job_type = '';
     projectModel.st_email = '';
     projectModel.st_name = `${projectModel.contact_address.contact.first_name} ${projectModel.contact_address.contact.last_name} `;
     projectModel.st_address = `${projectModel.contact_address.address} ${projectModel.contact_address.city} ${projectModel.contact_address.country_state.country_state}`;
-    projectModel.st_phone = projectModel.contact_address?.contact?.phones?.find(
-      y => y.is_default == true
-    )?.phone;
-    projectModel.st_prospecting_type = projectModel.prospecting_type?.prospecting_type;
+    projectModel.st_phone = projectModel.contact_address?.contact?.phones?.find(y => y.is_default == true)?.phone;
+    projectModel.st_prospecting_type =
+      projectModel.prospecting_type?.prospecting_type;
     projectModel.st_project_status = projectModel.project_status.project_status;
 
     if (!projectModel.versions || projectModel.versions.length == 0) {
-      const version: Version = this.getNewEmptyVersion(projectModel);
-      projectModel.versions = [];
-      projectModel.versions.push(version);
+        const version: Version = this.getNewEmptyVersion(projectModel);
+        projectModel.versions = [];
+        projectModel.versions.push(version);
     }
 
-    projectModel.versions.forEach(versionItem => {
-      versionItem.buildings.forEach(buildingItem => {
-        // Prospecting Material Types
-        if (buildingItem?.job_material_type?.material) {
-          projectModel.st_prospecting_material_type += `${buildingItem.job_material_type.material}|`;
-        }
+    // prospecting_material_types
+    projectModel.versions.forEach(item1 => {
+      item1.buildings.forEach(item2 => {
+        projectModel.st_prospecting_material_type += `${item2?.job_material_type?.material}|`;
+      });
+    });
 
-        // Job Types
-        if (buildingItem?.job_type?.job_type) {
-          projectModel.st_job_type += `${buildingItem.job_type.job_type}|`;
-        }
-
-        // PSB Measures Verified
-        if (buildingItem?.psb_measure?.psb_verifieds) {
-          buildingItem.psb_measure.psb_verifieds = this.removeDuplicateResources([
-            ...buildingItem.psb_measure.psb_verifieds
-          ]);
-        }
+    // job_types
+    projectModel.versions.forEach(item1 => {
+      item1.buildings.forEach(item2 => {
+        projectModel.st_job_type += `${item2?.job_type?.job_type}|`;
       });
     });
 
@@ -540,20 +464,9 @@ export class ProjectsService {
   private getNewEmptyVersion(x: Project): Version {
     const proposalNumber = x.versions.length + 1;
     return {
-      active: true,
-      buildings: [],
-      id: uuidv4(),
-      shingle_lines: [],
-      pv_trademarks: [],
-      pv_material_colors: [],
-      pv_colors: [],
-      isModified: true,
-      is_verified: false,
-      is_current_version: true,
-      id_project: x.id,
-      id_cost_type: 1,
-      project_version: 'Proposal 1 - ' + new Date().toLocaleDateString(),
-      expected_acceptance_date: undefined
+      active: true, buildings: [], id: uuidv4(), shingle_lines: [], pv_trademarks: [], pv_material_colors: [],
+      pv_colors: [], isModified: true, is_verified: false, is_current_version: true, id_project: x.id,
+      id_cost_type: 1, project_version: 'Proposal 1 - ' + (new Date().toLocaleDateString()), expected_acceptance_date: undefined
     };
   }
 }

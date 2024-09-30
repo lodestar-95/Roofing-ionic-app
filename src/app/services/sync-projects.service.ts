@@ -52,19 +52,16 @@ export class SyncProjectsService {
 
       const projectsData = await this.projectService.getLocalProjects();
 
-      console.log("projectsData", projectsData);
       let syncProjects = projectsData.data.filter((x) => x.isModified);
-      console.log("syncProjects", syncProjects);
       this.user = await this.auth.getAuthUser();
 
       const syncProjectsNotes = syncProjects
-        .filter(x => /*x.user_saleman.id_user != this.user.id &&*/ x.project_notes.some(y => y.isModified))
+        .filter(x => x.user_saleman.id_user != this.user.id && x.project_notes.some(y => y.isModified))
         .map(x => ({ ...x, versions: [] }))
-      /*
+
       syncProjects = syncProjects.filter(
         (x) => x.user_saleman.id_user == this.user.id
       );
-      */
 
       syncProjects = [...syncProjects, ...syncProjectsNotes]
 

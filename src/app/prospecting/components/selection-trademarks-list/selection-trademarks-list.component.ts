@@ -81,9 +81,7 @@ export class SelectionTrademarksListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const pv_trademarks = this.removeDuplicateTradeMarks(this.version.pv_trademarks);
-
-    this.trademarksSelected = pv_trademarks.filter(
+    this.trademarksSelected = this.version.pv_trademarks.filter(
       (x) => x.selected == true
     );
 
@@ -107,33 +105,6 @@ export class SelectionTrademarksListComponent implements OnInit, OnDestroy {
     });
   }
 
-  removeDuplicateTradeMarks(arr) {
-    const seen = new Map();
-  
-    return arr.filter(item => {
-      if (seen.has(item.id_trademarks)) {
-        return false;
-      } else {
-        seen.set(item.id_trademarks, true);
-        return true;
-      }
-    });
-  }
-
-  removeDuplicateMaterialSelected(arr) {
-    const seen = new Map();
-
-    return arr.filter(item => {
-        const key = `${item.id_trademark_shingle}-${item.id_material_type_selected}`;
-        if (seen.has(key)) {
-            return false;
-        } else {
-            seen.set(key, true);
-            return true;
-        }
-    });
-}
-
   /**
    * Load material selected for
    */
@@ -141,12 +112,9 @@ export class SelectionTrademarksListComponent implements OnInit, OnDestroy {
     if (!this.building.psb_measure.psb_selected_materials) {
       return;
     }
-
-    const materialSelected = this.removeDuplicateMaterialSelected(this.building.psb_measure.psb_selected_materials);
-
     this.trademarks.forEach((element) => {
       element.materialTypes = [];
-      materialSelected.forEach((x) => {
+      this.building.psb_measure.psb_selected_materials.forEach((x) => {
         if (element.id == x.id_trademark_shingle && !x.deletedAt) {
           const materialType: any = this.materialTypes.find(
             (item) => item.id == x.id_material_type_selected

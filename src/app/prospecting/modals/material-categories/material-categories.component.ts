@@ -38,11 +38,6 @@ export class MaterialCategoriesComponent implements OnInit, OnDestroy {
   categoryRidgecapId: number;
   withOutRidge: boolean;
 
-  selectionJobType:number|null = null;
-  selectionWindWarrantyDeclined:boolean = false;
-  selectionHasRidgecap:boolean = false;
-  selectionHasSlopes:boolean = false;
-
   constructor(
     private popoverCtrl: PopoverController,
     private modalController: ModalController,
@@ -72,44 +67,7 @@ export class MaterialCategoriesComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.selectionJobType = this.getJobType();
-    this.selectionWindWarrantyDeclined = this.getWindWarrantyDeclined();
-    this.selectionHasRidgecap = this.getRidgecap();
-    this.selectionHasSlopes = this.getStepSlope();
-  }
-
-  getJobType(){
-    this.selectionJobType = this.building.id_job_type;
-    return this.building.id_job_type;
-  }
-  getWindWarrantyDeclined(){
-    const hasWindWarrantyDeclined = this.building.psb_measure.id_inwshield_rows==3?true:false;
-    this.selectionWindWarrantyDeclined = hasWindWarrantyDeclined;
-    return hasWindWarrantyDeclined;
-  }
-  getRidgecap(){
-    if(
-        (this.building.psb_measure.ridge_lf && this.building.psb_measure.ridge_lf > 0) ||
-        (this.building.psb_measure.hips_lf && this.building.psb_measure.hips_lf > 0)
-    ){
-        //hay RidgeCap seleccionado, por lo tanto si se requiere la seleccion
-        this.selectionHasRidgecap = true;
-        return true;
-    }
-    return false;
-
-  }
-  getLowSlope(): boolean {
-    const hasLowSlopes = this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 2 && x.pitch < 4 && !x.deletedAt) ?? false
-    this.selectionHasSlopes = hasLowSlopes
-    return hasLowSlopes;
-  }
-  getStepSlope(): boolean {
-    const hasStepSlopes = this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 4 && !x.deletedAt) ?? false;
-    this.selectionHasSlopes = hasStepSlopes;
-    return hasStepSlopes;
-  }
+  ngOnInit() { }
 
   ngOnDestroy(): void {
     if (this.storeSubs) {
@@ -118,40 +76,43 @@ export class MaterialCategoriesComponent implements OnInit, OnDestroy {
   }
 
   async openPopoverMaterialTypes(event: any, materialCategory: any) {
-    //RidgeCap
-    if (materialCategory.id === 7 && (this.selectionJobType === 16 || !this.selectionHasRidgecap)){
+    if (materialCategory.id == 30) {
+      if (this.isInWShieldDeclined() && !this.hasLowSlope()) {
+        this.presentToast('Ice and Water Shield is declined');
+        return;
+      }
+
+      if (this.isOverlay() && !this.hasLowSlope()) {
+        this.presentToast('Doesn\'t apply ice and water shield when job type is overlay');
+        return;
+      }
+    }
+
+    if (materialCategory.id == 34) {
+      if (this.isInWShieldCompleteRoof()) {
+        this.presentToast('Doesn\'t apply underlayment when Ice and Water Shield is complete roof');
+        return;
+      }
+
+      if (this.isOverlay()) {
+        this.presentToast('Doesn\'t apply underlayment when job type is overlay');
+        return;
+      }
+    }
+
+    if (materialCategory.id == 34) {
+      if (this.isInWShieldCompleteRoof()) {
+        this.presentToast('Doesn\'t apply underlayment when Ice and Water Shield is complete roof');
+        return;
+      }
+    }
+
+    if (materialCategory.id == 7) {
+      if (this.withOutRidge) {
         this.presentToast('Ridge cap isn\'t required, ridge doesn\'t exist on the roof');
         return;
-    }
+      }
 
-    //Uderlayment
-    if (materialCategory.id === 34 ) {
-        if (!this.selectionHasSlopes) {
-            this.presentToast('Doesn\'t apply underlayment on pitchs lower than 4/12');
-            return;
-          }
-
-        if (this.selectionJobType === 16 || this.selectionJobType === 14) {
-            this.presentToast('Doesn\'t apply underlayment when job type is Overlay or Tear Off Only');
-            return;
-        }
-
-        if (this.isInWShieldCompleteRoof()) {
-          this.presentToast('Doesn\'t apply underlayment when Ice and Water Shield is complete roof');
-          return;
-        }
-    }
-
-    //Ice and Water Shields
-    if (materialCategory.id === 30) {
-        if (this.selectionWindWarrantyDeclined) {
-            this.presentToast('Ice and Water Shield is declined');
-            return;
-        }
-        if (this.selectionJobType === 16 || this.selectionJobType === 14) {
-            this.presentToast('Doesn\'t apply ice and water shield when job type is Overlay or Tear Off Only');
-            return;
-        }
     }
 
     let materialTypes = this.getMaterialTypes(materialCategory);

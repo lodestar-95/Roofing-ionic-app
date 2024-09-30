@@ -29,6 +29,8 @@ export class ProspectingItemComponent implements OnInit {
   ngOnInit() {
     this.status = this.getStatus();
     this.projectStatus = this.project.project_status.project_status;
+    console.log(":#####:#:#:#:#:#:#");
+    console.log(this.projectStatus);
     const nextContactDate = this.getNextContactDate();
     this.project.versions.forEach(projectVersion => {
       if (projectVersion.is_current_version) {
