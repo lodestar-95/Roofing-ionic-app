@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageResetPasswordService } from '../../services/message-reset-password.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-message',
@@ -16,16 +15,9 @@ export class MessagePage implements OnInit {
     allowSlideNext: false,
   };
 
-    
-  constructor(
-    public message: MessageResetPasswordService,
-    private router: Router,
-  ) {}
+  constructor(public message: MessageResetPasswordService) {}
 
   ngOnInit() {
-  }
-
-  tologinpage() {
-    this.router.navigate(['/']);
+    console.log(this.message.title);
   }
 }

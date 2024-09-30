@@ -1,12 +1,12 @@
-<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)" >
+<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)" id="reportbugs">
     <ion-item class="modal-title-padding">
         <ion-label class="roofing-title">Import Bugs Report</ion-label>
     </ion-item>
 
-    <ion-list id="reportbugs">
+    <ion-list >
         <ion-item
             *ngFor="let bugsReport of bugsReportList; index as i"
-            [ngClass]="{'highlight': selectedBugsReport?.id == bugsReport.id}"
+            [ngClass]="{'highlight': selectedBugsReport?.id === bugsReport.id}"
             (click)="selectBugsReport(bugsReport)"
             style="cursor: pointer;">
             <div style="display: flex; flex-direction: column; padding: 5px 0; width: 100%;">

@@ -153,11 +153,8 @@ export class AuthService {
     const body = {
       email,
     };
-    console.log("mail");
-    
     return this.http
       .post<AuthModel>(`${this.url}/auth/recoveryPassword`, body)
-      // .post<AuthModel>(`http://localhost:8000/api/auth/recoveryPassword`, body)
       .pipe(
         map((result) => {
           return result;

@@ -68,14 +68,8 @@ export class HomePage implements OnInit {
       if (!this.projects) {
         return;
       }
-      this.getNumberProjectsToSync().then(async x => {
+      this.getNumberProjectsToSync().then(x => {
         this.numberProjectsToSync = x;
-        let reportbugsarray = new Array();
-        if (this.storage.get('reportbugs')) {
-          reportbugsarray = await this.storage.get('reportbugs');
-          if (reportbugsarray != null)
-            this.numberProjectsToSync += reportbugsarray.length;
-        }
       });
     });
   }
@@ -126,12 +120,14 @@ export class HomePage implements OnInit {
       if (data.length > 0) {
         data.forEach(element => {
           this.sendReportbugs(element);
-        });
+        })
         // await this.storage.remove(); // Clear local storage after sending data to API
         this.storage.remove('reportbugs');
       }
-    } catch (error) {}
-    await this.materialService.syncMaterialData();
+    } catch (error) {
+      
+    }
+    await this.materialService.syncMaterialData()
     this.synprojects.syncOffline();
   }
 
@@ -148,19 +144,16 @@ export class HomePage implements OnInit {
       action: data.action,
       description: data.description,
       localStorageCopy: data.localStorageCopy,
-      localDBCopy: data.localDBCopy
+      localDBCopy: data.localDBCopy,
     };
-
+    
     const issue = await this.bugsReportsService.saveJiraIssue(bodyJira);
     bodyBugReport.description = `https://ehroofing.atlassian.net/browse/${issue.key} ${bodyJira.description}`;
-    this.bugsReportsService
-      .save(bodyBugReport)
-      .then(async () => {
-        // this.openSuccessModal('Bugs report sent successfully');
-        console.log('Bugs report sent successfully');
-      })
-      .catch(() => {
-        this.errorDialogService.showAlert({ TITLE: AppConfig.ERROR_SERVER });
+    this.bugsReportsService.save(bodyBugReport).then( async () => {
+      // this.openSuccessModal('Bugs report sent successfully');
+      console.log("Bugs report sent successfully")
+      } ).catch(() => {
+        this.errorDialogService.showAlert({TITLE:AppConfig.ERROR_SERVER});
       });
   }
   async getNumberProjectsToSync() {
@@ -182,10 +175,12 @@ export class HomePage implements OnInit {
 
     // Capture image before showing modal
     const caption = await Screenshot.take();
+    console.log(caption.base64);
     // Commenting out to fix crash until debugged properly
     // try {
     //   caption = await this.mediaCapture.captureImage({ limit: 1 })
     // } catch (e) {
+    //   console.log(e)
     // }
     const modal = await this.modalController.create({
       component: BugsReportModalComponent,
@@ -205,47 +200,35 @@ export class HomePage implements OnInit {
     };
 
     // let currentdata = this.storage.get("reportbugs");
+    let reportbugsarray = new Array;
+    reportbugsarray.push(report)
+    this.storage.set('reportbugs', reportbugsarray);
+    // const bodyJira: JiraBugsReport = {
+    //   proposal: data.proposal,
+    //   action: data.action,
+    //   description: data.description,
+    //   localStorageCopy: data.localStorageCopy,
+    //   caption: caption.base64
+    // };
+    // const bodyBugReport: BugsReport = {
+    //   proposal: data.proposal,
+    //   action: data.action,
+    //   description: data.description,
+    //   localStorageCopy: data.localStorageCopy,
+    //   localDBCopy: data.localDBCopy,
+    // };
 
-    try {
-      const bodyJira: JiraBugsReport = {
-        proposal: data.proposal,
-        action: data.action,
-        description: data.description,
-        localStorageCopy: data.localStorageCopy,
-        caption: caption.base64
-      };
-      const bodyBugReport: BugsReport = {
-        proposal: data.proposal,
-        action: data.action,
-        description: data.description,
-        localStorageCopy: data.localStorageCopy,
-        localDBCopy: data.localDBCopy
-      };
+    // console.log("bodyJira", bodyJira);
 
-      console.log('bodyJira', bodyJira);
+    // const issue = await this.bugsReportsService.saveJiraIssue(bodyJira);
+    // bodyBugReport.description = `https://ehroofing.atlassian.net/browse/${issue.key} ${bodyJira.description}`;
 
-      const issue = await this.bugsReportsService.saveJiraIssue(bodyJira);
-      bodyBugReport.description = `https://ehroofing.atlassian.net/browse/${issue.key} ${bodyJira.description}`;
+    // this.bugsReportsService.save(bodyBugReport).then( async () => {
 
-      this.bugsReportsService
-        .save(bodyBugReport)
-        .then(async () => {
-          this.openSuccessModal('Bugs report sent successfully');
-        })
-        .catch(() => {
-          this.errorDialogService.showAlert({ TITLE: AppConfig.ERROR_SERVER });
-        });
-    } catch (error) {
-      let reportbugsarray = new Array();
-      await this.storage.get('reportbugs').then(res => {
-        if (res) {
-          reportbugsarray.push(res);
-        }
-      });
-      reportbugsarray.push(report);
-      this.storage.set('reportbugs', reportbugsarray);
-      this.numberProjectsToSync += 1;
-    }
+    //   this.openSuccessModal('Bugs report sent successfully');
+    //   } ).catch(() => {
+    //     this.errorDialogService.showAlert({TITLE:AppConfig.ERROR_SERVER});
+    //   });
   }
 
   async openBugsReportImportModal() {

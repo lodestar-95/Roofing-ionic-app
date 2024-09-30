@@ -36,6 +36,8 @@ export class VentingsService {
   async calculateVentingCost(measures) {
     let ventilationCalculations = [];
     const shingles = await this.shingle.getShingles();
+    console.log('=================calculateVentingCost');
+    console.log(this.materialList);
 
     const category_jvent4 = await this.general.getConstValue('category_jvent4');
     const jVent4 = this.general.getFirstMaterial(this.materialList, category_jvent4);

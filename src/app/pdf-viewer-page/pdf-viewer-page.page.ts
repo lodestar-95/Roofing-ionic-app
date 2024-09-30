@@ -1,4 +1,3 @@
-import { DeleteComponent } from 'src/app/prospecting/modals/delete/delete.component';
 import { Trademark } from './../models/trademark.model';
 import { Building } from './../models/building.model';
 import { Component, OnInit } from '@angular/core';
@@ -20,9 +19,6 @@ import { ProjectsService } from '../services/projects.service';
 import { Project } from '../models/project.model';
 import { GeneralService } from '../estimate/calculation/materials/general.service';
 import { SyncProjectsService } from '../services/sync-projects.service';
-import { Printer, PrintOptions } from '@ionic-native/printer/ngx';
-import { Version } from '../models/version.model';
-import { MaterialService } from '../services/material.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 (window as any).pdfWorkerSrc = '../../assets/js/pdf.worker.min.js';
 
@@ -35,7 +31,6 @@ export class PdfViewerPagePage implements OnInit {
   project: Project;
   pdfSrc: any;
   pdfs = [];
-  printerpdf: any;
   pdfObject: any;
   totalPages: any;
   page = 1;
@@ -49,7 +44,7 @@ export class PdfViewerPagePage implements OnInit {
   buildinTxt: String = 'Storage';
   typeTxt: string = 'Architectural';
   ///
-  shingleLines: any[] = [];
+  shingleLines: any;
   buildings: any;
   trademarks: any;
   MaterialTypes: any;
@@ -68,133 +63,7 @@ export class PdfViewerPagePage implements OnInit {
   canSendEmail = true;
   canChangeStatus = false;
 
-  // add number and type heading
-  buildingNumber = 0;
-  buildingTypeLength = 0;
-
-  docDefinition: any[] = [];
-  generatingNumber = 0;
-  disablePrinter: boolean = false;
-
-  finalProposal = {
-    isFinal: false,
-    shingleColor: false, // Shingle and Ridge color
-    dripEdgeColor: false, // Drip Edge color
-    flashingColor: false,
-    sACapColor: false,
-    atticVentColor: false,
-    soffitVentColor: false,
-    regletColor: false
-  };
-
-  finalProposalDocItems = {
-    shingleColor: {
-      value: [
-        {
-          width: 'auto',
-          text: 'Shingle and Ridge color:',
-          preserveLeadingSpaces: true
-        },
-        {
-          width: '*',
-          text: '_______________________'
-        }
-      ]
-    }, // Shingle and Ridge color
-    dripEdgeColor: {
-      value: [
-        {
-          width: 'auto',
-          text: '              Drip Edge color:',
-          preserveLeadingSpaces: true
-        },
-        {
-          width: '*',
-          text: '_______________________'
-        }
-      ]
-    }, // Drip Edge color
-    flashingColor: {
-      value: [
-        {
-          width: 'auto',
-          text: '               Flashing color:',
-          preserveLeadingSpaces: true
-        },
-        {
-          width: '*',
-          text: '_______________________'
-        }
-      ],
-      underText: [
-        {
-          text: '(Pipe flashing, J vents, Louver vents, powder fans, exhaust\nvents, roll metal, 3x5x10 end wall, screws, spray paint)',
-          fontSize: 8,
-          margin: [60, 0, 0, 10]
-        }
-      ]
-    },
-    sACapColor: {
-      value: [
-        {
-          width: 'auto',
-          text: '                   SA Cap color:',
-          preserveLeadingSpaces: true
-        },
-        {
-          width: '*',
-          text: '_______________________'
-        }
-      ]
-    },
-    atticVentColor: {
-      value: [
-        {
-          width: 'auto',
-          text: '           Attic Vents color:',
-          preserveLeadingSpaces: true
-        },
-        {
-          width: '*',
-          text: '_______________________'
-        }
-      ]
-    },
-    soffitVentColor: {
-      value: [
-        {
-          width: 'auto',
-          text: '           Soffit Vents color:',
-          preserveLeadingSpaces: true
-        },
-        {
-          width: '*',
-          text: '_______________________'
-        }
-      ]
-    },
-    regletColor: {
-      value: [
-        {
-          width: 'auto',
-          text: '                   Reglet color:',
-          preserveLeadingSpaces: true
-        },
-        {
-          width: '*',
-          text: '_______________________'
-        }
-      ]
-    }
-  };
-
-  amount = '';
-  /**
- * Shingle and Ridge color: -> shingleColor
-Drip Edge color: -> dripEdgeColor
- */
   constructor(
-    private printer: Printer,
     private navController: NavController,
     private activatedRoute: ActivatedRoute,
     private file: File,
@@ -207,11 +76,10 @@ Drip Edge color: -> dripEdgeColor
     private loadingCtrl: LoadingController,
     private projectService: ProjectsService,
     private general: GeneralService,
-    private synProjects: SyncProjectsService,
-    private materialService: MaterialService
+    private synProjects: SyncProjectsService
   ) {
-    const storeproject = localStorage.getItem('storeproject');
-    this.project = JSON.parse(storeproject);
+    this.project = this.activatedRoute.snapshot.queryParams.project;
+    console.log(this.activatedRoute);
 
     this.loadingCtrl
       .create({
@@ -256,7 +124,7 @@ Drip Edge color: -> dripEdgeColor
 
         this.stName = this.project.st_name;
         this.stAddress = this.project.st_address;
-        this.stPhone = this.project.st_phone ? `Ph#: ${this.project.st_phone}` : '';
+        this.stPhone = this.project.st_phone ? `P: ${this.project.st_phone}` : '';
         this.stEmail = this.project.st_email ? `E: ${this.project.st_email}` : '';
         this.datePdf = this.formatDate(new Date());
 
@@ -265,7 +133,6 @@ Drip Edge color: -> dripEdgeColor
         if (version) {
           this.costType = version.id_cost_type != undefined ? version.id_cost_type : 1;
           this.buildings = version.buildings;
-          this.buildingNumber = this.buildings.length;
           this.shingleLines =
             version.shingle_lines != undefined
               ? version.shingle_lines.filter(f => f.is_selected)
@@ -290,21 +157,15 @@ Drip Edge color: -> dripEdgeColor
             return resp.data;
           });
 
-          try {
-            if (version.pv_colors != undefined) {
-              version.pv_colors.forEach(color => {
-                this.colors.push({
-                  group: groups.find(g => g.id == color.id_group).group,
-                  color: groupColors.find(gc => gc.id == color.id_group_color).color
-                });
+          if (version.pv_colors != undefined) {
+            version.pv_colors.forEach(color => {
+              this.colors.push({
+                group: groups.find(g => g.id == color.id_group).group,
+                color: groupColors.find(gc => gc.id == color.id_group_color).color
               });
-            }
-          } catch (error) {
-            console.log(error);
+            });
           }
         }
-        // this.buildingNumber = this.buildingOp.length;
-
         this.dataSelect();
       }
       //////////////
@@ -373,7 +234,6 @@ Drip Edge color: -> dripEdgeColor
   }
 
   async dataSelect() {
-    // this.disablePrinter = Iscreatepdf;
     const currentVersion = this.project.versions.find(x => x.active);
     //catalogos de materiales
     this.MaterialTypes = await this.catalogsService
@@ -391,14 +251,14 @@ Drip Edge color: -> dripEdgeColor
 
     //obtener materiales de shingle
     let materials = [];
+    this.shingleLines.forEach(shingle => {
+      let material = this.MaterialTypes.find(e => e.id == shingle.id_material_type);
+      materials.push(material);
+    });
 
-    if (this.shingleLines.length > 0) {
-      this.shingleLines.forEach(shingle => {
-        let material = this.MaterialTypes.find(e => e.id == shingle.id_material_type);
-        materials.push(material);
-      });
-    }
     let buildingsType = [];
+
+
     let _shingleLineName = materials.length == 1 ? materials[0].material_type : '';
 
     this.buildings.forEach(bOpt => {
@@ -503,8 +363,6 @@ Drip Edge color: -> dripEdgeColor
       }
 
       buildingsType.push(building);
-      const _typeOp = this.typeOp.filter(op => op.active);
-      this.buildingTypeLength = _typeOp.length;
       //}
     });
 
@@ -513,6 +371,7 @@ Drip Edge color: -> dripEdgeColor
       let optionsArray = [];
       if (building.building.psb_measure.hasOwnProperty('psb_options')) {
         building.building.psb_measure.psb_options.forEach((element, index) => {
+
           if (!element.is_built_in) {
             optionsArray.push({
               name: `Option ${index + 1}`,
@@ -525,9 +384,15 @@ Drip Edge color: -> dripEdgeColor
 
       for (const [key, type] of building.types.entries()) {
         this.typeTxt =
-          type.Architectural && type.Architectural.active ? 'Architectural' : 'Luxury';
-        let isActive = true;
-
+          type.Architectural && type.Architectural.active
+            ? 'Architectural'
+            : 'Luxury';
+        let isActive = false;
+        if (key == 0) {
+          isActive = type.Presidential.active;
+        } else {
+          isActive = type.Architectural.active;
+        }
         if (isActive) {
           let scope;
           if (key == 0) {
@@ -541,9 +406,7 @@ Drip Edge color: -> dripEdgeColor
           let currentBuilding = this.buildings.find(e => e.id == building.building.id);
           let upgrades =
             mainBuilding.psb_measure.psb_upgrades != undefined
-              ? mainBuilding.psb_measure.psb_upgrades.filter(
-                  f => f.id_cost_integration == 2
-                )
+              ? mainBuilding.psb_measure.psb_upgrades.filter(f => f.id_cost_integration == 2)
               : [];
           let upgradesConceptType = [];
           let buildingUpgrades = this.calculations.find(
@@ -555,29 +418,14 @@ Drip Edge color: -> dripEdgeColor
               bu => bu.id_upgrade == upgrade.id_upgrade
             );
             costBuildingUpgrades?.forEach(costUpgrade => {
-              if (
-                currentVersion.shingle_lines.some(
-                  x =>
-                    x.id_material_type == costUpgrade.id_material_type_shingle &&
-                    x.is_selected == true
-                )
-              ) {
-                const shingleline = materials.find(
-                  x => x.id == costUpgrade.id_material_type_shingle
-                );
-                const shingleName = logos.mark.find(
-                  x => x.id == shingleline.id_trademark
-                )?.trademark;
-                const upgradeName = conceptType.find(
-                  e => e.id == upgrade.id_upgrade
-                ).upgrade;
+              if (currentVersion.shingle_lines.some(x =>
+                x.id_material_type == costUpgrade.id_material_type_shingle
+                && x.is_selected == true)) {
+                const shingleline = materials.find(x => x.id == costUpgrade.id_material_type_shingle);
+                const shingleName = logos.mark.find(x => x.id == shingleline.id_trademark)?.trademark;
+                const upgradeName = conceptType.find(e => e.id == upgrade.id_upgrade).upgrade;
 
-                if (
-                  shingleName &&
-                  !upgradesConceptType.some(
-                    x => x.shingle == shingleName && x.name == upgradeName
-                  )
-                ) {
+                if (shingleName && !upgradesConceptType.some(x => x.shingle == shingleName && x.name == upgradeName)) {
                   upgradesConceptType.push({
                     name: upgradeName,
                     value: costUpgrade != undefined ? costUpgrade.total : 0,
@@ -590,7 +438,6 @@ Drip Edge color: -> dripEdgeColor
 
           const footerText = await this.general.getConstValue('pdf_footer_text');
 
-          await this.chechIsFinalProposal(currentVersion, building.building.id);
           this.generatePdf(
             building,
             logos,
@@ -598,59 +445,59 @@ Drip Edge color: -> dripEdgeColor
             key == 0 ? 'Luxury' : 'Architectural',
             optionsArray,
             upgradesConceptType,
-            footerText,
+            footerText
           );
         }
+
       }
     }
     this.getPdfs();
   }
 
-  async getJobType(trademarks, building) {
-    trademarks = trademarks.reduce((acc, item) => {
-      if (!acc.includes(item)) {
+  async getJobType(trademarks, building){
+    trademarks = trademarks.reduce((acc,item)=>{
+      if(!acc.includes(item)){
         acc.push(item);
       }
       return acc;
-    }, []);
+    },[]);
+    console.log(trademarks);
 
     let materialCategories = [];
     this.shingleLines.forEach(shingle => {
       let material = this.MaterialTypes.find(e => e.id == shingle.id_material_type);
       materialCategories.push(material.id_material_category);
     });
-    const category_shingle_architectural = await this.general.getConstValue(
-      'category_shingle_architectural'
-    );
-    const category_shingle_presidential = await this.general.getConstValue(
-      'category_shingle_presidential'
-    );
+    console.log('materialCategories');
+    console.log(materialCategories);
+    const category_shingle_architectural = await this.general.getConstValue('category_shingle_architectural');
+    const category_shingle_presidential = await this.general.getConstValue('category_shingle_presidential');
+    console.log(category_shingle_architectural);
+    console.log(category_shingle_presidential);
+    console.log(materialCategories.filter( x => category_shingle_presidential.includes(x)));
 
     let materialCategory = '';
-    if (
-      materialCategories.filter(x => category_shingle_architectural.includes(x)).length >
-      0
-    ) {
+    if (materialCategories.filter( x => category_shingle_architectural.includes(x)).length > 0){
       materialCategory = 'Architectural Asphalt Shingle';
     }
-    if (
-      materialCategories.filter(x => category_shingle_presidential.includes(x)).length > 0
-    ) {
-      if (materialCategory != '') {
+    if (materialCategories.filter( x => category_shingle_presidential.includes(x)).length > 0){
+      console.log('entre');
+      if(materialCategory != ''){
         materialCategory += ' and ';
       }
       materialCategory += 'Luxury Asphalt Shingle';
     }
 
     let jobType = `${building.building.job_type.job_type} on ${building.building.description} with ${building.shingleLineName}`;
-    const job_types_new_construction = await this.general.getConstDecimalValue(
-      'job_types_new_construction'
-    );
+    const job_types_new_construction = await this.general.getConstDecimalValue('job_types_new_construction');
     let shingleType;
-    if (building.building.job_type.id == job_types_new_construction) {
-      if (this.trademarks.length > 1) {
+    console.log(building);
+    console.log(building.building);
+    console.log(this.shingleLines[0]);
+    if(building.building.job_type.id == job_types_new_construction){
+      if(this.trademarks.length > 1){
         shingleType = '';
-      } else {
+      }else{
         shingleType = trademarks[0];
       }
       jobType = `Dry sheet and shingle installation on ${building.building.description} with ${building.shingleLineName} ${materialCategory}`;
@@ -658,81 +505,8 @@ Drip Edge color: -> dripEdgeColor
     return jobType;
   }
 
-  // Function to group items into columns of four elements (two pairs)
-  groupColumns(items) {
-    let columnsArray = [];
-    let textFlashing = false;
-    for (var i = 0; i < items.length; i += 2) {
-      var columns = [];
-      columns.push({
-        width: '50%',
-        columns: [...items[i].value]
-      }); // Add first pair
-      if (items[i + 1]) {
-        columns.push({
-          width: '50%',
-          columns: [...items[i + 1].value]
-        }); // Add second pair if exists
-      }
-      columnsArray.push({
-        columns: columns
-      });
-      if (items[i]?.underText) {
-        columnsArray.push(items[i]?.underText);
-      }
-      if (items[i + 1]?.underText) {
-        items[i + 1].underText[0].margin = [300, 0, 0, 10];
-        columnsArray.push(items[i + 1]?.underText);
-      }
-
-      columnsArray.push({ text: '', margin: [0, 10] }); // Add spacing
-    }
-    columnsArray.push(
-      { text: '', margin: [0, 10] },
-      {
-        text: 'Total Proposal Amount ' + this.amount,
-        alignment: 'center',
-        bold: true,
-        color: 'blue',
-        margin: [0, 20, 0, 20]
-      },
-      { text: '', margin: [0, 10] },
-      {
-        columns: [
-          {
-            width: 'auto',
-            text: 'Customer signature:'
-          },
-          {
-            width: '*',
-            text: '_______________________'
-          },
-          {
-            width: 'auto',
-            text: 'Acceptance date:'
-          },
-          {
-            width: '*',
-            text: '_______________________'
-          }
-        ]
-      }
-    );
-    console.log(columnsArray);
-    return columnsArray;
-  }
-
-  async generatePdf(
-    building,
-    logos,
-    scope,
-    type,
-    optionsList,
-    upgrades,
-    footerText,
-  ) {
+  async generatePdf(building, logos, scope, type, optionsList, upgrades, footerText) {
     const logo4 = this.logosM[4];
-
     let tableLogos = [
       {
         image: this.logosM[0],
@@ -745,7 +519,6 @@ Drip Edge color: -> dripEdgeColor
       ''
     ];
     let shingleTrademarks = [];
-
     this.trademarks.forEach(async trademark => {
       shingleTrademarks.push(trademark.trademark);
       switch (trademark.id) {
@@ -793,17 +566,7 @@ Drip Edge color: -> dripEdgeColor
       }
     });
 
-    let images = {};
-    let indeximage = 0;
-
-    tableLogos.map(logo => {
-      if (logo != '') {
-        images[`$$pdfmake$$${indeximage + 1}`] = logo['image'];
-        indeximage++;
-      }
-    });
-
-    /*let colorPdf = [];
+    let colorPdf = [];
     this.colors.forEach((color, key) => {
       let alignment;
       switch (key) {
@@ -823,7 +586,7 @@ Drip Edge color: -> dripEdgeColor
         text: [{ text: `${color.group} color: `, bold: true }, { text: color.color }],
         alignment: alignment
       });
-    });*/
+    });
     //Total
     var amountTotals = [];
     if (logos.calculations.length == 0) {
@@ -834,7 +597,6 @@ Drip Edge color: -> dripEdgeColor
       ]);
     }
     logos.calculations.forEach((amount, index) => {
-      this.amount = formatCurrency(amount.value, 'en-US', '$');
       var row = [];
       if (index == 0) {
         row.push({ text: 'Total proposal amount: ', bold: true, alignment: 'right' });
@@ -864,13 +626,7 @@ Drip Edge color: -> dripEdgeColor
         row.push('');
       }
       row.push(
-        [
-          {
-            text: `${upgrade.name} with ${upgrade.shingle}: `,
-            bold: true,
-            alignment: 'right'
-          }
-        ],
+        [{ text: `${upgrade.name} with ${upgrade.shingle}: `, bold: true, alignment: 'right' }],
         [{ text: formatCurrency(upgrade.value, 'en-US', '$') }]
       );
       upgradeTotals.push(row);
@@ -901,29 +657,107 @@ Drip Edge color: -> dripEdgeColor
       optionalsTotals.push(row);
     });
 
-    let sowText = scope?.scope_of_work?.split('- ') ?? [''];
+    let sowText = scope?.scope_of_work?.split('- ') ?? '';
 
     //Set Job text
     let jobType = await this.getJobType(shingleTrademarks, building);
 
-    let signSections = [];
-    if (this.finalProposal.isFinal) {
-      signSections.push({ text: '', margin: [0, 10] });
-      var content = [];
-      var selectedItems = [];
-
-      // Collect the selected items based on finalProposal booleans
-      for (var key in this.finalProposal) {
-        if (this.finalProposal.hasOwnProperty(key) && this.finalProposal[key]) {
-          if (this.finalProposalDocItems.hasOwnProperty(key)) {
-            selectedItems.push(this.finalProposalDocItems[key]);
+    let docDefinition = {
+      pageMargins: [40, 20, 40, 60],
+      content: [
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto', 'auto', 'auto'],
+            body: [tableLogos, ['', '', '', '']]
           }
-        }
-      }
-
-      signSections.push(...this.groupColumns(selectedItems));
-    } else {
-      signSections.push(
+        },
+        {
+          columns: [{
+            //split text
+            text: [
+              { text: 'Proposal ', style: ['proposal'] }
+            ],
+            style: ['columnsStyle']
+          },
+          { text: this.datePdf, alignment: 'right', style: ['proposalMin'] },
+          ]
+        },
+        {
+          columns: [
+            //paragraphs
+            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
+            [{ text: this.stPhone, alignment: 'right' },
+            { text: this.stEmail, alignment: 'right' }]
+          ],
+          style: ['columnsStyle']
+        },
+        {
+          //split text
+          text: [{ text: 'Job: ' }, { text: jobType }],
+          style: ['fontSizeText', 'columnsStyle']
+        },
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*'],
+            body: [[''], ['']]
+          }
+        },
+        {
+          //split text
+          text: [
+            { text: 'Scope of work/ Building: ' },
+            { text: building.building.description }
+          ],
+          style: ['scopeWork', 'columnsStyle']
+        },
+        {
+          // to treat a paragraph as a bulleted list, set an array of items under the ul key
+          ul: sowText,
+          style: ['columnsStyle'],
+          pageBreak: 'after'
+        },
+        //page 2
+        {
+          columns: [{
+            //split text
+            text: [
+              { text: 'Proposal ', style: ['proposal'] }
+            ],
+            style: ['columnsStyle']
+          },
+          { text: this.datePdf, alignment: 'right', style: ['proposalMin'] },
+          ]
+        },
+        {
+          columns: [
+            //paragraphs
+            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
+            [{ text: this.stPhone, alignment: 'right' },
+            { text: this.stEmail, alignment: 'right' }]
+          ],
+          style: ['columnsStyle']
+        },
+        {
+          //split text
+          text: [{ text: 'Job: ' }, { text: jobType }],
+          style: ['fontSizeText', 'columnsStyle']
+        },
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*'],
+            body: [[''], ['']]
+          }
+        },
+        {
+          columns: colorPdf,
+          style: ['columnsStyle']
+        },
         {
           layout: 'lightHorizontalLines',
           table: {
@@ -979,106 +813,7 @@ Drip Edge color: -> dripEdgeColor
             body: optionalsTotals,
             alignment: 'rigth'
           }
-        }
-      );
-    }
-
-    
-    //Set Document Definition
-
-    if (this.generatingNumber < this.buildingNumber) {
-      this.docDefinition.push(
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto', 'auto', 'auto'],
-            body: [tableLogos, ['', '', '', '']]
-          },
-          pageBreak: this.docDefinition.length != 0 ? 'before' : ''
         },
-        {
-          columns: [
-            {
-              //split text
-              text: [{ text: 'Proposal ', style: ['proposal'] }]
-            },
-            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
-          ]
-        },
-        {
-          columns: [
-            //paragraphs
-            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
-            [
-              { text: this.stPhone, alignment: 'right' },
-              { text: this.stEmail, alignment: 'right' }
-            ]
-          ],
-          style: ['columnsStyle']
-        },
-        {
-          //split text
-          text: [{ text: 'Job: ' }, { text: jobType }],
-          style: ['fontSizeText', 'columnsStyle']
-        },
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*'],
-            body: [[''], ['']]
-          }
-        },
-        {
-          //split text
-          text: [
-            { text: 'Scope of work/ Building: ' },
-            { text: building.building.description }
-          ],
-          style: ['scopeWork', 'columnsStyle']
-        },
-        {
-          // to treat a paragraph as a bulleted list, set an array of items under the ul key
-          ul: sowText,
-          style: ['columnsStyle'],
-          pageBreak: 'after'
-        },
-        //page 2
-        {
-          columns: [
-            {
-              //split text
-              text: [{ text: 'Proposal ', style: ['proposal'] }]
-            },
-            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
-          ]
-        },
-        {
-          columns: [
-            //paragraphs
-            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
-            [
-              { text: this.stPhone, alignment: 'right' },
-              { text: this.stEmail, alignment: 'right' }
-            ]
-          ],
-          style: ['columnsStyle']
-        },
-        {
-          //split text
-          text: [{ text: 'Job: ' }, { text: jobType }],
-          style: ['fontSizeText', 'columnsStyle']
-        },
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*'],
-            body: [[''], ['']]
-          }
-        },
-        ...signSections,
         {
           columns: [
             //paragraphs
@@ -1094,229 +829,8 @@ Drip Edge color: -> dripEdgeColor
               },
               {
                 text:
-                  'A 3.5% processing fee will be charged on all credit/debit card payments. Excludes: Unforeseen removal or ' +
-                  'cutting of siding, mold remediation, framing, roof deck, fascia, soffit, gutters, metal trims, HVAC, ' +
-                  'snow removal, and any damage due to vibrations, damages to existing skylight and sheet rock.',
-                alignment: 'center',
-                fontSize: 8,
-                bold: true
-              }
-            ]
-          ],
-          style: ['columnsStyle'],
-          marginTop: 100
-        },
-        {
-          columns: [
-            //paragraphs
-            [
-              {
-                text: 'Thank you for choosing E&H Roofing for all your roofing needs',
-                alignment: 'center',
-                bold: true
-              },
-              {
-                text: `Proposal valid for ${this.proposalValid} days`,
-                alignment: 'center',
-                bold: true
-              }
-            ]
-          ],
-          style: ['columnsStyle']
-        }
-      );
-    }
-
-  this.generatingNumber++;
-  let Isend = this.generatingNumber == this.buildingNumber * this.buildingTypeLength;
-    let docDefinitionpdf = {
-      pageMargins: [40, 20, 40, 60],
-      content: this.docDefinition,
-      footer: function (currentPage) {
-        return [
-          {
-            text: currentPage == 1 ? footerText : '',
-            bold: true,
-            marginLeft: 35,
-            alignment: 'center'
-          },
-          {
-            layout: 'lightHorizontalLines',
-            table: {
-              headerRows: 1,
-              widths: ['auto', 'auto', 'auto'],
-              body: [
-                ['', '', ''],
-                [
-                  [
-                    { text: 'Office Ph#: (208) 608-5569', style: ['footerText'] },
-                    { text: 'office@ehroofing.com', style: ['footerNetwork'] }
-                  ],
-                  [
-                    {
-                      text: 'Adress: 9530 S Powerline Rd, Nampa, ID 83686',
-                      style: ['footerText']
-                    },
-                    { text: 'www.ehroofing.com', style: ['footerNetwork'] }
-                  ],
-                  [
-                    {
-                      image: logo4,
-                      width: 60
-                    }
-                  ]
-                ]
-              ]
-            },
-            style: ['tableStyles']
-          }
-        ];
-      },
-      //css
-      styles: {
-        proposal: {
-          fontSize: 22,
-          bold: true
-        },
-        proposalMin: {
-          fontSize: 16,
-          bold: true
-        },
-        columnsStyle: {
-          marginTop: 10
-        },
-        fontSizeText: {
-          fontSize: 12
-        },
-        scopeWork: {
-          fontSize: 17,
-          bold: true
-        },
-        footerText: {
-          fontSize: 12,
-          bold: true
-        },
-        footerNetwork: {
-          color: '#007aff',
-          bold: true
-        },
-        tableStyles: {
-          marginLeft: 40,
-          marginRight: 10
-        }
-      },
-      images
-    };
-    let singledocDefinitionpdf = {
-      pageMargins: [40, 20, 40, 60],
-      content: [
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto', 'auto', 'auto'],
-            body: [tableLogos, ['', '', '', '']]
-          }
-        },
-        {
-          columns: [
-            {
-              //split text
-              text: [{ text: 'Proposal ', style: ['proposal'] }]
-            },
-            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
-          ]
-        },
-        {
-          columns: [
-            //paragraphs
-            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
-            [
-              { text: this.stPhone, alignment: 'right' },
-              { text: this.stEmail, alignment: 'right' }
-            ]
-          ],
-          style: ['columnsStyle']
-        },
-        {
-          //split text
-          text: [{ text: 'Job: ' }, { text: jobType }],
-          style: ['fontSizeText', 'columnsStyle']
-        },
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*'],
-            body: [[''], ['']]
-          }
-        },
-        {
-          //split text
-          text: [
-            { text: 'Scope of work/ Building: ' },
-            { text: building.building.description }
-          ],
-          style: ['scopeWork', 'columnsStyle']
-        },
-        {
-          // to treat a paragraph as a bulleted list, set an array of items under the ul key
-          ul: sowText,
-          style: ['columnsStyle'],
-          pageBreak: 'after'
-        },
-        //page 2
-        {
-          columns: [
-            {
-              //split text
-              text: [{ text: 'Proposal ', style: ['proposal'] }]
-            },
-            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
-          ]
-        },
-        {
-          columns: [
-            //paragraphs
-            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
-            [
-              { text: this.stPhone, alignment: 'right' },
-              { text: this.stEmail, alignment: 'right' }
-            ]
-          ],
-          style: ['columnsStyle']
-        },
-        {
-          //split text
-          text: [{ text: 'Job: ' }, { text: jobType }],
-          style: ['fontSizeText', 'columnsStyle']
-        },
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*'],
-            body: [[''], ['']]
-          }
-        },
-        ...signSections,
-        {
-          columns: [
-            //paragraphs
-            [
-              {
-                text:
-                  'Terms: All accounts due and payable 10 days from date work is completed.  A finance charge of ' +
-                  '1 ½ per month which is 18% per annum will be charged on the unpaid balance of past due accounts.' +
-                  'Customer agrees to pay a reasonable attorney’s fee and other costs of collection after default ' +
-                  'and referral to an attorney. A 15% restocking fee will be charged if job is canceled without notice. ',
-                alignment: 'center',
-                fontSize: 8
-              },
-              {
-                text:
-                  'A 3.5% processing fee will be charged on all credit/debit card payments. Excludes: Unforeseen removal or ' +
-                  'cutting of siding, mold remediation, framing, roof deck, fascia, soffit, gutters, metal trims, HVAC, ' +
+                  'A 3.5% processing fee will be charged on all credit/debit card payments. Excludes: Unforeseen removal or '+
+                  'cutting of siding, mold remediation, framing, roof deck, fascia, soffit, gutters, metal trims, HVAC, '+
                   'snow removal, and any damage due to vibrations, damages to existing skylight and sheet rock.',
                 alignment: 'center',
                 fontSize: 8,
@@ -1363,7 +877,7 @@ Drip Edge color: -> dripEdgeColor
                 ['', '', ''],
                 [
                   [
-                    { text: 'Office Ph#: (208) 608-5569', style: ['footerText'] },
+                    { text: 'Office contact: # (208) 608-5569', style: ['footerText'] },
                     { text: 'office@ehroofing.com', style: ['footerNetwork'] }
                   ],
                   [
@@ -1384,7 +898,7 @@ Drip Edge color: -> dripEdgeColor
             },
             style: ['tableStyles']
           }
-        ];
+        ]
       },
       //css
       styles: {
@@ -1418,15 +932,10 @@ Drip Edge color: -> dripEdgeColor
           marginLeft: 40,
           marginRight: 10
         }
-      },
-      images
+      }
     };
-    if (Isend) {
-      this.pdfObject = pdfMake.createPdf(docDefinitionpdf);
-    }
-    else {
-        this.pdfObject = pdfMake.createPdf(singledocDefinitionpdf);
-    }
+
+    this.pdfObject = pdfMake.createPdf(docDefinition);
     if (this.platform.is('cordova')) {
       this.pdfObject.getBuffer(buffer => {
         var blob = new Blob([buffer], { type: 'application/pdf' });
@@ -1441,13 +950,11 @@ Drip Edge color: -> dripEdgeColor
         this.file
           .writeFile(
             path,
-            'Proposal_' + building.building.id + '_' + type + this.generatingNumber + '.pdf',
+            'Proposal_' + building.building.id + '_' + type + '.pdf',
             blob,
             { replace: true }
           )
           .then(entry => {
-            console.log('successful');
-
             this.urlpath = `${path}Proposal_${building.building.id}_${type}.pdf`;
             let win: any = window;
             var myURL = win.Ionic.WebView.convertFileSrc(this.urlpath);
@@ -1457,48 +964,12 @@ Drip Edge color: -> dripEdgeColor
               urlPDF: myURL,
               file: this.urlpath
             });
-            if (Isend) {
-              console.log("makde pdf for printing");
-              
-              this.printerpdf = `${path}Proposal_${building.building.id}_${type}.pdf`;
-            }
           });
       });
 
       return true;
     }
-    
     this.pdfObject.open();
-  }
-
-  PrinterFunction() {
-    console.log("click Print", this.printerpdf);
-    
-    this.printer
-    .print(this.printerpdf, {
-      name: 'My PDF'
-    })
-    .then(
-      () => {
-        console.log('Print success!');
-        // this.disablePrinter = false;
-      },
-      error => {
-        console.error('Print failed:', error);
-      }
-    )
-    .catch(err => {
-      console.error('Unexpected error:', err);
-    });
-  }
-
-  async blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
   }
 
   selectPage(selectedPage) {
@@ -1524,8 +995,6 @@ Drip Edge color: -> dripEdgeColor
     let init = this.pdfs.find(
       pdf => pdf.idBuilding == this.buildingOp[0].id && pdf.type == this.typeTxt
     );
-    console.log('init', init);
-
     if (init != undefined) {
       this.pdfSrc = init.urlPDF;
     }
@@ -1668,41 +1137,40 @@ Drip Edge color: -> dripEdgeColor
     ];
     const day = [
       '',
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '10',
-      '11',
-      '12',
-      '13',
-      '14',
-      '15',
-      '16',
-      '17',
-      '18',
-      '19',
-      '20',
-      '21',
-      '22',
-      '23',
-      '24',
-      '25',
-      '26',
-      '27',
-      '28',
-      '29',
-      '30',
-      '31'
+      '1st',
+      '2nd',
+      '3rd',
+      '4th',
+      '5th',
+      '6th',
+      '7th',
+      '8th',
+      '9th',
+      '10th',
+      '11th',
+      '12th',
+      '13th',
+      '14th',
+      '15th',
+      '16th',
+      '17th',
+      '18th',
+      '19th',
+      '20th',
+      '21st',
+      '22nd',
+      '23rd',
+      '24th',
+      '25th',
+      '26th',
+      '27th',
+      '28th',
+      '29th',
+      '30th',
+      '31st'
     ];
-    var newDate = `${month[date.getMonth()]} ${
-      day[date.getDate()]
-    }, ${date.getFullYear()}`;
+    var newDate = `${month[date.getMonth()]} ${day[date.getDate()]
+      } ${date.getFullYear()}`;
     return newDate;
   }
 
@@ -1721,162 +1189,5 @@ Drip Edge color: -> dripEdgeColor
       this.synProjects.syncOffline();
       this.navController.navigateForward('home/prospecting');
     }, 500);
-  }
-
-  async chechIsFinalProposal(version: Version, buildingId): Promise<void> {
-    // First validations IsFInal
-    console.log(
-      version.shingle_lines.filter(
-        item => item.deletedAt === null && item.is_selected === true
-      ).length
-    );
-    console.log(
-      version.buildings
-        .find(item => item.id == buildingId)
-        .psb_measure.psb_upgrades.filter(item => item.id_cost_integration === 2).length
-    );
-    console.log(
-      version.buildings
-        .find(item => item.id == buildingId)
-        .psb_measure.psb_options.filter(
-          item => !item.is_built_in && item.deletedAt === null
-        ).length
-    );
-    const checkShinglesToFinal =
-      version.shingle_lines.filter(
-        item => item.deletedAt === null && item.is_selected === true
-      ).length === 1;
-    const checkPsbUpgradesToFinal =
-      version.buildings
-        .find(item => item.id == buildingId)
-        .psb_measure.psb_upgrades.filter(item => item.id_cost_integration === 2)
-        .length === 0;
-    const checkPsbOptionsToFinal =
-      version.buildings
-        .find(item => item.id == buildingId)
-        .psb_measure.psb_options.filter(
-          item => !item.is_built_in && item.deletedAt === null
-        ).length === 0;
-    console.log(checkShinglesToFinal);
-    console.log(checkPsbUpgradesToFinal);
-    console.log(checkPsbOptionsToFinal);
-    this.finalProposal.isFinal =
-      checkShinglesToFinal && checkPsbUpgradesToFinal && checkPsbOptionsToFinal;
-    console.log(this.finalProposal.isFinal);
-
-    // Flashing color
-    const pipeFlashing =
-      (await this.checkPsbMaterialCalcSelectedList(
-        'category_pipe_flashing3in1',
-        buildingId
-      )) &&
-      (await this.checkPsbMaterialCalcSelectedList(
-        'category_pipe_flashing2in1',
-        buildingId
-      ));
-    const jVents =
-      (await this.checkPsbMaterialCalcSelectedList('category_jvent4', buildingId)) &&
-      (await this.checkPsbMaterialCalcSelectedList('category_jvent6', buildingId));
-    const powerFans =
-      (await this.checkPsbMaterialCalcSelectedList(
-        'category_solar_power_vents',
-        buildingId
-      )) &&
-      (await this.checkPsbMaterialCalcSelectedList('category_power_vents', buildingId));
-    const rollMetal = await this.checkPsbMaterialCalcSelectedList(
-      'category_rolled_metal',
-      buildingId
-    );
-    const endwall = await this.checkPsbMaterialCalcSelectedList(
-      'category_end_wall_metal',
-      buildingId
-    );
-    const sprayPaint = await this.checkPsbMaterialCalcSelectedList(
-      'category_spray_paint',
-      buildingId
-    );
-    const louvreVents = await this.checkPsbMaterialCalcSelectedList(
-      'category_louvre_vents',
-      buildingId
-    );
-
-    this.finalProposal.flashingColor =
-      pipeFlashing ||
-      jVents ||
-      powerFans ||
-      rollMetal ||
-      endwall ||
-      sprayPaint ||
-      louvreVents;
-
-    //SA Cap color
-    this.finalProposal.sACapColor = await this.checkPsbMaterialCalcSelectedList(
-      'category_sa_cap',
-      buildingId
-    );
-
-    //Attic Vents color
-    this.finalProposal.atticVentColor = await this.checkPsbMaterialCalcSelectedList(
-      'category_metal_artict_vents',
-      buildingId
-    );
-
-    //Reglet color
-    this.finalProposal.regletColor = await this.checkPsbMaterialCalcSelectedList(
-      'category_ridglet',
-      buildingId
-    );
-
-    // category_soffit_vents
-    this.finalProposal.soffitVentColor = await this.checkPsbMaterialCalcSelectedList(
-      'category_soffit_vents',
-      buildingId
-    );
-
-    // category_soffit_vents
-    this.finalProposal.soffitVentColor = await this.checkPsbMaterialCalcSelectedList(
-      'category_soffit_vents',
-      buildingId
-    );
-
-    // Shingle and Ridge color and Drip Edge color
-    const jobMaterialTypeId = version.buildings.find(item => item.id == buildingId)
-      .job_material_type.id;
-    const jobMaterialTypeShingle = await this.general.getConstDecimalValue(
-      'job_material_type_shingle'
-    );
-    this.finalProposal.shingleColor = jobMaterialTypeId === jobMaterialTypeShingle;
-    this.finalProposal.dripEdgeColor = jobMaterialTypeId === jobMaterialTypeShingle;
-    console.log('this.finalProposal');
-    console.log(this.finalProposal);
-  }
-
-  async checkPsbMaterialCalcSelectedList(key: string, buildingId) {
-    console.log(key);
-    // busco id de la categoria en generals
-    const categoryMetalArtictVents = await this.general.getConstDecimalValue(key);
-
-    // obtengo material tipes relacionados con la categoria
-    const { data: materialTypesData } =
-      await this.catalogsService.getMeasuresMaterialTypes();
-    const materialsTypesIds = materialTypesData
-      .filter(item => item.id_material_category === categoryMetalArtictVents)
-      .map(item => item.id);
-
-    // obtengo los materials relacionados a esos material tipes
-    const { data: materialsData } = await this.materialService.getMaterials(); //
-    const materialsIds = materialsData
-      .filter(item => materialsTypesIds.includes(item.id_material_type))
-      .map(item => Number(item.id));
-    const building = this.buildings.find(item => item.id == buildingId);
-    // obtengo en los materiales calculados relacionados con materials price list ids
-    const psbMaterialCalcSelectedList =
-      building.psb_measure.psb_material_calculations.filter(
-        item => materialsIds.includes(item.id_concept) && item.deletedAt == null
-      );
-    console.log('psbMaterialCalcSelectedList');
-    console.log(psbMaterialCalcSelectedList);
-    if (psbMaterialCalcSelectedList.length >= 1) return true;
-    else return false;
   }
 }

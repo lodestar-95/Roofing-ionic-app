@@ -138,6 +138,7 @@ export class NewMaterialModalComponent implements OnInit {
   getSelectedMaterialPrice() {
     const priceIds = this.priceLists.filter(x => x.id_supplier == this.selectedSupplierId && x.is_current==true).map(x => '' + x.id);
     const materialPriceList = this.materialPriceLists.find(x => x.id_material == this.selectedMaterialId && priceIds.includes('' + x.id_price_list))
+    console.log(materialPriceList);
     return materialPriceList?.cost ?? 0;
   }
 

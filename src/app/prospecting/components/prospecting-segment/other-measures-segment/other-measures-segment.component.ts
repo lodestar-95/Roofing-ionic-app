@@ -236,24 +236,9 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
     this.ventingList = [];
     this.ventingList.push(
       {
-        description: 'J Vent 4”',
-        value: `${this.building.psb_measure.vent_j_vent_4_pc} PC`,
-        visible: this.building.psb_measure.vent_j_vent_4_pc ? true : false
-      },
-      {
-        description: 'J Vent 6”',
-        value: `${this.building.psb_measure.vent_j_vent_6_pc} PC`,
-        visible: this.building.psb_measure.vent_j_vent_6_pc ? true : false
-      },
-      {
-        description: 'Ridge Vent',
-        value: `${this.building.psb_measure.vent_ridgevent_lf} LF`,
-        visible: this.building.psb_measure.vent_ridgevent_lf ? true : false
-      },
-      {
-        description: 'Metal Attic Vents to replace',
-        value: `${this.building.psb_measure.vent_metal_artict_replace_pc} PC`,
-        visible: this.building.psb_measure.vent_metal_artict_replace_pc ? true : false
+        description: 'Existing Metal Attic Vents',
+        value: `${this.building.psb_measure.vent_metal_artict} PC`,
+        visible: this.building.psb_measure.vent_metal_artict ? true : false
       },
       {
         description: 'Metal Attic Vents to remove and cover',
@@ -261,9 +246,263 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.vent_metal_artict_remove_pc ? true : false
       },
       {
-        description: 'Cut in New Metal Attic Vents',
-        value: `${this.building.psb_measure.vent_metal_artict_cut_in_pc} PC`,
-        visible: this.building.psb_measure.vent_metal_artict_cut_in_pc ? true : false
+        description: 'Metal Attic Vents to keep',
+        value: `${this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove_pc} PC`,
+        visible: this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove_pc > 0? true : false
+      },
+      {
+        description: 'Metal Attic Vents to add',
+        value: `${this.building.psb_measure.vent_metal_artict_replace_pc} PC`,
+        visible: this.building.psb_measure.vent_metal_artict_replace_pc ? true : false
+      },
+      
+      
+      {
+        description: 'Existing J Vent 4”',
+        value: `${this.building.psb_measure.vent_j_vent_4_pc} PC`,
+        visible: this.building.psb_measure.vent_j_vent_4_pc ? true : false
+      },
+      {
+        description: 'J Vent 4” to remove and cover',
+        value: `${this.building.psb_measure.vent_j_vent_4_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_j_vent_4_pc_remove ? true : false
+      },
+      {
+        description: 'J Vent 4” to keep',
+        value: `${this.building.psb_measure.vent_j_vent_4_pc - this.building.psb_measure.vent_j_vent_4_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_j_vent_4_pc - this.building.psb_measure.vent_j_vent_4_pc_remove? true : false
+      },
+      {
+        description: 'J Vent 4” to add',
+        value: `${this.building.psb_measure.vent_j_vent_4_pc_add} PC`,
+        visible: this.building.psb_measure.vent_j_vent_4_pc_add ? true : false
+      },
+      {
+        description: 'J Vent 6”',
+        value: `${this.building.psb_measure.vent_j_vent_6_pc} PC`,
+        visible: this.building.psb_measure.vent_j_vent_6_pc ? true : false
+      },
+      {
+        description: 'J Vent 6” to remove and cover',
+        value: `${this.building.psb_measure.vent_j_vent_6_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_j_vent_6_pc_remove ? true : false
+      },
+      {
+        description: 'J Vent 6” to keep',
+        value: `${this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_pc_remove? true : false
+      },
+      {
+        description: 'J Vent 6” to add',
+        value: `${this.building.psb_measure.vent_j_vent_6_pc_add} PC`,
+        visible: this.building.psb_measure.vent_j_vent_6_pc_add ? true : false
+      },
+
+      {
+        description: 'Existing 4" LV with extensions',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions ? true : false
+      },
+
+      {
+        description: '4" LV with extensions to remove and cover',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove } PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove  ? true : false
+      },
+      {
+        description: '4" LV with extensions to keep',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove? true : false
+      },
+      {
+        description: '4" LV with extensions to add',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsAdd} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsAdd ? true : false
+      },
+
+
+      {
+        description: 'Existing 6" LV with extensions',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensions} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensions ? true : false
+      },
+
+      {
+        description: '6" LV with extensions to remove and cover',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensionsRemove } PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensionsRemove  ? true : false
+      },
+      {
+        description: '6" LV with extensions to keep',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensions - this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensionsRemove} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensions - this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensionsRemove? true : false
+      },
+      {
+        description: '6" LV with extensions to add',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensionsAdd} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithExtensionsAdd ? true : false
+      },
+
+      {
+        description: '4" LV without with extensions',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensions} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensions ? true : false
+      },
+      {
+        description: '4" LV without to remove and cover',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsRemove} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsRemove ? true : false
+      },
+      {
+        description: '4" LV without to keep',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensions - this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsRemove} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensions - this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsRemove? true : false
+      },
+      {
+        description: '4" LV without to add',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsAdd} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsAdd ? true : false
+      },
+
+      {
+        description: '6" LV without extensions',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensions} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensions ? true : false
+      },
+      {
+        description: '6" LV without to remove and cover',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensionsRemove} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensionsRemove ? true : false
+      },
+      {
+        description: '6" LV without to keep',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensions - this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensionsRemove} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensions - this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensionsRemove? true : false
+      },
+      {
+        description: '6" LV without to add',
+        value: `${this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensionsAdd} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.louveredVent6WithoutExtensionsAdd ? true : false
+      },
+
+      {
+        description: 'Ridge Vent to in place',
+        value: `${this.building.psb_measure.vent_ridgevent_lf} LF`,
+        visible: this.building.psb_measure.vent_is_ridgevent_in_place && !this.building.psb_measure.vent_is_ridgevent_be_replace && this.building.psb_measure.vent_ridgevent_lf? true : false
+      },
+      {
+        description: 'Ridge Vent to add',
+        value: `${this.building.psb_measure.vent_ridgevent_lf} LF`,
+        visible: this.building.psb_measure.vent_is_ridgevent_add && this.building.psb_measure.vent_ridgevent_lf? true : false
+      },
+
+      {
+        description: 'Ridge Vent to be replace',
+        value: `${this.building.psb_measure.vent_ridgevent_lf} LF`,
+        visible: this.building.psb_measure.vent_is_ridgevent_be_replace && this.building.psb_measure.vent_ridgevent_lf? true : false
+      },
+
+      {
+        description: 'Existing 4" x 16" SV',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent416} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent416 ? true : false
+      },
+      {
+        description: '4" x 16" SV to remove and cover',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent416Remove} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent416Remove ? true : false
+      },
+
+      {
+        description: '4" x 16" SV to keep',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent416 - this.building.psb_measure.psb_soffitvents.soffitVent416Remove} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent416 -this.building.psb_measure.psb_soffitvents.soffitVent416Remove ? true : false
+      },
+      {
+        description: '4" x 16" SV to add',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent416Add} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent416Add ? true : false
+      },
+      {
+        description: 'Existing 6" x 16" SV',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent616} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent616 ? true : false
+      },
+      {
+        description: '6" x 16" SV to remove and cover',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent616Remove} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent616Remove ? true : false
+      },
+
+      {
+        description: '6" x 16" SV to keep',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent616 - this.building.psb_measure.psb_soffitvents.soffitVent616Remove} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent616 -this.building.psb_measure.psb_soffitvents.soffitVent616Remove ? true : false
+      },
+      {
+        description: '6" x 16" SV to add',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent616Add} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent616Add ? true : false
+      },
+      {
+        description: 'Existing 2" SV',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent2} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent2 ? true : false
+      },
+      {
+        description: '2" SV to remove and cover',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent2Remove} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent2Remove ? true : false
+      },
+      {
+        description: '2" SV to keep',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent2 - this.building.psb_measure.psb_soffitvents.soffitVent2Remove } PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent2 - this.building.psb_measure.psb_soffitvents.soffitVent2Remove ? true : false
+      },
+      {
+        description: '2" SV to add',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent2Add} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent2Add ? true : false
+      },
+      {
+        description: 'Existing 3" SV',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent3} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent3 ? true : false
+      },
+      {
+        description: '3" SV to remove and cover',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent3Remove} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent3Remove ? true : false
+      },
+      {
+        description: '3" SV to keep',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent3 - this.building.psb_measure.psb_soffitvents.soffitVent3Remove } PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent3 - this.building.psb_measure.psb_soffitvents.soffitVent3Remove ? true : false
+      },
+      {
+        description: '3" SV to add',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent3Add} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent3Add ? true : false
+      },
+      {
+        description: 'Existing 4" SV',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent4} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent4 ? true : false
+      },
+      {
+        description: '4" SV to remove and cover',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent4Remove} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent4Remove ? true : false
+      },
+      {
+        description: '4" SV to keep',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent4 - this.building.psb_measure.psb_soffitvents.soffitVent4Remove } PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent4 - this.building.psb_measure.psb_soffitvents.soffitVent4Remove ? true : false
+      },
+      {
+        description: '4" SV to add',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVent4Add} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVent4Add ? true : false
       },
       {
         description: 'Existing solar power vent',
@@ -271,30 +510,60 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.vent_solar_power_vent_pc ? true : false
       },
       {
+        description: 'Solar power vent to remove and cover',
+        value: `${this.building.psb_measure.vent_solar_power_vent_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_solar_power_vent_pc_remove ? true : false
+      },
+      {
+        description: 'Solar power vent to keep',
+        value: `${this.building.psb_measure.vent_solar_power_vent_pc - this.building.psb_measure.vent_solar_power_vent_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_solar_power_vent_pc - this.building.psb_measure.vent_solar_power_vent_pc_remove? true : false
+      },
+      {
+        description: 'Solar power vent to add',
+        value: `${this.building.psb_measure.vent_solar_power_vent_pc_add} PC`,
+        visible: this.building.psb_measure.vent_solar_power_vent_pc_add ? true : false
+      },
+      {
         description: 'Existing power vent',
         value: `${this.building.psb_measure.vent_power_vent_pc} PC`,
         visible: this.building.psb_measure.vent_power_vent_pc ? true : false
       },
       {
-        description: 'Exposed wide soffit on eves',
-        value: `${this.building.psb_measure.vent_soffit_eves_in} IN`,
-        visible: this.building.psb_measure.vent_soffit_eves_in ? true : false
+        description: 'Power vent to remove and cover',
+        value: `${this.building.psb_measure.vent_power_vent_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_power_vent_pc_remove ? true : false
       },
       {
-        description: 'Exposed wide soffit on rakes',
-        value: `${this.building.psb_measure.vent_soffit_rakes_in} IN`,
-        visible: this.building.psb_measure.vent_soffit_rakes_in ? true : false
+        description: 'Power vent to keep',
+        value: `${this.building.psb_measure.vent_power_vent_pc - this.building.psb_measure.vent_power_vent_pc_remove} PC`,
+        visible: this.building.psb_measure.vent_power_vent_pc -this.building.psb_measure.vent_power_vent_pc_remove ? true : false
       },
+      {
+        description: 'Power vent to add',
+        value: `${this.building.psb_measure.vent_power_vent_pc_add} PC`,
+        visible: this.building.psb_measure.vent_power_vent_pc_add ? true : false
+      },
+      // {
+      //   description: 'Exposed wide soffit on eves',
+      //   value: `${this.building.psb_measure.vent_soffit_eves_in} IN`,
+      //   visible: this.building.psb_measure.vent_soffit_eves_in ? true : false
+      // },
+      // {
+      //   description: 'Exposed wide soffit on rakes',
+      //   value: `${this.building.psb_measure.vent_soffit_rakes_in} IN`,
+      //   visible: this.building.psb_measure.vent_soffit_rakes_in ? true : false
+      // },
       {
         description: 'All Expossed soffit',
         value: `${this.building.psb_measure.vent_additional_soffit_eves_sf} SF`,
         visible: this.building.psb_measure.vent_additional_soffit_eves_sf ? true : false
       },
-      {
-        description: 'Cut siding on walls',
-        value: `${this.building.psb_measure.vent_cut_sidding_walls_lf} LF`,
-        visible: this.building.psb_measure.vent_cut_sidding_walls_lf ? true : false
-      }
+      // {
+      //   description: 'Cut siding on walls',
+      //   value: `${this.building.psb_measure.vent_cut_sidding_walls_lf} LF`,
+      //   visible: this.building.psb_measure.vent_cut_sidding_walls_lf ? true : false
+      // }
     );
   }
 
@@ -570,96 +839,101 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
    * @returns
    */
   async onVerifiedCheked(event) {
-        let aRestar = 0;
-        if (!this.validPitchAngleFlatRoof) {aRestar++;}
-        if (!this.validPitchAngleLowSlope) {aRestar++;}
-        if (!this.validPitchAngleSteepSlope) {aRestar++;}
-    
-        const totalModals = 7 - aRestar;
-    
-        const verifiedInformation = this.projectShingleBuilding.psb_verifieds
-          ? [...this.projectShingleBuilding.psb_verifieds]
-          : [];
-    
-        const verified = verifiedInformation.filter(
-          x => x.id_resource >= 13 && x.id_resource <= 21 && x.is_verified
-        );
-    
-        if (verified.length >= totalModals) {
-          this.showIconError = false;
-          let psb_verifieds = this.projectService.getShingleVerifiedInformation(
-            9,
-            !this.otherMeasuresActive
-          );
-    
-          const shingle: PsbMeasures = {
-            ...this.projectShingleBuilding,
-            psb_verifieds,
-          };
-    
-          if(shingle.hips_lf > 0 && shingle.ridge_lf > 0 && !event) {
-            shingle.psb_verifieds = shingle.psb_verifieds.filter(item => item.id_resource !== 12);
-          }
-    
-          if(shingle.hips_lf === 0 && shingle.ridge_lf === 0) {
-    
-            //tenemos que eliminar los materiales id_material_category: 7
-            if (shingle.psb_selected_materials) {
-                shingle.psb_selected_materials = shingle.psb_selected_materials.map(x => {
-                  if (x.id_material_category == 7) {
-                    return { ...x, deletedAt: new Date() };
-                  }
-                  return x;
-                });
-            }
-    
-            const upgradeRidgeventsId = await this.general.getConstDecimalValue('upgrade_ridgevents');
-            const costIntegrationDeclinedId = await this.general.getConstDecimalValue('cost_integration_declined');
-            const resourceSelectionId = await this.general.getConstDecimalValue('resource_selection');
-    
-            if(shingle.psb_upgrades && shingle.psb_upgrades.length > 0 ){
-    
-              shingle.psb_upgrades = shingle.psb_upgrades.map(x => {
-                if(x.id_upgrade === upgradeRidgeventsId) {
-                  return {...x, id_cost_integration: costIntegrationDeclinedId};
-                }
-                return x;
-              });
-            } else {
-              shingle.psb_upgrades = [{
-                id_upgrade: upgradeRidgeventsId,
-                id: null,
-                id_project: this.project.id,
-                id_cost_integration: costIntegrationDeclinedId,
-                isModified: null,
-            }
-              ];
-            }
-    
-            const categoryRidgecapId = await this.general.getConstDecimalValue('category_ridgecap');
-            if(shingle.psb_selected_materials){
-              shingle.psb_selected_materials = shingle.psb_selected_materials.map(
-                x => {
-                  if (x.id_material_category === categoryRidgecapId) {
-                    return {...x, deletedAt:  new Date()};
-                  }
-    
-                return x;}
-              );
-            }
-    
-          }
+    let aRestar = 0;
+    if (!this.validPitchAngleFlatRoof) {aRestar++;}
+    if (!this.validPitchAngleLowSlope) {aRestar++;}
+    if (!this.validPitchAngleSteepSlope) {aRestar++;}
 
-            this.projectService.saveProjectShingleBuilding(shingle);
-            setTimeout(() => {
-              if (!event) {
-                this.synProjects.syncOffline();
-                this.changeSegmentEmmited.emit('options');
-              }
-            }, 500);
+    const totalModals = 7 - aRestar;
+
+    const verifiedInformation = this.projectShingleBuilding.psb_verifieds
+      ? [...this.projectShingleBuilding.psb_verifieds]
+      : [];
+
+
+    const psb_no_requireds = this.projectService.getShingleNoRequired(12, false, true);
+    const psb_selection_verifieds = this.projectService.getShingleVerifiedInformation(
+    12,
+    false
+    );
+
+    const verified = verifiedInformation.filter(
+      x => x.id_resource >= 13 && x.id_resource <= 21 && x.is_verified
+    );
+
+    if (verified.length >= totalModals) {
+      this.showIconError = false;
+      let psb_verifieds = this.projectService.getShingleVerifiedInformation(
+        9,
+        !this.otherMeasuresActive
+      );
+
+      psb_verifieds = [...psb_verifieds, ...psb_selection_verifieds];
+
+      //this.projectShingleBuilding.psb_selected_materials = [];
+
+      if(this.projectShingleBuilding.psb_selected_materials){
+        this.projectShingleBuilding.psb_selected_materials = this.projectShingleBuilding.psb_selected_materials.map(
+          x => {return {...x, deletedAt:  new Date()};}
+        );
+      }
+
+      const shingle: PsbMeasures = {
+        ...this.projectShingleBuilding,
+        psb_verifieds,
+        psb_no_requireds
+      };
+
+      if(shingle.hips_lf === 0 && shingle.ridge_lf === 0) {
+        const upgradeRidgeventsId = await this.general.getConstDecimalValue('upgrade_ridgevents');
+        const costIntegrationDeclinedId = await this.general.getConstDecimalValue('cost_integration_declined');
+        const resourceSelectionId = await this.general.getConstDecimalValue('resource_selection');
+
+        shingle.psb_verifieds = shingle.psb_verifieds.filter(item => item.id_resource !== resourceSelectionId);
+
+        if(shingle.psb_upgrades && shingle.psb_upgrades.length > 0 ){
+
+          shingle.psb_upgrades = shingle.psb_upgrades.map(x => {
+            if(x.id_upgrade === upgradeRidgeventsId) {
+              return {...x, id_cost_integration: costIntegrationDeclinedId};
+            }
+            return x;
+          });
         } else {
-          this.showIconError = true;
+          shingle.psb_upgrades = [{
+            id_upgrade: upgradeRidgeventsId,
+            id: null,
+            id_project: this.project.id,
+            id_cost_integration: costIntegrationDeclinedId,
+            isModified: null,
         }
+          ];
+        }
+
+        const categoryRidgecapId = await this.general.getConstDecimalValue('category_ridgecap');
+        if(shingle.psb_selected_materials){
+          shingle.psb_selected_materials = shingle.psb_selected_materials.map(
+            x => {
+              if (x.id_material_category === categoryRidgecapId) {
+                return {...x, deletedAt:  new Date()};
+              }
+
+            return x;}
+          );
+        }
+
+      }
+      this.projectService.saveProjectShingleBuilding(shingle);
+      setTimeout(() => {
+        if (!event) {
+          this.synProjects.syncOffline();
+          this.changeSegmentEmmited.emit('options');
+        }
+      }, 500);
+
+    } else {
+      this.showIconError = true;
+    }
   }
 
   validateChanges() {

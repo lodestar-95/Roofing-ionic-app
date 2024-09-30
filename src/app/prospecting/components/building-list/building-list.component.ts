@@ -146,10 +146,11 @@ export class BuildingListComponent implements OnInit {
   }
 
   isDisabledBrand() {
-    /*const rolesForbiden = [1, 2];
+    const rolesForbiden = [1, 2];
     if (rolesForbiden.includes(parseInt(this.user?.role.id_role)) && this.project.id_user_saleman != this.user?.id) {
       return true;
-    }*/
+    }
+
     return this.validCheckbox;
   }
 
@@ -219,9 +220,9 @@ export class BuildingListComponent implements OnInit {
 
     this.projectService.update(this.project.id, projectUpdated);
 
-    setTimeout(() => {
-      this.synprojects.syncOffline();
-    }, 500);
+    // setTimeout(() => {
+    //   this.synprojects.syncOffline();
+    // }, 500);
   }
 
   async makeMainBuilding(idProjectBuilding: number) {
@@ -327,11 +328,16 @@ export class BuildingListComponent implements OnInit {
             }
           }
 
+          console.log("test trademarks");
+          
+
           mark['id'] = element.id;
           mark['color'] = element.color;
           mark['trademark'] = element.trademark;
           mark['checked'] = t?.selected ? t.selected : false;
 
+          console.log(mark);
+          
           this.trademarks.push(mark);
         });
     });
@@ -414,7 +420,7 @@ export class BuildingListComponent implements OnInit {
   }
 
   onVerifiedCheked() {
-
+    
     if (this.validCheckbox) {
       this.version = { ...this.version, is_verified: false, isModified: true};
       this.projectService.saveVersion(this.version);

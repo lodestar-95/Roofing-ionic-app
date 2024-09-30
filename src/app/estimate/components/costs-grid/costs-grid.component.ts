@@ -174,13 +174,7 @@ export class CostsGridComponent implements OnInit, OnDestroy {
           key => (allCalculationList = [...allCalculationList, ...calculations[key]])
         );
       }
-console.log("allCalculationList", allCalculationList);
-console.log("allCalculationList.filter", allCalculationList
-  .filter(x => x.qty && x.qty > 0
-    && x.is_final == true
-    && x.id_material_type && x.id_material_type > 0
-    && shingleIds.includes(this.general.parseNumber(x.id_material_type_shingle))));
-console.log("b.psb_measure?.psb_material_calculations", b.psb_measure?.psb_material_calculations);
+
       const psb_material_calculations = allCalculationList
         .filter(x => x.qty && x.qty > 0
           && x.is_final == true
@@ -211,17 +205,13 @@ console.log("b.psb_measure?.psb_material_calculations", b.psb_measure?.psb_mater
             id_material: this.general.parseNumber(x.id_material),
           };
         });
-        console.log("psb_material_calculations", psb_material_calculations);
       b.psb_measure?.psb_material_calculations?.forEach(c => {
         const newCalculation = psb_material_calculations.find(x => x.id_concept_type == c.id_concept_type && x.id_material_shingle == c.id_material_shingle);
         if (!newCalculation) {
           psb_material_calculations.push({ ...c, deletedAt: new Date(), isModified: true });
         }
       });
-      console.log("psb_material_calculations", psb_material_calculations);
       const measure = { ...b.psb_measure, psb_material_calculations, isModified: true };
-
-      console.log("measure", measure);
       return { ...b, psb_measure: measure };
     });
 

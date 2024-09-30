@@ -53,6 +53,7 @@ export class ScopeEditModalComponent implements OnInit {
     if (!this.text) {
       await this.getDescriptions();
     }
+    console.log("*******onVerifiedClick");
 
     const scopes = this.building.pb_scopes.map(x => {
       if (x.id == idScope) {
@@ -67,10 +68,13 @@ export class ScopeEditModalComponent implements OnInit {
         return { ...x };
       }
     });
+    console.log(scopes);
 
     this.building = { ...this.building, pb_scopes: scopes };
     this.projectService.saveProjectBuilding(this.building);
+    console.log("*******save");
     this.loadScope();
+    console.log("*******onVerifiedClick end");
   }
   /**
    * Load init data scope
@@ -120,7 +124,9 @@ export class ScopeEditModalComponent implements OnInit {
           .filter(x => x.is_presidential == true)
           .sort((a, b) => a.order - b.order);
       }
+console.log("********getDescriptions");
       await this.textAppendTags();
+      console.log("********getDescriptions finished");
     });
   }
 
@@ -141,6 +147,7 @@ export class ScopeEditModalComponent implements OnInit {
       this.materials,
       this.project
     );
+    console.log("********textAppendTags finished");
   }
 
   /**

@@ -5,8 +5,10 @@
 </ion-header>
 
 <ion-content>
+
   <ion-slides [options]="sliderOpts">
     <ion-slide>
+
       <ion-grid>
         <ion-row>
           <ion-col>
@@ -21,34 +23,18 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-label class="sf-pro-semibold roofing-subtitble"
-              >{{ message.subTitle }}</ion-label
-            >
+            <ion-label class="sf-pro-semibold roofing-subtitble">{{ message.subTitle }}</ion-label>
           </ion-col>
         </ion-row>
-        <ion-row style="padding-top: 10px">
+        <ion-row style="padding-top: 10px;">
           <ion-col>
-            <ion-icon
-              *ngIf="message.icon === 'success'"
-              size="large"
-              name="checkmark-circle-outline"
-              class="icon-success"></ion-icon>
-            <ion-icon
-              *ngIf="message.icon !== 'success'"
-              size="large"
-              name="sad-outline"
-              class="icon-error"></ion-icon>
+            <ion-icon *ngIf="message.icon === 'success'" size="large" name="checkmark-circle-outline" class="icon-success"></ion-icon>
+            <ion-icon *ngIf="message.icon !== 'success'" size="large" name="sad-outline" class="icon-error"></ion-icon>
           </ion-col>
         </ion-row>
-
-        <ion-button
-          class="sf-pro-semibold"
-          expand="block"
-          color="primary"
-          (click)="tologinpage()">
-          Go to login page
-        </ion-button>
       </ion-grid>
+
     </ion-slide>
   </ion-slides>
+
 </ion-content>

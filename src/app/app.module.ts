@@ -10,7 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TouchID } from '@awesome-cordova-plugins/touch-id/ngx';
 
-import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
+import { Device } from '@ionic-native/device/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -27,8 +27,7 @@ import { File } from '@awesome-cordova-plugins/file/ngx';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
 import { EventService } from './services/event.service';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
-import { Printer } from '@ionic-native/printer/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -67,9 +66,7 @@ import { Printer } from '@ionic-native/printer/ngx';
     File,
     EmailComposer,
     TouchID,
-    UniqueDeviceID,
-    Deeplinks,
-    Printer
+    Device
   ],
   bootstrap: [AppComponent],
 })

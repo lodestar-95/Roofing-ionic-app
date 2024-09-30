@@ -10,7 +10,7 @@ import {
 import { JwtValidateService } from '../shared/helpers/jwt-validate.service';
 import { MessageResetPasswordService } from './services/message-reset-password.service';
 import { AuthService } from '../login/services/auth/auth.service';
-import { UsersService } from 'src/app/common/services/storage/users.service';
+
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.page.html',
@@ -34,9 +34,7 @@ export class ResetPasswordPage implements OnInit {
     private message: MessageResetPasswordService,
     private nav: NavController,
     private toastController: ToastController,
-    private auth: AuthService,
-    private usersService: UsersService,
-
+    private auth: AuthService
   ) {}
 
   async ngOnInit() {
@@ -45,8 +43,6 @@ export class ResetPasswordPage implements OnInit {
     this.token = this.route.snapshot.paramMap.get('token');
     this.payload = this.jwtService.getPayload(this.token);
 
-    console.log(this.payload );
-    
     let isTokenDateValid = this.jwtService.isDateValid(this.token);
     if (isTokenDateValid) {
     } else {
@@ -96,21 +92,15 @@ export class ResetPasswordPage implements OnInit {
    * @param form
    * @returns
    */
-   changePassword(form: NgForm) {
+  changePassword(form: NgForm) {
     if (form.invalid) {
       return;
     }
 
     if (this.password1 === this.password2) {
       this.auth.changePassword(this.password1, this.token).subscribe(
-        async (result: any) => {
+        (result: any) => {
           if (result.isSuccess) {
-
-            await this.usersService.updatepassword(
-              this.payload.name,
-              this.password1,
-            );
-
             this.message.title = 'Password updated';
             this.message.subTitle =
               'Yor password has been updated succesfully.';

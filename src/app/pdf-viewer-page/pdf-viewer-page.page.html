@@ -17,20 +17,19 @@
       </div>
       <div>
         <ion-button (click)="openPopover($event,1)">
-          <label class="TitleSel">Building({{buildingNumber}}): </label>
+          <label class="TitleSel">Building: </label>
           <label class="Title">{{buildinTxt}}</label>
         </ion-button>
         <ion-button (click)="openPopover($event,2)">
-          <label class="TitleSel">Type({{buildingTypeLength}}): </label>
+          <label class="TitleSel">Type: </label>
           <label class="Title">{{typeTxt}}</label>
         </ion-button>
       </div>
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <!--<ion-icon name="checkmark-circle-outline" style="color: gray;"></ion-icon> [class.hidden]="disablePrinter"-->
-      <ion-icon name="print-outline" (click)="PrinterFunction()" class="printbutton"  color="primary"></ion-icon>
-      <ion-button (click)="openEmailClient()" [disabled]="!canSendEmail" class="mail">
+      <!--<ion-icon name="checkmark-circle-outline" style="color: gray;"></ion-icon>-->
+      <ion-button (click)="openEmailClient()" [disabled]="!canSendEmail">
         <img src="../../assets/imgs/mail_icon2.svg" height="30px" />
       </ion-button>
       <ion-button (click)="changeProjectStatus()" [disabled]="!canChangeStatus">
@@ -48,7 +47,7 @@
         <span class="Final-proposal">Proposal Preview</span>
       </ion-col>
     </ion-row>
-    <ion-row class="row" id="pdf-viewer">
+    <ion-row class="row">
       <ion-col size="12">
         <pdf-viewer
           *ngIf="pdfSrc != undefined"
