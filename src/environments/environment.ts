@@ -4,26 +4,27 @@
 
 export const environment = {
   production: false,
-   url: 'https://eh-roofing-gateway.herokuapp.com/api',
-  //url: 'http://localhost:8000/api',
+  url: 'https://eh-roofing-gateway.herokuapp.com/api',
+  //url: 'https://ehroofing-gw-gateway-prd-e7655b826815.herokuapp.com/api',
+  // url: 'http://localhost:8000/api',
 
   /** dropbox keys */
   //appKey:"57lwsplp5auk44k",
   //appSecret:"0nzbfv5z7j5fdin",
   //refreshToken: "Z4H5zFAg7yUAAAAAAAAAAdQOd00n0gisv-6vKvLuQjDpN1-T36joeLqPGaAoeFFe",
 
-//  appKey:"6edooml28x01qgw",
-//  appSecret:"72pcda6o140iry6",
-//  refreshToken: "pj2jRVkyIpEAAAAAAAAAAXuSmZ7rWpoFTZtgxD0YSpLBcS7E0jQRDWLPFP72Ukq4",
+  //  appKey:"6edooml28x01qgw",
+  //  appSecret:"72pcda6o140iry6",
+  //  refreshToken: "pj2jRVkyIpEAAAAAAAAAAXuSmZ7rWpoFTZtgxD0YSpLBcS7E0jQRDWLPFP72Ukq4",
 
-  appKey:"qgm8gkydey74u6g",
-  appSecret:"doxew38mu5q2mlk",
+  appKey: "qgm8gkydey74u6g",
+  appSecret: "doxew38mu5q2mlk",
   refreshToken: "3EOAmzFZO1oAAAAAAAAAAT4QQUtWutr3nM8T6qz8zk2BLmWsL4yGc7tfWgc6Vfz1",
 
   //jiraUsername:"sebastiansaenz.94@gmail.com",
   //jiraPassword:"ATATT3xFfGF0DBfefWEdC8qdG6uwVi29fFlauBYSNcIuuHuxJ5iSenpP8fIENgpfhr16eTOSSb_FrpIYuqDbaqybI_ZvgUH_7Mf01tGUuFWKxke8aRHBO3ylhCxNd0oss8K-Cf3YHDJCiwt5JvHVA07T5eiGFzKWoXjkAmLt3GEE9TGZGjYmnB0=DC729FA1"
-  jiraUsername:"albertozarate@gmail.com",
-  jiraPassword:"Roofing+1m3"
+  jiraUsername: "albertozarate@gmail.com",
+  jiraPassword: "Roofing+1m3"
 };
 
 /*

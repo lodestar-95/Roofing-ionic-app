@@ -118,9 +118,6 @@ export class INWShieldUnderlaymentsService {
 
         let inwShieldCosts = [];
         for (const shingle of this.shingles) {
-
-          console.log("shingle");
-          console.log(shingle);
             const materials = this.general.getSelectedMaterial(this.selectedMaterials, this.building.psb_measure, this.inwShieldCategoryId, shingle);
             if (!materials)
                 continue;
@@ -226,14 +223,6 @@ export class INWShieldUnderlaymentsService {
         }
 
         const isInWCategory = (this.laborCategoryInWShieldId == laborCategoryId);
-
-        console.log("-------------------------------");
-        console.log(slope.floor);
-        console.log(slope.pitch);
-        console.log(laborCategoryId);
-        console.log(laborTypeId);
-        console.log("==============================*");
-
         const price = isInWCategory
             ? this.laborPrices.find(x => x.floor_slope == 1 //slope.floor
                 && x.pitch == Math.trunc(slope.pitch)
@@ -243,7 +232,6 @@ export class INWShieldUnderlaymentsService {
                 && x.pitch == Math.trunc(slope.pitch)
                 && x.id_labor_category == laborCategoryId);
 
-        console.log(price);
         //let slopeCosts = [];
         //for (const price of prices) {
         let laborCost = {

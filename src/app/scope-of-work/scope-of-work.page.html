@@ -15,8 +15,17 @@
   <ion-toolbar class="pb-35">
     <ion-title mode="md" class="roofing-large-title sf-pro-bold">Scope of work</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="openPriceModal()">
+      <!-- <ion-button (click)="openPriceModal()">
         <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+      </ion-button> -->
+      <ion-button *ngIf="showMdlAcceptance" (click)="openAcceptanceModal()">
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!showMdlAcceptance" (click)="clickCreateVersion()">
+        <ion-icon name="duplicate-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="showPreview" (click)="goToScope()">
+        <ion-icon name="newspaper-outline"></ion-icon>
       </ion-button>
       <ion-button (click)="openNotesModal()">
         <ion-icon slot="icon-only" name="clipboard-outline"></ion-icon>
@@ -24,12 +33,11 @@
        <ion-button (click)="openNewContactDateModal()">
         <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
       </ion-button>
-      <ion-button class="close-button" (click)="openRejectProposalModal()">
+      <ion-button *ngIf="showCloseBtn" class="close-button" (click)="openRejectProposalModal()">
         <ion-icon
           slot="icon-only"
-          name="close-outline"
+          name="trash-outline"
           color="danger"
-          style="font-size: 50px" 
         ></ion-icon>
       </ion-button>
     </ion-buttons>

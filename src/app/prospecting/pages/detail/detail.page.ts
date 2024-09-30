@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit,EventEmitter,Output } from '@angular/core';
+import { Component, OnDestroy, OnInit, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonRouterOutlet, MenuController, ModalController } from '@ionic/angular';
 import { Project } from 'src/app/models/project.model';
@@ -15,7 +15,10 @@ import { SyncProjectsService } from 'src/app/services/sync-projects.service';
 import { AuthService } from 'src/app/login/services/auth/auth.service';
 import { AlertController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
-import { PopoverController } from '@ionic/angular';
+
+import { RejectReasonsService } from 'src/app/services/reject-reasons.service';
+import { RejectReason } from 'src/app/models/reject-reason.model';
+import { NavController, ToastController } from '@ionic/angular';
 
 // create new version
 import { Version } from 'src/app/models/version.model';
@@ -42,6 +45,8 @@ export class DetailPage implements OnInit, OnDestroy {
   showMdlAcceptance: boolean = true;
   currentUserRoleId: number;
   currentUserId: number;
+  showCloseBtn: boolean = true;
+  rejectReasons: RejectReason[]
 
   version: Version;
 
@@ -51,12 +56,14 @@ export class DetailPage implements OnInit, OnDestroy {
     private projectService: ProjectsService,
     private router: Router,
     private route: ActivatedRoute,
+    private rejectReasonService: RejectReasonsService,
     private modalController: ModalController,
     private store: Store<AppState>,
     private menu: MenuController,
     private routerOutlet: IonRouterOutlet,
     private synProjects: SyncProjectsService,
-    private modalService: AppComponent
+    private modalService: AppComponent,
+    private nav: NavController,
   ) {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'));
     localStorage.setItem('idProject', this.id + '');
@@ -64,6 +71,7 @@ export class DetailPage implements OnInit, OnDestroy {
     this.store.select('projects').subscribe(state => {
       this.project = state.project;
       if (!this.project || this.project.versions.length == 0) {
+        this.showMdlAcceptance = false;
         return;
       }
 
@@ -75,19 +83,51 @@ export class DetailPage implements OnInit, OnDestroy {
       const { buildings } = this.project.versions.find(x => x.active);
       this.building = buildings.find(x => x.active);
 
-      let shingle_lines = this.project.versions[0].shingle_lines.length ? true : false;
+      let shingle_lines = version.shingle_lines.filter(x => x.is_selected).length === 1 ? true : false;
 
+      let measure = version.buildings.find(x => x.psb_measure);
+
+      // psb_options should have only records with is_built_in = true in order to show accept icon. Only consider records with deleted_at = null.
+      let optionsOK = measure.psb_measure.psb_options == undefined || !measure.psb_measure.psb_options.find(item =>
+        item.deletedAt == null && !item.is_built_in
+      );
+      // psb_updates should have no records with id_cost_integration = 2 in order to show accept icon
+      let updatesOK = false;
+      let cost_integration = measure.psb_measure.psb_upgrades.find(item => item.id_cost_integration == 2);
+      if (measure.psb_measure.psb_upgrades == undefined || cost_integration == undefined) {
+        updatesOK = true;
+      }
+      // End
+      // Hidden with userRole and proejct_status
       this.auth.getAuthUser().then(user => {
         this.idUserRole = parseInt(user.role.id_role);
-        console.log(this.project.id_project_status);
 
-
-        if (this.project.id_project_status === 5 || this.project.id_project_status < 3 || this.idUserRole > 2 || shingle_lines) {
-          this.showMdlAcceptance = false
+        this.showMdlAcceptance = false;
+        if (this.project.id_project_status == 3 || this.project.id_project_status >= 5) {
+          if (optionsOK && updatesOK && shingle_lines) {
+            this.showMdlAcceptance = true;
+          }
         }
+
+        if (this.project.id_project_status == 5) {
+          this.showCloseBtn = false
+        }
+
+
+        if (this.project.id_project_status >= 3) {
+          this.showPreview = true;
+        }
+        /*if (this.idUserRole > 2) {
+          this.showMdlAcceptance = false;
+        }*/
       });
-      this.showPreview = this.project.id_project_status >= 3 ? true : false;
+
+
+      if (this.project.id_project_status < 3) {
+        this.showMdlAcceptance = false;
+      }
     });
+
 
 
   }
@@ -136,7 +176,7 @@ export class DetailPage implements OnInit, OnDestroy {
 
   getNextProjectVersion(projectVersion: string) {
     let versionNumber = +projectVersion.toLowerCase().match(/v(\d+)/)[1];
-    return `V${++versionNumber}-${new Date().toLocaleDateString()}`;
+    return `Proposal ${++versionNumber}-${new Date().toLocaleDateString()}`;
   }
 
 
@@ -195,10 +235,20 @@ export class DetailPage implements OnInit, OnDestroy {
  */
   async openAcceptanceModal() {
 
-    if (this.project.id_project_status === 5) {
+    this.rejectReasons = await (await this.rejectReasonService.getMockRejectReason()).data
+
+    let reject_message;
+
+    if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
+      reject_message = "This proposal was marked as " + this.project.reject_reason;
+    }
+    else
+      reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
+
+    if (this.project.id_project_status >= 5) {
       const alert = await this.alertController.create({
         header: 'Are you sure you want accept this proposal?',
-        message: 'This proposal was marked as locker',
+        message: reject_message,
         buttons: [
           {
             text: 'Cancel',
@@ -284,25 +334,22 @@ export class DetailPage implements OnInit, OnDestroy {
     this.showBuilding = true;
   }
 
-  /**
-   * Click menu item
-   */
-  clickOption() {
-    this.modalService.clickOption({
-      id: 4,
-      name: 'Proposal Preview',
-      url: '/pdf-viewer-page',
-      //
-      active: false,
-    });
-  }
 
+  goToScope() {
+    console.log("store");
+    
+    localStorage.removeItem('storeproject');
+    localStorage.setItem('storeproject', JSON.stringify(this.project));
+    this.nav.navigateForward('pdf-viewer-page');
+  }
   private createNewVersion(activeVersion: Version) {
     this.projectService.saveVersion({ ...this.version, active: false, is_current_version: false });
 
     const lastVersion = this.project.versions[this.project.versions.length - 1];
     const nextProjectVersion = this.getNextProjectVersion(lastVersion.project_version);
     const newVersionId = uuidv4();
+
+
 
     return {
       ...activeVersion,
@@ -354,10 +401,26 @@ export class DetailPage implements OnInit, OnDestroy {
   }
 
 
-  async clickCreateVersion () {
+  async clickCreateVersion() {
+
+    this.rejectReasons = await (await this.rejectReasonService.getMockRejectReason()).data
+
+    let reject_message;
+
+
+    if (this.project.id_reject_reason !== null)
+      if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
+        reject_message = "This proposal was marked as " + this.project.reject_reason;
+      }
+      else
+        reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
+    else {
+      reject_message = "Previous proposal was declined without a specified reason";
+    }
+
     const alert = await this.alertController.create({
-      header: 'Are you sure you want create a new version?',
-      message: 'This proposal was marked as locker',
+      header: 'Are you sure you want create a new  proposal option?',
+      message: reject_message,
       buttons: [
         {
           text: 'Cancel',
@@ -385,7 +448,18 @@ export class DetailPage implements OnInit, OnDestroy {
       return { ...x, active: false, is_current_version: false, isModified: true };
     }), newVersion];
 
-    const projectUpdated = { ...this.project, versions: versions, isModified: true };
+    const projectUpdated: Project = {
+      ...this.project,
+      versions: versions,
+      isModified: true,
+      id_project_status: 1,
+      project_status: {
+        id: 1,
+        project_status: "Lead"
+      }
+    };
+
+
     await this.projectService.update(this.project.id, projectUpdated);
     this.changeVersionEmited.emit(true);
   }

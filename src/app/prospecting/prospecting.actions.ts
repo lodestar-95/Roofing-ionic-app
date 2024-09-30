@@ -23,4 +23,10 @@ export const setProject = createAction(
   props<{ project: Project }>()
 );
 
+
 export const unSetProject = createAction('[Prospection] Unset prospection');
+
+export const setBugs = createAction(
+  '[Prospection] Set prospection',
+  props<{ bug: any }>()
+);

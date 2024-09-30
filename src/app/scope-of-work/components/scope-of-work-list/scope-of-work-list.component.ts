@@ -215,7 +215,6 @@ export class ScopeOfWorkListComponent implements OnInit, OnDestroy {
         }
         newScopes.push(_scope);
       }
-
       const previosLength = newScopes.length;
       const architecturalScope = newScopes.find(x => x.is_architectural == true);
       const presidentialScope = newScopes.find(x => x.is_architectural == false);
@@ -235,13 +234,13 @@ export class ScopeOfWorkListComponent implements OnInit, OnDestroy {
       localStorage.setItem('versionCode', hashcode.toString());
       this.processing = false;
     }
-
     this.hideLoading();
   }
 
   private hideLoading() {
     this.processCount--;
-    if (this.processCount == 0) {
+
+    if (this.processCount <= 0) {
       this.loadingService.hide();
     }
   }

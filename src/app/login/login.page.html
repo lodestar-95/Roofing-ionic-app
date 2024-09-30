@@ -10,9 +10,10 @@
         <ion-col>
           <ion-item>
             <ion-label class="roofing-label" position="fixed" id="login-label">
-              Email
+              Email:
             </ion-label>
-            <ion-input class="roofing-label" clearInput id="login-input" formControlName="username" type="text" placeholder="Enter your E&H e-mail account">
+            <ion-input class="roofing-label" clearInput id="login-input" formControlName="username" type="text"
+              placeholder="Enter your E&H e-mail account">
             </ion-input>
           </ion-item>
           <p class="roofing-error p-error"
@@ -24,8 +25,9 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label class="roofing-label" position="fixed" id="password-label">Password</ion-label>
-            <ion-input class="roofing-label" clearInput id="password-input" formControlName="password" type="password" placeholder="Insert your password">
+            <ion-label class="roofing-label" position="fixed" id="password-label">Password:</ion-label>
+            <ion-input class="roofing-label" clearInput id="password-input" formControlName="password" type="password"
+              placeholder="Insert your password">
             </ion-input>
           </ion-item>
           <p class="roofing-error p-error"
@@ -47,12 +49,27 @@
       </ion-button>
     </div>
 
-    <div class="btn-container" hidden="true">
-      <ion-toggle
-        style="margin:0px auto"
-        (ionChange)="changeNetwork($event)"
-        [checked]="networkService.isConnected"
-      ></ion-toggle>
+    <div class="btn-container;" style="display: flex;align-items: center;justify-content: center;" *ngIf="false">
+      <ion-toggle  (ionChange)="changeNetwork($event)"
+        [checked]="networkService.isConnected"></ion-toggle>
     </div>
+
+    <div class="btn-container;" style="display: flex;align-items: center;justify-content: center;" *ngIf="!networkService.isConnected">
+      <ion-label> Your internet connection is not available. You can only use information currently in your
+        Application.  Information will not synchronize until you perform an update with internet connection.
+      </ion-label>
+    </div>
+
+    <div class="fingerprint" *ngIf="enableFingrPrint">
+      <ion-icon slot="start" name="finger-print-outline" (click)="scanFinger()"></ion-icon>
+    </div>
+
+    <ion-card class="deviceId" *ngIf="deviceId && networkService.isConnected && !userRes">
+      {{deviceId}}
+      <ion-icon style="margin-left: 20px; min-height: 18px;min-width: 18px;" (click)="copyToClipboard(deviceId)"
+        name="copy-outline"></ion-icon>
+    </ion-card>
+
+
   </div>
 </ion-content>

@@ -27,7 +27,6 @@ export class OsbLaborService {
         let slopes = building.psb_measure.psb_slopes;
         const wasting = building.psb_measure.wasting * 0.01;
         //let slopesSQ = this.getShingleSlopesSQTotal(slopes);
-        //console.log(slopesSQ);
         const shingles = await this.shingle.getShingles();
         let calculation  = [];
         for (let shingle of shingles) {
@@ -82,25 +81,16 @@ export class OsbLaborService {
             this.laborCost.id_concept_type = concept_types_labor;
             //TODO: Eliminar cuando ya se calcule totales de labor.
             this.laborCost.total = this.laborCost.total_cost;
-            //console.log(":::::LABOR:::::::");
-            //console.log(this.laborCost);
             let temp = JSON.parse(JSON.stringify(this.laborCost));
-            //console.log(temp);
             obsLabor.push(temp);
         }
-        //console.log("tearOffLabor");
-        //console.log(tearOffLabor);
         return obsLabor;
     }
 
     
     async getOsbTotals(obsLabor: LaborCost[], shingle: any): Promise<any[]> {
-        //console.log("tearOffLabor");
-        //console.log(tearOffLabor);
         let total = this.generalLabor.getSum("total_cost", obsLabor);
         let total_area = this.generalLabor.getSum("total_area", obsLabor);
-        //console.log("total");
-        //console.log(total);
         let calc = [];
         if(obsLabor.length == 0){
             return null;

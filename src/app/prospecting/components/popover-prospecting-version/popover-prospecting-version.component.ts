@@ -7,6 +7,9 @@ import { Project } from 'src/app/models/project.model';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducer';
 
+import { RejectReasonsService } from 'src/app/services/reject-reasons.service';
+import { RejectReason } from 'src/app/models/reject-reason.model';
+
 @Component({
   selector: 'app-popover-prospecting-version',
   templateUrl: './popover-prospecting-version.component.html',
@@ -19,11 +22,13 @@ export class PopoverProspectingVersionComponent implements OnInit {
   currentUserRoleId: number;
   currentUserId: number;
   project: Project;
+  rejectReasons: RejectReason[]
 
   constructor(
     private popoverController: PopoverController,
     private alertController: AlertController,
     private store: Store<AppState>,
+    private rejectReasonService: RejectReasonsService,
     private auth: AuthService) { }
 
   ngOnInit() {
@@ -44,7 +49,7 @@ export class PopoverProspectingVersionComponent implements OnInit {
 
   /**
    * Dissmiss modal and return version selected
-   * @param version 
+   * @param version
    * @author: Carlos Rodríguez
    */
   selectVersion(version: Version) {
@@ -57,11 +62,24 @@ export class PopoverProspectingVersionComponent implements OnInit {
       this.project = state.project;
 
     });
+    this.rejectReasons = await (await this.rejectReasonService.getMockRejectReason()).data
+
+    let reject_message;
+
+    if (this.project.id_reject_reason !== null)
+      if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
+        reject_message = "This proposal was marked as " + this.project.reject_reason;
+      }
+      else
+        reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
+    else {
+      reject_message = "Previous proposal was declined without a specified reason";
+    }
 
     if (this.project.id_project_status === 5) {
       const alert = await this.alertController.create({
-        header: 'Are you sure you want create a new version?',
-        message: 'This proposal was marked as locker',
+        header: 'Are you sure you want create a new proposal option?',
+        message: reject_message,
         buttons: [
           {
             text: 'Cancel',

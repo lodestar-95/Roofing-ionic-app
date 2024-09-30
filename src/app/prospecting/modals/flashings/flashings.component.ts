@@ -78,7 +78,6 @@ export class FlashingsComponent implements OnInit, OnDestroy {
   }
 
   optionSelcted(option: number) {
-    console.log('ss', option);
     if (option == 1) {
       this.optionChecked8 = true;
       this.optionChecked12 = false;
@@ -88,7 +87,6 @@ export class FlashingsComponent implements OnInit, OnDestroy {
       this.flashStep8 = null;
       this.optionChecked12 = true;
     }
-    console.log('Finales::', this.optionChecked8, this.optionChecked12);
   }
 
   confirm() {
@@ -105,7 +103,6 @@ export class FlashingsComponent implements OnInit, OnDestroy {
       flash_step_4_4_12_lf: this.flashStep12,
       psb_verifieds,
     };
-    console.log('Se guarda:', shingle);
     this.projectService.saveProjectShingleBuilding(shingle);
     this.modalCtrl.dismiss({ data: true });
   }

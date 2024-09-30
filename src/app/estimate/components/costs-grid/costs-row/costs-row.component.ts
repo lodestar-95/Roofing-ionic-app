@@ -97,7 +97,6 @@ export class CostsRowComponent implements OnInit {
           return { ...element };
         }
       });
-      console.log(result.data);
       const color: PvMaterialColor = {
         id: uuidv4(),
         id_color: result.data.id,

@@ -575,7 +575,7 @@
 			"id_project_status" : 2,
 			"project_status" : {
 				"id" : 2,
-				"project_status" : "pending of acceptance"
+				"project_status" : "Working on Estimate"
 			},
 			"prospecting_start_date" : "2022-05-01T05:00:00.000Z",
 			"id_contact_address" : 6,

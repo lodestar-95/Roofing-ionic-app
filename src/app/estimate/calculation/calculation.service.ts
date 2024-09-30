@@ -109,24 +109,19 @@ export class CalculationService {
       : new Date();
 
     const selectedPriceLists = await this.general.getSelectedPriceLists(acceptanceDate);
-    console.log('selectedPriceLists');
-    console.log(selectedPriceLists);
     const materialList = await this.getMaterialList(selectedPriceLists);
-    console.log('getMaterialList');
-    console.log(materialList);
-
     this.setSelectedMaterialListToServices(materialList);
-    console.log('ok');
-
     return this.calculate(project);
   }
 
   async getMaterialList(priceListDate) {
     const ids = priceListDate.flatMap(dates => dates.id);
     const materialPrices = (await this.catalogsService.getMaterialPrices()).data;
-    console.log('materialPrices');
-    console.log(materialPrices);
-    const materialPrice = materialPrices.filter(material => ids.includes(material.id_price_list));
+
+
+
+    const custom_skylight_id_material = await this.general.getConstValue('custom_skylight_id_material');
+    const materialPrice = materialPrices.filter(material => ids.includes(material.id_price_list) || material.id === custom_skylight_id_material);
     return materialPrice;
   }
 
@@ -181,7 +176,6 @@ export class CalculationService {
   async getProjectsCalculates(buildings_calculation) {
     let totalsPerShingle = [];
     let shingles = await this.shingle.getShingles();
-console.log('getProjectsCalculates');
     for (let shingle of shingles) {
       let totals = [];
       let upgrades = [];
@@ -263,7 +257,6 @@ console.log('getProjectsCalculates');
     if (version == null) {
       return;
     }
-console.log('calculate');
     let buildings_calculation = [];
     this.costTypeId = !version.id_cost_type || version.id_cost_type == 0 ? 1 : version.id_cost_type;
 
@@ -271,7 +264,6 @@ console.log('calculate');
     const buildings = version.buildings.filter(building => building.deletedAt == null);
     const mainBuilding = buildings.find(building => building.is_main_building == true);
 
-    console.log('calculate2');
     for (const building of buildings) {
       let buildingObj = JSON.parse(JSON.stringify(building));
       //TODO: Eliminar cuando ya vengan en el json de projects
@@ -289,7 +281,6 @@ console.log('calculate');
           };
         }
 
-        console.log('calculate3');
         if (buildingObj.psb_measure.psb_skylights) {
           for (let skylight of buildingObj.psb_measure.psb_skylights) {
             //TODO: Cambiar los valores fijos por los valores del catálogo
@@ -310,26 +301,22 @@ console.log('calculate');
           }
         }
 
-        console.log('calculateShingleBuilding');
         // cálculo de edificios de tipo  shingle
         const buildingCalculation = await this.calculateShingleBuilding(
           buildingObj,
           version.id,
           project.id_prospecting_type
         );
-        console.log('calculateShingleBuilding');
         if (
           buildingCalculation.is_success == null ||
           buildingCalculation.is_success == false
         )
           return;
 
-console.log('buildings_calculation.push');
         buildings_calculation.push(buildingCalculation);
       }
     }
 
-    console.log('getProjectsCalculates');
     const projects_calculation = await this.getProjectsCalculates(buildings_calculation);
 
     let upgradeBuiltinList = [];
@@ -348,7 +335,6 @@ console.log('buildings_calculation.push');
       data: null
     };
 
-    console.log('res');
     res.data = {
       buildings: buildings_calculation,
       projects: projects_calculation,
@@ -422,8 +408,6 @@ console.log('buildings_calculation.push');
       await this.miscellaneous.calculateMiscellaneousMeasures(building);
     buildingsCalculation.PlugRoofPatch = await this.plugroof.calculate(building);
     buildingsCalculation = await this.reorderPlasticCaps(buildingsCalculation);
-console.log('>>>>>>>>>>>>>>>>>buildingsCalculation');
-console.log(buildingsCalculation);
     //TODO: Poner los totales en 0 si el tipo de trabajo es tear off only
 
     let allCalculationList = [];
@@ -572,8 +556,6 @@ console.log(buildingsCalculation);
         concept_types_labor
       );
     }
-    console.log("materialCalculations");
-    console.log(materialCalculations);
     */
 
     //remove some venting calculation when ridge calculation  is built in

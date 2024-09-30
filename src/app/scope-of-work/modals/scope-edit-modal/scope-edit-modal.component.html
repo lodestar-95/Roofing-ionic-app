@@ -22,6 +22,7 @@
       class="sf-pro-semibold roofing-button"
       color="primary"
       (click)="generate()"
+      [disabled]="scope.is_verified"
     >
       Generate
     </ion-button>

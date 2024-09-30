@@ -78,6 +78,8 @@ export class MiscellaneousService {
       expenses,
       shingles
     );
+
+
     const t = await this.calculateOutTownExpenses(measures, expenses, shingles);
     let miscellaneousCalculations = [].concat(x, y, z, w, v, u, t);
     miscellaneousCalculations = miscellaneousCalculations.filter(Boolean);
@@ -126,7 +128,54 @@ export class MiscellaneousService {
       expenses,
       shingles
     );
-    const outTownCalculations = [].concat(lodging, fuel, perdium);
+
+    //crickets_additional_cost
+    let crickets_additional_cost_total = 0;
+    if (measures.psb_crickets && measures.psb_crickets.length > 0) {
+        crickets_additional_cost_total = measures.psb_crickets.reduce((accumulator, current) => {
+          return accumulator + current.aditional_cost;
+        }, 0);
+    }
+    const expenses_crickets_additional_cost = await this.general.getConstValue('expenses_crickets_additional_cost');
+    const cricketsAdditionalCost = await this.general.addExpense(
+        crickets_additional_cost_total,
+      expenses_crickets_additional_cost,
+      expenses,
+      shingles
+    );
+
+    //chimneys_additional_cost
+    let chimneys_additional_cost_total = 0;
+    if (measures.psb_chimneys && measures.psb_chimneys.length > 0) {
+        chimneys_additional_cost_total = measures.psb_chimneys.reduce((accumulator, current) => {
+          return accumulator + current.aditional_cost;
+        }, 0);
+    }
+    const expenses_chimneys_additional_cost = await this.general.getConstValue('expenses_chimneys_additional_cost');
+    const chimneysAdditionalCost = await this.general.addExpense(
+        chimneys_additional_cost_total,
+      expenses_chimneys_additional_cost,
+      expenses,
+      shingles
+    );
+
+    //skylights_additional_cost
+    let skylights_additional_cost_total = 0;
+    if (measures.psb_skylights && measures.psb_skylights.length > 0) {
+        skylights_additional_cost_total = measures.psb_skylights.reduce((accumulator, current) => {
+          return Number(accumulator) + Number(current.aditional_cost);
+        }, 0);
+    }
+
+    const expenses_skylights_additional_cost = await this.general.getConstValue('expenses_skylights_additional_cost');
+    const skylightsAdditionalCost = await this.general.addExpense(
+        skylights_additional_cost_total,
+      expenses_skylights_additional_cost,
+      expenses,
+      shingles
+    );
+
+    const outTownCalculations = [].concat(lodging, fuel, perdium, cricketsAdditionalCost, chimneysAdditionalCost, skylightsAdditionalCost);
     return outTownCalculations;
   };
 }

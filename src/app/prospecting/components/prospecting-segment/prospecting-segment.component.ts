@@ -52,6 +52,8 @@ export class ProspectingSegmentComponent implements OnInit, OnDestroy {
 
         this.validateTabsActive();
       }
+
+      console.log('buildings', buildings)
     });
   }
 

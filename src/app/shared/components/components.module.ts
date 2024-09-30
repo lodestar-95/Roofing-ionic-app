@@ -7,6 +7,7 @@ import { VerifiedInformationComponent } from './verified-information/verified-in
 import { ProspectingDetailComponent } from './prospecting-detail/prospecting-detail.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
+import { PhoneFormatPipe } from 'src/app/pipes/phone-format.pipe';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { CalendarComponentComponent } from './calendar-component/calendar-compon
     VerifiedInformationComponent,
     ProspectingDetailComponent,
     NoDataComponent,
-    CalendarComponentComponent
+    CalendarComponentComponent,
+    PhoneFormatPipe
   ],
   imports: [CommonModule, IonicModule, FormsModule],
   exports: [

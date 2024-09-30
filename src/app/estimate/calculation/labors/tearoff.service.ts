@@ -46,11 +46,13 @@ export class TearOffLaborService {
             if (slopesSQ > 0) {
                 ridgecapSQ = await this.getTotalRidgeCapsSQ(materialsCalc, shingle, building.psb_measure, building);
                 if (ridgecapSQ == null) {
-                    continue;
+                  ridgecapSQ = 0;
+                    //continue;
                 }
                 starterSQ = await this.getTotalStartersSQ(materialsCalc, shingle, building.psb_measure);
                 if (starterSQ == null) {
-                    continue;
+                  slopesSQ = 0;
+                    //continue;
                 }
                 presidentialStarterSQ = await this.getTotalPresidentialStartersSQ(materialsCalc, shingle, building.psb_measure);
                 if (presidentialStarterSQ == null) {
@@ -219,7 +221,6 @@ export class TearOffLaborService {
             const labor_category_tear_off = await this.general.getConstDecimalValue('labor_category_tear_off');
             const adjusment = await this.adjustmentLaborCost(building.psb_measure, moreExpensiveSlope[layer], shingle, building.id_job_type, ridgecapSQDiff, starterSQDiff, layer);
             //const adjusmentCost = await this.getTearoffLaborCost(building.psb_measure, morExpensiveSlope, building.id_job_type, slopesSQ, ridgecapSQ, shingle, starterSQ);
-            //console.log(adjusmentCost);
             adjusments = adjusments.concat(adjusment);
         }
         return adjusments;
@@ -284,7 +285,7 @@ export class TearOffLaborService {
         const material = (await this.getStarterSelected(category_starter, shingle))
         return qty / material[0].coverage_sq;
     }
-    
+
     async getTotalPresidentialStartersSQ(materialsCalc, shingle, psb_measure) {
         const category_starter = await this.general.getConstValue('category_presidential_starters');
         const starters = materialsCalc.filter(
@@ -329,10 +330,10 @@ export class TearOffLaborService {
     }
 
 
-    /*  
-  
+    /*
+
     let install = laborCalculation.tearOff.filter(labor => labor.layer == 1);
-    
+
     calculations = calculations.concat(this.tearoff.getTearoffTotals(laborCalculation.tearOff, shingles, 1));
     calculations = calculations.concat(this.tearoff.getTearoffTotals(laborCalculation.tearOff, shingles, 2));
     calculations = calculations.concat(this.tearoff.getTearoffTotals(laborCalculation.tearOff, shingles, 3));
@@ -350,8 +351,7 @@ export class TearOffLaborService {
         const concept_types_labor = await this.general.getConstDecimalValue('concept_types_labor');
         const layers = psb_measure.psb_layers.filter(layer => {
             layer.layer <= slope.layers
-        })
-
+        });
         let costs = laborPrices.filter(price => {
             return price.id_labor_category == labor_category_tear_off
                 && price.id_job_type == parseInt(idJobType)
@@ -360,6 +360,7 @@ export class TearOffLaborService {
                 && price.layer != null
                 && price.layer <= slope.layers
         });
+
         for (let cost of costs) {
             const layerInfo = await (this.getMaterialCategory(cost.layer, psb_measure.psb_layers));
             const layer = this.getLayer(psb_measure, cost.layer);
@@ -414,9 +415,6 @@ export class TearOffLaborService {
 
         const labor_category = await this.general.getConstDecimalValue('labor_category_tear_off');
         let costs = laborPrices.filter(price => {
-            //console.log("price.id_material_category");
-            //console.log(price.id_material_category);
-            //console.log(price.id_material_category == shingle.id_material_category);
             return price.id_labor_category == labor_category
                 && price.id_job_type == parseInt(idJobType)
                 && price.pitch == Math.trunc(slope.pitch)

@@ -1,18 +1,21 @@
 <div [class.div-disabled]="verifiedActive || userDisabledPermision">
-  <ion-grid>
+  <ion-grid class="ion-padding">
     <ion-row class="row-title">
-      <ion-col size="3"></ion-col>
       <ion-col>
         <div class="modal-title-padding">
-          <ion-label class="roofing-title">Selection</ion-label>
-        </div>
-        <p class="mssg" *ngIf="!trademarksSelected || trademarksSelected?.length == 0">You need select some shingle trademarks before this step.</p>
-
+            <ion-label class="roofing-title">Selection</ion-label>
+          </div>
       </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col>
+            <p class="mssg-bold" *ngIf="notRequired">This project doesn't require Ridgecap, Ice & Water Shield neither Underlayment.</p>
+            <p class="mssg" *ngIf="(!trademarksSelected || trademarksSelected?.length == 0) && !notRequired">You need select some shingle trademarks before this step.</p>
+          </ion-col>
     </ion-row>
   </ion-grid>
 
-  <app-selection-trademarks-list></app-selection-trademarks-list>
+  <app-selection-trademarks-list *ngIf="!notRequired"></app-selection-trademarks-list>
 </div>
 
 <ion-grid style="margin-bottom: 20px" *ngIf="isAllSegmentsOk">

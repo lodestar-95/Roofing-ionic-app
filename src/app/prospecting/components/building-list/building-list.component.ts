@@ -146,11 +146,10 @@ export class BuildingListComponent implements OnInit {
   }
 
   isDisabledBrand() {
-    const rolesForbiden = [1, 2];
+    /*const rolesForbiden = [1, 2];
     if (rolesForbiden.includes(parseInt(this.user?.role.id_role)) && this.project.id_user_saleman != this.user?.id) {
       return true;
-    }
-
+    }*/
     return this.validCheckbox;
   }
 
@@ -415,13 +414,14 @@ export class BuildingListComponent implements OnInit {
   }
 
   onVerifiedCheked() {
+
     if (this.validCheckbox) {
-      this.version = { ...this.version, is_verified: false, isModified: true };
+      this.version = { ...this.version, is_verified: false, isModified: true};
       this.projectService.saveVersion(this.version);
     } else {
       const validTradeMarks = this.trademarks.find(e => e.checked) ? true : false;
       const validateAllBuildingsVerified = this.validBuildings();
-      const hasMainBuilding = this.projectBuildings.some(x=>x.is_main_building && x.deletedAt == null);
+      const hasMainBuilding = this.projectBuildings.some(x => x.is_main_building && x.deletedAt == null);
 
       if (validateAllBuildingsVerified && validTradeMarks && hasMainBuilding) {
         this.validCheckbox = this.validCheckbox ? false : true;
@@ -592,7 +592,7 @@ export class BuildingListComponent implements OnInit {
   }
   mdlResponsePayload(payload: any) {
     this.isModalOpen = payload.isDatePopUpOpen;
-    if(payload.wasSelectedDate){
+    if (payload.wasSelectedDate) {
       var date = new Date(payload.dateSelected);
       this.version = { ...this.version, expected_acceptance_date: date };
       this.dateTxt = this.formatDate(date);

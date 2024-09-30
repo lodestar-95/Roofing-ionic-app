@@ -61,17 +61,12 @@ export class SacapsService {
     shingles.forEach(async (shingle) => {
       const sacap = this.general.getMaterial(this.materialList, category_sa_cap).filter(x => x.id_trademark == shingle.id_trademark)[0];
       if (!sacap) throw new NotFoundMaterialException('SA Cap');
-      console.log('>>>>SA CAP');
-      console.log(sacap);
-      console.log(shingle);
       sacapCalculations.push(await this.general.calculateSQCoverageCostJustOneShingle(
         sacapSQ,
         sacap,
         shingle
       ));
     });
-    console.log('>>>>>>>>>>>>>>>>>>>++++++++++++++++sacapCalculations');
-    console.log(sacapCalculations);
     return sacapCalculations;
   };
 }

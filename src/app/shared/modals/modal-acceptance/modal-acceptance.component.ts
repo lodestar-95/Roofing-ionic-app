@@ -290,11 +290,12 @@ export class ModalAcceptanceComponent implements OnInit {
     if(materialTypeId && idGroup == 4){
         colors = this.groupColors.filter(x => x.id_group == idGroup && x.id_material_type==materialTypeId);
     }
-    
+
     const popover = await this.popoverCtrl.create({
       component: PopoverGroupColorsComponent,
       event,
       side: 'top',
+      cssClass:'popover-colors-settings',
       size:'auto',
       mode:'md',
       alignment:'center',

@@ -1,11 +1,11 @@
-<ion-list>
+<ion-list style="min-width:500px">
   <ion-radio-group [value]="currentVersionId">
     <ion-item
       *ngIf="currentUserRoleId == 3 || currentUserRoleId == 4 || currentUserId == salesManId"
       (click)="createVersion()"
     >
       <ion-radio slot="start" mode="md"></ion-radio>
-      <ion-label>New version</ion-label>
+      <ion-label>New proposal</ion-label>
     </ion-item>
     <ion-item *ngFor="let version of versions" (click)="selectVersion(version)">
       <ion-label>{{ version.project_version }}</ion-label>

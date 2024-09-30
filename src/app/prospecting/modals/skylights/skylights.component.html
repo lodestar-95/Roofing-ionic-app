@@ -17,6 +17,15 @@
         </ion-col>
       </ion-row>
 
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-no-padding" lines="none">
+            <ion-checkbox slot="start" formControlName="needReplace" color="success" mode="md"></ion-checkbox>
+            <ion-text class="ion-no-wraper">{{isNewConstruction ? 'To be Installed':'To be Replaced'}}</ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
       <ion-row *ngFor="let skylightSize of skylightSizeCatalog">
         <ion-col size="7" size-xs="6">
           <ion-item class="ion-no-padding" lines="none" (click)="optionChange($event, skylightSize.id)">
@@ -26,7 +35,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row class="custom-elements">
         <ion-col size="6" size-xs="5">
           <ion-item class="ion-no-padding" lines="none">
             <ion-label class="ion-no-wraper">Exact width</ion-label>
@@ -56,7 +65,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row class="custom-elements">
         <ion-col size="6" size-xs="5">
           <ion-item class="ion-no-padding" lines="none">
             <ion-label class="ion-no-wraper">Exact length</ion-label>
@@ -85,12 +94,48 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
-        <ion-col>
-          <ion-item class="ion-no-padding" lines="none">
-            <ion-checkbox slot="start" formControlName="needReplace" color="success" mode="md"></ion-checkbox>
-            <ion-text class="ion-no-wraper">{{isNewConstruction ? 'To be Installed':'Need replace'}}</ion-text>
+      <ion-row class="custom-elements">
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Custom cost
+            </ion-text>
           </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-label slot="start" class="lbl-left">$</ion-label>
+            <ion-input formControlName="customCost" class="ion-text-left"
+              (keypress)="allowNumbers($event, 'customCost')" placeholder="00">
+            </ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('customCost').invalid  &&
+            (ngForm.get('customCost').touched || ngForm.get('customCost').dirty)
+          ">Valid value</ion-label>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="9" size-xs="8">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-text class="ion-no-wraper">
+              Qty
+            </ion-text>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="3" size-xs="4">
+          <ion-item color="light" lines="none">
+            <ion-input formControlName="customQty" class="ion-text-left"
+              (keypress)="allowNumbers($event, 'customQty')" placeholder="0">
+            </ion-input>
+          </ion-item>
+          <ion-label color="danger" class="roofing-error" *ngIf="
+            ngForm.get('customQty').invalid  &&
+            (ngForm.get('customQty').touched || ngForm.get('customQty').dirty)
+          ">Valid value</ion-label>
         </ion-col>
       </ion-row>
 
@@ -115,7 +160,7 @@
         <ion-col size="9" size-xs="8">
           <ion-item lines="none" class="ion-no-padding">
             <ion-text class="ion-no-wraper">
-              Adittional cost
+              Adittional cost per Skylight
             </ion-text>
           </ion-item>
         </ion-col>

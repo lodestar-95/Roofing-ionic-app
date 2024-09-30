@@ -8,8 +8,12 @@
                   <ion-col class="ion-no-padding">
                       <ion-label class="roofing-subtitble sf-pro-regular">
                           <ion-text *ngIf="skylight.on_rigde">It is over the ridge / </ion-text>
-                          <ion-text *ngIf="!skylight.width && !skylight.lenght">{{ getDescSkylightSizeCatalog(skylight.id_skylight_size) }} </ion-text>
-                          <ion-text *ngIf="skylight.width && skylight.lenght">{{ getDescSkylightSizeCatalog(skylight.id_skylight_size) }} ({{skylight.width}} x {{skylight.lenght}})</ion-text>
+                          <ion-text *ngIf="!skylight.width && !skylight.lenght"> 
+                            {{skylight.custom_qty}} {{ getDescSkylightSizeCatalog(skylight.id_skylight_size) }} 
+                            </ion-text>
+                          <ion-text *ngIf="skylight.width && skylight.lenght">
+                            {{skylight.custom_qty}} {{ getDescSkylightSizeCatalog(skylight.id_skylight_size) }} ({{skylight.width}} x {{skylight.lenght}})
+                        </ion-text>
                       </ion-label>
                   </ion-col>
               </ion-row>

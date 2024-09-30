@@ -142,6 +142,19 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       fWidth: [''],
       lenght: [''],
       fLenght: [''],
+      customCost: [
+        {value: '', disabled: true},
+        Validators.compose([
+          Validators.pattern(this.exp_regular),
+        ]),
+      ],
+      customQty: [
+        '',
+        Validators.compose([
+            Validators.required,
+          Validators.pattern(this.exp_regular),
+        ]),
+      ],
       needReplace: [false],
       idFkitOption: ['', Validators.compose([Validators.required])],
       adittionalCost: [
@@ -153,8 +166,24 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       ],
       note: [''],
     });
+
+    this.ngForm.get('needReplace').valueChanges.subscribe(value => {
+        this.toggleCustomCostInput();
+      });
+    
     this.loadData();
   }
+
+  toggleCustomCostInput() {
+    const needReplace = this.ngForm.get('needReplace').value;
+    if (needReplace && this.idSkylightSize == 3) {
+      this.ngForm.get('customCost').enable();
+    } else {
+      this.ngForm.get('customCost').disable();
+    }
+  }
+
+
 
   loadData() {
     this.ngForm
@@ -177,6 +206,13 @@ export class SkylightsComponent implements OnInit, OnDestroy {
     this.ngForm
       .get('fLenght')
       .setValue(this.skylight ? this.skylight.f_lenght : '');
+    this.ngForm
+      .get('customCost')
+      .setValue(this.skylight ? this.skylight.custom_cost : '');
+    this.ngForm
+      .get('customQty')
+      .setValue(this.skylight ? this.skylight.custom_qty : '');
+      
     this.ngForm
       .get('needReplace')
       .setValue(this.skylight ? this.skylight.need_replace : false);
@@ -324,6 +360,10 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       this.ngForm.get('fLenght').setValue('');
       this.ngForm.get('fLenght').addValidators(Validators.required);
       this.ngForm.get('fLenght').updateValueAndValidity();
+
+      this.ngForm.get('customCost').setValue('');
+      this.ngForm.get('customCost').addValidators(Validators.required);
+      this.ngForm.get('customCost').updateValueAndValidity();
     } else {
       this.ngForm.get('width').setValue('');
       this.ngForm.get('width').removeValidators(Validators.required);
@@ -340,7 +380,12 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       this.ngForm.get('fLenght').setValue('');
       this.ngForm.get('fLenght').removeValidators(Validators.required);
       this.ngForm.get('fLenght').updateValueAndValidity();
+
+      this.ngForm.get('customCost').setValue('');
+      this.ngForm.get('customCost').removeValidators(Validators.required);
+      this.ngForm.get('customCost').updateValueAndValidity();
     }
+    this.toggleCustomCostInput();
   }
 
   confirm() {
@@ -364,16 +409,22 @@ export class SkylightsComponent implements OnInit, OnDestroy {
     skylightUpdated.id_psb_measure = parseInt(this.building.psb_measure.id);
     skylightUpdated.isModified = true;
 
+    skylightUpdated.custom_qty = this.ngForm.get('customQty').value;
+
     if (this.idSkylightSize == 3) {
       skylightUpdated.width = parseFloat(this.ngForm.get('width').value);
       skylightUpdated.f_width = this.ngForm.get('fWidth').value;
       skylightUpdated.lenght = parseFloat(this.ngForm.get('lenght').value);
       skylightUpdated.f_lenght = this.ngForm.get('fLenght').value;
+      skylightUpdated.custom_cost = this.ngForm.get('customCost').value;
+      
+      
     } else {
       skylightUpdated.width = null;
       skylightUpdated.f_width = null;
       skylightUpdated.lenght = null;
       skylightUpdated.f_lenght = null;
+      skylightUpdated.custom_cost = null;
     }
 
     const psb_skylights_updated = this.psbMeasures.psb_skylights.map((x) => {
@@ -388,8 +439,6 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       ...this.psbMeasures,
       psb_skylights: psb_skylights_updated,
     };
-
-    console.log('project_shingle_building update::', psbMeasuresUpdated);
 
     this.projectService.saveProjectShingleBuilding(psbMeasuresUpdated);
     this.modalCtrl.dismiss();
@@ -406,6 +455,7 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       note: this.ngForm.get('note').value,
       id_psb_measure: parseInt(this.building.psb_measure.id),
       isModified: true,
+      custom_qty: this.ngForm.get('customQty').value
     };
 
     if (this.idSkylightSize == 3) {
@@ -413,6 +463,7 @@ export class SkylightsComponent implements OnInit, OnDestroy {
       skylight.f_width = this.ngForm.get('fWidth').value;
       skylight.lenght = this.ngForm.get('lenght').value;
       skylight.f_lenght = this.ngForm.get('fLenght').value;
+      skylight.custom_cost = this.ngForm.get('customCost').value;
     }
 
     const psb_skylights_updated = this.psbMeasures.psb_skylights

@@ -37,23 +37,22 @@ export class VentingsService {
     let ventilationCalculations = [];
     const shingles = await this.shingle.getShingles();
 
-
     const category_jvent4 = await this.general.getConstValue('category_jvent4');
     const jVent4 = this.general.getFirstMaterial(this.materialList, category_jvent4);
     if (!jVent4) throw new NotFoundMaterialException('Jvent 4');
-    
+
     const category_jvent6 = await this.general.getConstValue('category_jvent6');
     const jVent6 = this.general.getFirstMaterial(this.materialList, category_jvent6);
     if (!jVent6) throw new NotFoundMaterialException('Jvent 6');
-    
+
     const category_metal_artict_vents = await this.general.getConstValue('category_metal_artict_vents');
     const metalArtictVent = this.general.getFirstMaterial(this.materialList,category_metal_artict_vents);
     if (!metalArtictVent) throw new NotFoundMaterialException('Metal Artict Vents');
-    
+
     const category_solar_power_vents = await this.general.getConstValue('category_solar_power_vents');
     const solarPowerVent = this.general.getFirstMaterial(this.materialList,category_solar_power_vents);
     if (!solarPowerVent) throw new NotFoundMaterialException('Solar Power Vents');
-    
+
     const category_power_vents = await this.general.getConstValue('category_power_vents');
     const powerVent = this.general.getFirstMaterial(this.materialList, category_power_vents);
     if (!powerVent) throw new NotFoundMaterialException('Power Vents');
@@ -97,7 +96,7 @@ export class VentingsService {
     if(!measures.vent_is_ridgevent_in_place){
       ridgeVentLF = 0;
     }
-    
+
     ridgeVentLF = ridgeVentLF * (1 + ((measures.wasting * 0.01) / 2))
     let u = await this.general.calculateRidgeventsCost(
       ridgeVentLF,

@@ -13,6 +13,8 @@ export interface PsbSkylight extends Sync {
     id_psb_measure: number;
     f_width?: string;
     f_lenght?: string;
+    custom_cost?: number;
+    custom_qty?: number;
     deletedAt?: any;
     on_rigde?: any;
 }

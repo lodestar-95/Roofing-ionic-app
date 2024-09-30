@@ -275,13 +275,7 @@ export class VentingComponent implements OnInit, OnDestroy {
     if (this.ridgeVent) {
       count++;
     }
-    if (this.metalArtticVentsReplace) {
-      count++;
-    }
-    if (this.metalArtticVentsRemove) {
-      count++;
-    }
-    if (this.cutNewMetalArtticVents) {
+    if (this.metalArtticVentsReplace || this.cutNewMetalArtticVents) {
       count++;
     }
     if (this.solarPowerVent) {

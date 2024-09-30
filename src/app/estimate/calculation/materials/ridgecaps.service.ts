@@ -80,16 +80,13 @@ export class RidgecapsService {
       newCalc.sqlf = lfRidgeHips;
       let newRidgecap = JSON.parse(JSON.stringify(newCalc));
       try {
-        //console.log(ridgecap.id_trademark_shingle + " == " + shingle.id_trademark)
         //if(ridgecap.id_trademark_shingle == shingle.id_trademark){
         newRidgecap.id_material_type_shingle = shingle.id_material_type;
         //selectedMaterials.filter(material => material.id_trademark_shingle == shingle.id_trademark)[0].id_material_type_selected;
         ridgeCalculations.push(newRidgecap);
         //}
       } catch {
-        console.log(
-          'Ridgecap not found for this shingle: ' + shingle.material
-        );
+
       }
     }
     return ridgeCalculations;

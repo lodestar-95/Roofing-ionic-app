@@ -18,6 +18,7 @@ export class ProspectingItemComponent implements OnInit {
   nextContactDate: string;
   projectBuilding: Building;
   totalProjectBuildings: number;
+  projectStatus: string;
 
   constructor(private auth: AuthService) {}
 
@@ -27,6 +28,7 @@ export class ProspectingItemComponent implements OnInit {
 
   ngOnInit() {
     this.status = this.getStatus();
+    this.projectStatus = this.project.project_status.project_status;
     const nextContactDate = this.getNextContactDate();
     this.project.versions.forEach(projectVersion => {
       if (projectVersion.is_current_version) {
@@ -46,7 +48,7 @@ export class ProspectingItemComponent implements OnInit {
     let color = 'draft';
     const hasContactDate = !!this.project.next_contact_date;
     const projectStatusId = this.project.id_project_status;
-    
+
     const todayDate = moment().format('YYYY-MM-DD');
     if (!hasContactDate && projectStatusId == 1) {
         color = 'draft'; // Initial State
@@ -55,13 +57,13 @@ export class ProspectingItemComponent implements OnInit {
         color = 'gray';
     }
     if (hasContactDate && isValidDate && todayDate<projectDateStr) {
-        color = 'green'; 
+        color = 'green';
     }
     if (hasContactDate && isValidDate && todayDate===projectDateStr) {
-        color = 'yellow'; 
+        color = 'yellow';
     }
     if (hasContactDate && isValidDate && todayDate>projectDateStr) {
-        color = 'red'; 
+        color = 'red';
     }
 
     return color + '-status';
@@ -74,7 +76,7 @@ export class ProspectingItemComponent implements OnInit {
     if(this.project.next_contact_date){
         isValidDate = true;
         let m = moment.utc(this.project.next_contact_date);
-        this.nextContactDate = m.format('DD/MM/YYYY'); // 06/01/2019
+        this.nextContactDate = m.format('MM/DD/YYYY'); // 06/01/2019
         projectDate = this.nextContactDate;
         projectDateStr = m.format('YYYY-MM-DD');
     }else{

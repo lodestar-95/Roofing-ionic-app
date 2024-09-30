@@ -28,7 +28,10 @@ export class ShinglesService {
       building.psb_measure.psb_slopes,
       wasting
     );
-    let shingleCalculation = await this.calculateShingleSlopes(lowSteepSlopesQS);
+
+    const cricketsShinglesSQ = this.getCricketsShingle(building.psb_measure, wasting);
+
+    let shingleCalculation = await this.calculateShingleSlopes(lowSteepSlopesQS + cricketsShinglesSQ);
     return shingleCalculation;
   };
 
@@ -104,4 +107,15 @@ export class ShinglesService {
       );
     return shingles;
   };
+
+  getCricketsShingle(measures, wasting) {
+    const areas = measures?.psb_crickets?.filter(x => x.pitch >= 3 && !x.deletedAt)?.map(x => x.area) ?? [];
+    if (areas.length == 0) {
+        return 0;
+    } else {
+        const sq = areas.reduce((previous, current) => previous + current, 0);
+        return this.general.parseNumber(sq * (1 + (wasting / 100)));
+    }
+  }
+
 }

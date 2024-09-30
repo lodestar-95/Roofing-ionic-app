@@ -11,7 +11,11 @@ import { User } from '../models/user.model';
 import { SyncProjectsService } from '../services/sync-projects.service';
 import { MaterialService } from '../services/material.service';
 import { BugsReportModalComponent } from './modals/bugs-report/bugs-report.component';
-import { BugsReport, BugsReportsService, JiraBugsReport } from '../services/bugs-reports.service';
+import {
+  BugsReport,
+  BugsReportsService,
+  JiraBugsReport
+} from '../services/bugs-reports.service';
 import { ImportModalComponent } from './modals/bugs-report/import-modal.component';
 import { BugsReportPdfGeneratorService } from './services/bugs-report-pdf-generator-service';
 import { SuccessDialogService } from '../common/services/success-dialog/success.service';
@@ -20,6 +24,7 @@ import { AppConfig } from '../config/app';
 import { ProjectsService } from '../services/projects.service';
 import { Screenshot } from 'capacitor-screenshot';
 import * as projectsActions from '../prospecting/prospecting.actions';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-home',
@@ -37,6 +42,7 @@ export class HomePage implements OnInit {
   projects: Project[];
   user: User;
   numberProjectsToSync = 0;
+  report_bugs: BugsReport[];
 
   constructor(
     private menu: MenuController,
@@ -53,14 +59,23 @@ export class HomePage implements OnInit {
     private readonly navCtrl: NavController,
     private successDialogService: SuccessDialogService,
     private errorDialogService: ErrorDialogService,
+    private storage: Storage
   ) {
     this.store.select('projects').subscribe(state => {
+      this.report_bugs = state.reportbugs;
+
       this.projects = state.projects;
       if (!this.projects) {
         return;
       }
-      this.getNumberProjectsToSync().then(x=>{
+      this.getNumberProjectsToSync().then(async x => {
         this.numberProjectsToSync = x;
+        let reportbugsarray = new Array();
+        if (this.storage.get('reportbugs')) {
+          reportbugsarray = await this.storage.get('reportbugs');
+          if (reportbugsarray != null)
+            this.numberProjectsToSync += reportbugsarray.length;
+        }
       });
     });
   }
@@ -94,7 +109,7 @@ export class HomePage implements OnInit {
       result.data.map(element => {
         element.component = `${element.resource}`;
         element.component = element.component.replace(' ', '_').toLowerCase();
-        element.icon = element.id === 24?'bug':'construct-outline';
+        element.icon = element.id === 24 ? 'bug' : 'construct-outline';
       });
 
       this.menuFooter = result;
@@ -105,10 +120,49 @@ export class HomePage implements OnInit {
    * Send local info to API
    */
   async syncOffline() {
+    const data = await this.storage.get('reportbugs');
+
+    try {
+      if (data.length > 0) {
+        data.forEach(element => {
+          this.sendReportbugs(element);
+        });
+        // await this.storage.remove(); // Clear local storage after sending data to API
+        this.storage.remove('reportbugs');
+      }
+    } catch (error) {}
     await this.materialService.syncMaterialData();
     this.synprojects.syncOffline();
   }
 
+  async sendReportbugs(data: any) {
+    const bodyJira: JiraBugsReport = {
+      proposal: data.proposal,
+      action: data.action,
+      description: data.description,
+      localStorageCopy: data.localStorageCopy,
+      caption: data.base64
+    };
+    const bodyBugReport: BugsReport = {
+      proposal: data.proposal,
+      action: data.action,
+      description: data.description,
+      localStorageCopy: data.localStorageCopy,
+      localDBCopy: data.localDBCopy
+    };
+
+    const issue = await this.bugsReportsService.saveJiraIssue(bodyJira);
+    bodyBugReport.description = `https://ehroofing.atlassian.net/browse/${issue.key} ${bodyJira.description}`;
+    this.bugsReportsService
+      .save(bodyBugReport)
+      .then(async () => {
+        // this.openSuccessModal('Bugs report sent successfully');
+        console.log('Bugs report sent successfully');
+      })
+      .catch(() => {
+        this.errorDialogService.showAlert({ TITLE: AppConfig.ERROR_SERVER });
+      });
+  }
   async getNumberProjectsToSync() {
     let syncProjects = this.projects.filter(x => x.isModified);
     if (!syncProjects) {
@@ -128,22 +182,31 @@ export class HomePage implements OnInit {
 
     // Capture image before showing modal
     const caption = await Screenshot.take();
-    console.log(caption.base64);
     // Commenting out to fix crash until debugged properly
     // try {
     //   caption = await this.mediaCapture.captureImage({ limit: 1 })
     // } catch (e) {
-    //   console.log(e)
     // }
-      const modal = await this.modalController.create({
-        component: BugsReportModalComponent,
-        componentProps:{
-          caption: caption.base64
-        },
-      });
-      await modal.present();
+    const modal = await this.modalController.create({
+      component: BugsReportModalComponent,
+      componentProps: {
+        caption: caption.base64
+      }
+    });
+    await modal.present();
 
-      const { data } = await modal.onWillDismiss();
+    const { data } = await modal.onWillDismiss();
+
+    this.store.dispatch(projectsActions.setBugs({ bug: { ...data, ...caption } }));
+
+    let report = {
+      ...data,
+      ...caption
+    };
+
+    // let currentdata = this.storage.get("reportbugs");
+
+    try {
       const bodyJira: JiraBugsReport = {
         proposal: data.proposal,
         action: data.action,
@@ -156,22 +219,39 @@ export class HomePage implements OnInit {
         action: data.action,
         description: data.description,
         localStorageCopy: data.localStorageCopy,
-        localDBCopy: data.localDBCopy,
+        localDBCopy: data.localDBCopy
       };
+
+      console.log('bodyJira', bodyJira);
+
       const issue = await this.bugsReportsService.saveJiraIssue(bodyJira);
       bodyBugReport.description = `https://ehroofing.atlassian.net/browse/${issue.key} ${bodyJira.description}`;
-      this.bugsReportsService.save(bodyBugReport).then( async () => {
 
+      this.bugsReportsService
+        .save(bodyBugReport)
+        .then(async () => {
           this.openSuccessModal('Bugs report sent successfully');
-        } ).catch(() => {
-          this.errorDialogService.showAlert({TITLE:AppConfig.ERROR_SERVER});
+        })
+        .catch(() => {
+          this.errorDialogService.showAlert({ TITLE: AppConfig.ERROR_SERVER });
         });
+    } catch (error) {
+      let reportbugsarray = new Array();
+      await this.storage.get('reportbugs').then(res => {
+        if (res) {
+          reportbugsarray.push(res);
+        }
+      });
+      reportbugsarray.push(report);
+      this.storage.set('reportbugs', reportbugsarray);
+      this.numberProjectsToSync += 1;
+    }
   }
 
   async openBugsReportImportModal() {
     this.isOpen = false;
     const modal = await this.modalController.create({
-      component: ImportModalComponent,
+      component: ImportModalComponent
     });
     await modal.present();
 
@@ -182,23 +262,27 @@ export class HomePage implements OnInit {
       this.catalogsService.createUser(localDBCopy.user);
       this.catalogsService.createUsers(localDBCopy.users);
       for (const [key, value] of Object.entries(localDBCopy)) {
-        if(key.includes('resource_'))
-        {this.catalogsService.createMenu(value);}
-        if(key.includes('syncDate_'))
-        {this.catalogsService.createSyncDate(value);}
+        if (key.includes('resource_')) {
+          this.catalogsService.createMenu(value);
+        }
+        if (key.includes('syncDate_')) {
+          this.catalogsService.createSyncDate(value);
+        }
       }
 
-      if(localDBCopy.projects)
-      {
+      if (localDBCopy.projects) {
         this.projectService.loadProjects(localDBCopy.projects);
-        this.store.dispatch(projectsActions.setProjects({ projects:localDBCopy.projects }));
+        this.store.dispatch(
+          projectsActions.setProjects({ projects: localDBCopy.projects })
+        );
       }
     }
     if (data !== undefined) {
       // Install localStorageCopy
       for (const [key, value] of Object.entries(JSON.parse(data.localStorageCopy))) {
-        if(key !== 'refreshToken' && key !== 'token')
-        {localStorage.setItem(key, value as string);}
+        if (key !== 'refreshToken' && key !== 'token') {
+          localStorage.setItem(key, value as string);
+        }
       }
 
       await this.bugsReportPdfGeneratorService.generatePdfUrls(data);
@@ -209,12 +293,12 @@ export class HomePage implements OnInit {
     }
   }
 
-    /**
-     * Something
-     */
-    async openSuccessModal(title: string) {
-      this.successDialogService.showAlert({
-        TITLE: title,
-      });
-    }
+  /**
+   * Something
+   */
+  async openSuccessModal(title: string) {
+    this.successDialogService.showAlert({
+      TITLE: title
+    });
+  }
 }

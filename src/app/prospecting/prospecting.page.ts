@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { SyncProjectsService } from '../services/sync-projects.service';
 import { ServeCLI } from '@ionic/cli/lib/serve';
 import { SyncCatalogsService } from '../services/sync-catalogs.service';
+import { NetworkValidateService } from '../shared/helpers/network-validate.service';
 
 @Component({
   selector: 'app-prospecting',
@@ -47,6 +48,8 @@ export class ProspectingPage implements OnInit, OnDestroy {
 
   id: number;
   contactDate: any;
+  offline = false;
+
 
   constructor(
     private modalController: ModalController,
@@ -58,13 +61,15 @@ export class ProspectingPage implements OnInit, OnDestroy {
     private loading: LoadingService,
     private nav: NavController,
     private synprojects: SyncProjectsService,
-    private syncCatalogs: SyncCatalogsService
+    private syncCatalogs: SyncCatalogsService,
+    private networkService: NetworkValidateService
   ) {
     this.repository = new ProjectsRepository(this.storage, `projects`);
 
     this.storeSubs = this.store.select('projects').subscribe(state => {
       this.projects = state.projects;
       this.loadProject();
+      this.offline = !networkService.isConnected;
     });
 
     this.syncCatalogs.update();
@@ -264,8 +269,11 @@ export class ProspectingPage implements OnInit, OnDestroy {
       switch (project.project_status?.id) {
         case 1:
         case 2:
-        case 3:
+        //case 16:
           this.listPendingAcceptance.push(project);
+          break;
+        case 3:
+          this.listAcceptanceInProgress.push(project);
           break;
         case 4:
           this.listAcepte.push(project);

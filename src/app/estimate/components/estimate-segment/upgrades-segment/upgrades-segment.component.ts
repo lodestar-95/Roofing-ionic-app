@@ -150,7 +150,6 @@ export class UpgradesSegmentComponent implements OnInit {
 
   async getAlwaysAllowModification() {
     this.alwaysAllowModification = 1 == await this.general.getConstDecimalValue('always_allow_modification');
-    console.log(this.alwaysAllowModification);
   }
 
   /**
@@ -217,9 +216,6 @@ export class UpgradesSegmentComponent implements OnInit {
         return true;
       }
     });
-    console.log("xxxxxxxx");
-    console.log(this.project.versions.find(v => v.is_current_version).buildings);
-    console.log(x);
     return x;
   }
 
@@ -232,10 +228,6 @@ export class UpgradesSegmentComponent implements OnInit {
         return true;
       }
     });
-    console.log("xxxxxxxx");
-    console.log(job_types_overlay);
-    console.log(this.project.versions.find(v => v.is_current_version).buildings);
-    console.log(x);
     return x;
   }
 

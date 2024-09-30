@@ -18,19 +18,23 @@ import { HashCodeService } from './shared/helpers/hash-code.service';
 import { interval } from 'rxjs';
 import { AuthService } from './login/services/auth/auth.service';
 import { JwtValidateService } from './shared/helpers/jwt-validate.service';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
+  styleUrls: ['app.component.scss']
 })
 export class AppComponent {
   menuOptions: SideMenu[];
-  project: any
+  project: any;
   version: Version;
 
   constructor(
-    private networkService: NetworkValidateService,
+    private platform: Platform,
+    private deeplinks: Deeplinks,
+    public networkService: NetworkValidateService,
     private usersService: UsersService,
     private generalService: ConfigsGeneralService,
     public readonly http: HttpClient,
@@ -41,8 +45,9 @@ export class AppComponent {
     private nav: NavController,
     private hash: HashCodeService,
     private auth: AuthService,
-    private jwtService: JwtValidateService,
+    private jwtService: JwtValidateService
   ) {
+    this.initializeApp();
     this.getProject();
     this.networkService.validateNetwork();
     this.usersService.init();
@@ -53,7 +58,47 @@ export class AppComponent {
     // this.generalService.loadConfigs(configGeneral);
     this.validateSessionToken();
   }
+  initializeApp() {
+    this.platform
+      .ready()
+      .then(() => {
+        if (this.deeplinks) {
+          this.deeplinks
+            .route({
+              '/reset-password/:token': 'reset-password'
+            })
+            .subscribe(
+              match => {
+                console.log('Successfully matched route', match);
+                const token = match.$args.token;
+                this.router.navigate(['/reset-password/', token]);
+              },
+              nomatch => {
+                this.handleBrowserURL();
+                console.error("Got a deeplink that didn't match", nomatch);
+              }
+            );
+        } else {
+          console.warn('Cordova is not available. Handling URL manually in the browser.');
+          this.handleBrowserURL();
+        }
+      })
+      .catch(error => {
+        console.error('Platform not ready', error);
+      });
+  }
 
+  handleBrowserURL() {
+    const url = new URL(window.location.href);
+    const path = url.pathname;
+    const token = path.split('/reset-password/')[1];
+
+    if (path.startsWith('/reset-password/') && token) {
+      this.router.navigate(['/reset-password/', token]);
+    } else {
+      console.log('URL does not match expected pattern');
+    }
+  }
   validateSessionToken() {
     interval(60000).subscribe(async () => {
       const token = localStorage.getItem('token');
@@ -62,12 +107,11 @@ export class AppComponent {
 
       const isValid = this.jwtService.isDateValid(token);
       if (!isValid) {
-
         const toast = await this.toastController.create({
           message: 'Session expired',
           duration: 8000,
           color: 'dark',
-          position: 'bottom',
+          position: 'bottom'
         });
 
         await toast.present();
@@ -78,7 +122,7 @@ export class AppComponent {
   }
 
   getProject() {
-    this.store.select('projects').subscribe((state) => {
+    this.store.select('projects').subscribe(state => {
       this.project = state.project;
       if (!this.project) {
         return;
@@ -95,7 +139,7 @@ export class AppComponent {
    * @author Carlos Rodríguez
    */
   isLoading() {
-    this.store.select('ui').subscribe(async (ui) => {
+    this.store.select('ui').subscribe(async ui => {
       if (ui.isLoading) {
         this.loadingService.show();
       } else {
@@ -109,21 +153,19 @@ export class AppComponent {
   }
 
   clickOption(menu) {
-    console.log("menu", menu);
-    console.log("project", this.project);
-
-    this.menuOptions = this.menuOptions.map((item) => ({
+    this.menuOptions = this.menuOptions.map(item => ({
       ...item,
-      active: item.id === menu.id ? true : false,
+      active: item.id === menu.id ? true : false
     }));
 
     let verifiedRoof = false;
-    let verifiedEstimate = false
-    let version = this.project.versions.find((x) => x.active);
+    let verifiedEstimate = false;
+    let version = this.project.versions.find(x => x.active);
     this.project.versions.forEach(projectVersion => {
       if (version.id && projectVersion.id == version.id) {
-        verifiedRoof = (version.is_Verified != undefined && version.is_Verified) ? true : false;
-        if ((version.shingle_lines != undefined && version.shingle_lines.length >= 1) && (version.pv_colors != undefined && version.pv_colors.length == 3)) {
+        verifiedRoof =
+          version.is_Verified != undefined && version.is_Verified ? true : false;
+        if (version.shingle_lines != undefined && version.shingle_lines.length >= 1) {
           verifiedEstimate = true;
         }
       }
@@ -135,8 +177,7 @@ export class AppComponent {
     if (opt == 'Estimates' && !verifiedRoof) {
       if (this.version.is_verified) {
         this.nav.navigateForward(`/home/estimate`);
-      }
-      else {
+      } else {
         this.presentToast();
       }
 
@@ -146,30 +187,27 @@ export class AppComponent {
     if (opt == 'Generate proposals' && !verifiedEstimate) {
       if (this.version.is_verified && this.proposalDoesntHaveChanges()) {
         this.nav.navigateForward('home/scope-of-work');
-      }
-      else {
+      } else {
         this.presentToast();
       }
 
       return;
     }
 
-    if ((opt == 'Proposal Preview' && !verifiedEstimate)) {
+    if (opt == 'Proposal Preview') {
       if (this.version.is_verified && this.proposalDoesntHaveChanges()) {
-
-        //this.project = this.activatedRoute.snapshot.queryParams.project;
-        this.nav.navigateForward('/pdf-viewer-page', {
-          queryParams: { project: this.project }
-        });
-      }
-      else {
+        localStorage.removeItem('storeproject');
+        localStorage.setItem('storeproject', JSON.stringify(this.project));
+        this.nav.navigateForward('pdf-viewer-page');
+      } else {
         this.presentToast();
       }
 
       return;
     }
 
-    const url = menu.url + (menu.id == 1 ? parseInt(localStorage.getItem('idProject')) : '');
+    const url =
+      menu.url + (menu.id == 1 ? parseInt(localStorage.getItem('idProject')) : '');
     this.router.navigate([url]);
   }
 
@@ -191,9 +229,9 @@ export class AppComponent {
   }
 
   selectMenuOption() {
-    this.menuOptions = this.menuOptions.map((item) => ({
+    this.menuOptions = this.menuOptions.map(item => ({
       ...item,
-      active: this.router.url.includes(item.url),
+      active: this.router.url.includes(item.url)
     }));
   }
 

@@ -157,6 +157,41 @@ export class GeneralService {
     return calc;
   };
 
+  async calculatePiecesCostCustom(skylights, material, shingles, addCoverageUnit = true) {
+    const calc = [];
+    const concept_types_material = await this.getConstValue('concept_types_material');
+    for (const skylight of skylights) {
+        const newCalc = JSON.parse(JSON.stringify(CALCULATION_SCHEMA));
+        newCalc.qty = skylight.custom_qty;
+        newCalc.calculation_type = 'Costo de ' + material.material;
+        newCalc.category = material.category;
+        newCalc.id_material_category = material.id_material_category;
+        newCalc.concept = `${skylight.skylights} ${skylight.width} x ${skylight.lenght}`;
+        newCalc.concept_type = 'Material';
+        newCalc.id_concept_type = concept_types_material;
+        newCalc.id_concept = material.id;
+        newCalc.cost = skylight.custom_cost;
+        newCalc.coverage = 1;
+        newCalc.coverage_description = '1 pc';
+        newCalc.id_material_type = material.id_material_type;
+        //newCalc.id_material = material.id;
+        newCalc.is_final = true;
+        newCalc.unit = material.unit;
+        newCalc.unit_abbrevation = material.abbreviation;
+        newCalc.value = Number(skylight.custom_qty)*Number(skylight.custom_cost);
+        newCalc.id_material_price_list = null;
+        newCalc.id_price_list = null;
+        newCalc.id_trademark = null;
+        for (const shingle of shingles) {
+        const newMaterial = JSON.parse(JSON.stringify(newCalc));
+        newMaterial.id_material_type_shingle = shingle.id_material_type;
+        calc.push(newMaterial);
+        }
+    }
+
+    return calc;
+  };
+
   async calculateLFCoverageCost(lf, material, shingles) {
     const calc = [];
     const concept_types_material = await this.getConstValue('concept_types_material');
@@ -367,7 +402,7 @@ export class GeneralService {
   };
 
   getOnlySlopesLowSteep = (slope) => {
-    return slope.pitch > 1.9 && slope.deletedAt == null;
+    return slope.pitch >= 3 && slope.deletedAt == null;
   };
 
   getOnlySteepSlopes = (slope) => {
@@ -375,11 +410,11 @@ export class GeneralService {
   };
 
   getOnlyFlatRoof = (slope) => {
-    return slope.pitch < 2 && slope.deletedAt == null;
+    return slope.pitch < 3 && slope.deletedAt == null;
   };
 
   getOnlyLowSlopes = (slope) => {
-    return slope.pitch > 1.9 && slope.pitch < 4.0 && slope.deletedAt == null;
+    return slope.pitch >=3 && slope.pitch < 4.0 && slope.deletedAt == null;
   };
 
   calculateLowSlopeSQ = (slopes, wasting) => {
@@ -416,8 +451,6 @@ export class GeneralService {
     newCalc.sq = sq;
     newCalc.coverage = material.coverage_sq;
     newCalc.coverage_description = this.getCoverageDescription(material);
-    console.log('+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=material');
-    console.log(material);
     newCalc.qty = Math.ceil(sq / newCalc.coverage);
     newCalc.calculation_type = 'Costo de ' + material.material;
     newCalc.category = material.category;
@@ -576,25 +609,13 @@ export class GeneralService {
           material?.id_material_category == category
       }
     );
-    console.log(measures.psb_selected_materials);
-    console.log(1 * shingle.id_trademark);
-    console.log("getSelectedMaterial.materialSelected");
-    console.log(materialSelected);
     if (!materialSelected || materialSelected.length == 0) {
       const isShingleSelected = measures.psb_selected_materials.filter(
         (material) => {
           return (1 * material.id_trademark_shingle) == (1 * shingle.id_trademark)
         });
-      console.log('isShingleSelected');
-      console.log(isShingleSelected);
       if(isShingleSelected.length > 0){
-        //console.log(measures.psb_selected_materials);
-        //console.log('Sin material en categoria ' + category);
-        //console.log(1* shingle.id_trademark_shingle);
-      console.log('not found');
         const inwShield = this.getMaterialNotFound(materials, measures, category, shingle);
-        //console.log('not found');
-        //console.log(inwShield);
         return inwShield;
       }else{
         return null;
@@ -604,28 +625,18 @@ export class GeneralService {
     } else {
       materialSelected = materialSelected[0];
     }
-    //console.log('>>>>>filter');
-    //console.log(materials);
     let inwShield = materials.filter(
       (material) =>
         material?.id_material_category == category &&
         material.id_material_type == materialSelected.id_material_type_selected
     );
-    //console.log(inwShield);
     if(!inwShield || inwShield.length == 0){
-      console.log('Afueraaaaaaaaaaaaa');
       inwShield = this.getMaterialNotFound(materials, measures, category, shingle);
     }
-    //console.log(inwShield);
     return inwShield;
   }
 
   getMaterialNotFound(materials, measures, category, shingle){
-    console.log('>>>>>>>>category');
-    console.log(materials[0]);
-    console.log(category);
-    console.log(measures.id);
-    console.log(shingle.id_trademark);
     const material = {
       id: uuidv4(),
       id_material_category: category,
@@ -657,8 +668,6 @@ export class GeneralService {
       id_trademark: shingle.id_trademark,
       id_material_type_shingle: shingle.id_material_type
     };
-    //console.log('>>>material');
-    //console.log(material);
     return Array(material);
   }
 

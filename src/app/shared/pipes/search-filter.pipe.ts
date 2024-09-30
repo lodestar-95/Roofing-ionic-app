@@ -14,6 +14,9 @@ export class SearchFilterPipe implements PipeTransform {
     }
 
     if (filter && Array.isArray(items)) {
+        if(filter['st_phone'] && filter['st_phone'].includes('(')){
+            filter['st_phone'] = filter['st_phone'].replace(/[^\d]/g, '');
+        }
       let filterKeys = Object.keys(filter);
 
       if (defaultFilter) {

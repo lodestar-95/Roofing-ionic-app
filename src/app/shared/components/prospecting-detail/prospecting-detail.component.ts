@@ -12,6 +12,7 @@ import { ProjectsService } from 'src/app/services/projects.service';
 import { PopoverProspectingVersionComponent } from '../../../prospecting/components/popover-prospecting-version/popover-prospecting-version.component';
 import { Subscription } from 'rxjs';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-prospecting-detail',
@@ -37,10 +38,13 @@ export class ProspectingDetailComponent implements OnInit {
   buildings: Building[];
   text: string;
   storeSubs: Subscription;
+  projectStatus: string;
+
 
   constructor(
     private popoverController: PopoverController,
     private projectService: ProjectsService,
+    private alertController: AlertController,
     private store: Store<AppState>
   ) {
     this.storeSubs = this.store.select('projects').subscribe((state) => {
@@ -127,11 +131,11 @@ export class ProspectingDetailComponent implements OnInit {
       return;
     }
 
-    if(this.project.next_contact_date){
-        let m = moment.utc(this.project.next_contact_date);
-        this.nextContactDate = m.format('DD/MM/YYYY'); // 06/01/2019
-    }else{
-        this.nextContactDate = 'No contact date';
+    if (this.project.next_contact_date) {
+      let m = moment.utc(this.project.next_contact_date);
+      this.nextContactDate = m.format('MM/DD/YYYY');
+    } else {
+      this.nextContactDate = 'No contact date';
     }
 
     this.project.versions.forEach((projectVersion) => {
@@ -144,11 +148,14 @@ export class ProspectingDetailComponent implements OnInit {
     const lastVersion =
       this.project.versions[this.project.versions.length - 1];
     this.isLastVersion = this.version.id === lastVersion.id;
+
+    this.projectStatus = this.project.project_status.project_status;
   }
 
   /**
    * Open popover for select de current version
    */
+
   async openPopoverVersion(ev: any) {
     const modal = await this.popoverController.create({
       component: PopoverProspectingVersionComponent,
@@ -185,19 +192,28 @@ export class ProspectingDetailComponent implements OnInit {
       });
     }
 
-    const projectUpdated = { ...this.project, versions: versions, isModified:true };
+    const projectUpdated: Project = {
+      ...this.project,
+      versions: versions,
+      isModified: true,
+      id_project_status: 1,
+      project_status: {
+        id: 1,
+        project_status: "Lead"
+      }
+    };
+
     await this.projectService.update(this.project.id, projectUpdated);
     this.changeVersionEmited.emit(true);
   }
 
 
   private createNewVersion(activeVersion: Version) {
-    this.projectService.saveVersion({...this.version, active: false, is_current_version: false});
+    this.projectService.saveVersion({ ...this.version, active: false, is_current_version: false });
 
     const lastVersion = this.project.versions[this.project.versions.length - 1];
     const nextProjectVersion = this.getNextProjectVersion(lastVersion.project_version);
     const newVersionId = uuidv4();
-
     return {
       ...activeVersion,
       id: newVersionId,
@@ -249,10 +265,10 @@ export class ProspectingDetailComponent implements OnInit {
 
   getNextProjectVersion(projectVersion: string) {
     let versionNumber = +projectVersion.toLowerCase().match(/v(\d+)/)[1];
-    return `V${++versionNumber}-${new Date().toLocaleDateString()}`;
+    return `Proposal ${++versionNumber}-${new Date().toLocaleDateString()}`;
   }
 
-  goToMaps(adress: string){
+  goToMaps(adress: string) {
     adress = adress.replace(' ', '+');
     // window.open('https://www.google.com/maps/place/' + adress, '_blank');
     const url = `maps://maps.apple.com/?daddr=${encodeURIComponent(adress)}`;

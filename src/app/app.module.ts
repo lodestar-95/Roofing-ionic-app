@@ -8,6 +8,9 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { TouchID } from '@awesome-cordova-plugins/touch-id/ngx';
+
+import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -23,7 +26,9 @@ import { appReducers } from './app.reducer';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
-
+import { EventService } from './services/event.service';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { Printer } from '@ionic-native/printer/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,6 +56,7 @@ import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
   providers: [
     AuthService,
     NetworkValidateService,
+    EventService,
     Network,
     {
       provide: HTTP_INTERCEPTORS,
@@ -60,7 +66,11 @@ import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     File,
     EmailComposer,
+    TouchID,
+    UniqueDeviceID,
+    Deeplinks,
+    Printer
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

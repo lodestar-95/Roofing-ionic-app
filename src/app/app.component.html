@@ -1,4 +1,11 @@
 <ion-app>
+  <ion-header  *ngIf="!networkService.isConnected" class="offline-header">
+    <ion-toolbar mode="md" color="danger" class="offline-toolbar">
+      <ion-title class="offline-title">
+        YOU'RE IN OFFLINE MODE
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
   <ion-menu side="end" menuId="appMenu" contentId="main-content" (ionWillOpen)="selectMenuOption()">
     <ion-header class="ion-no-border">
       <ion-toolbar mode="md" class="pb pt">

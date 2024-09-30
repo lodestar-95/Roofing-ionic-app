@@ -13,3 +13,23 @@ img.logo-image {
     margin-bottom: 3.1484vh;
     height: 12.628vh;
 }
+
+.fingerprint {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+
+    ion-icon {
+        font-size: 64px;
+    }
+}
+
+.deviceId {
+    padding: 10px;
+    color: black;
+    width: 100%;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

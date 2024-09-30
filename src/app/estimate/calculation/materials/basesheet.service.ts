@@ -19,7 +19,8 @@ export class BaseSheetService {
     }
 
     async calculate(building: Building) {
-        const quantity = this.getCricketsBaseSheet(building.psb_measure) + this.getFlatAreaOnCompleteRoof(building.psb_measure);
+        const quantity = this.getCricketsBaseSheet(building.psb_measure)
+                          + this.getFlatAreaOnCompleteRoof(building.psb_measure);
         const category_base_sheet = await this.general.getConstValue('category_base_sheet');
         const materials = this.general.getMaterial(this.materialList, category_base_sheet);
         const shingles = await this.shingle.getShingles();

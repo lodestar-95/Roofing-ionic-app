@@ -42,12 +42,15 @@ export class BugsReportsService {
    *
    * @returns
    */
-  list(): Promise<ApiResponse<BugReport[]>> {
+  list(offset): Promise<ApiResponse<BugReport[]>> {
+    const limit = 10;
     return new Promise((resolve, reject) => {
       if (this.networkService.isConnected) {
         this.http
           .get<ApiResponse<BugReport[]>>(
-            `${this.url}/bugs-report/list`
+            `${this.url}/bugs-report/list?offset=${offset}&limit=${limit}`
+            // `http://localhost:8000/api/bugs-report/list?offset=${offset}&limit=${limit}`
+
           )
           .subscribe(
             (result) => {
@@ -77,6 +80,7 @@ export class BugsReportsService {
         this.http
           .post<ApiResponse<ProjectNote[]>>(
             `${this.url}/bugs-report/save`,
+            // `http://localhost:8000/api/bugs-report/save`,
             body,
           )
           .subscribe(

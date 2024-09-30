@@ -18,12 +18,10 @@ export class AddNewOrNotRequiredComponent implements OnInit {
   ngOnInit() {}
 
   onNoRequired(){
-    console.log("Envia desde aca");
     this.optionEmited.emit();
   }
 
   onAdd(){
-    console.log("Envia desde aca");
     this.addEmited.emit();
   }
 

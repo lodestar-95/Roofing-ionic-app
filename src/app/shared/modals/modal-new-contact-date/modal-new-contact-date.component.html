@@ -16,12 +16,12 @@
           <ion-row>
             <ion-icon color="medium" name="create-outline"></ion-icon>
             <ion-label color="success">{{
-                project?.next_contact_date | date : 'd MMMM y'
+                project?.next_contact_date | date : 'MMMM d, y'
             }}</ion-label>
           </ion-row>
         </ion-grid>
       </ion-item>
-      
+      <!--
       <ion-list *ngIf="(dates$ | async)?.length > 0; else noDates">
         <ion-item>
           <ion-label>
@@ -44,7 +44,7 @@
             </ion-label>
           </ion-item>
       </ng-template>
-   
+    -->
     </ion-card-content>
   </ion-card>
   <section></section>
@@ -66,10 +66,10 @@
   </ion-grid>
 
 
-  <app-calendar-modals 
+  <app-calendar-modals
         [titleDateElement]="mdlDateTitle"
-        [isDatePopUpOpen]="isMdlDateOpen" 
-        [minDateString]="minDateString" 
+        [isDatePopUpOpen]="isMdlDateOpen"
+        [minDateString]="minDateString"
         (mdlResponse)="mdlResponsePayload($event)">
     </app-calendar-modals>
 </ion-content>

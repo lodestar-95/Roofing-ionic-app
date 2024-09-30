@@ -12,6 +12,7 @@ import { AppConfig } from 'src/app/config/app';
 import { JwtValidateService } from '../../../shared/helpers/jwt-validate.service';
 import { AuthRepository } from '../../db/auth.repository';
 import { User } from 'src/app/models/user.model';
+import { EventService } from 'src/app/services/event.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,8 @@ export class AuthService {
     private usersService: UsersService,
     private errorDialogService: ErrorDialogService,
     private jwtService: JwtValidateService,
-    private storage: Storage
+    private storage: Storage,
+    private eventSrv:EventService
   ) {
     this.repository = new AuthRepository(this.storage, `auth`);
   }
@@ -42,7 +44,51 @@ export class AuthService {
   authenticate(username: string, password: string) {
     const body = {
       username,
-      password,
+      password
+    };
+
+    return this.http
+      .post<AuthModel>(
+        `${this.url}/auth/login`,
+        JSON.stringify(body),
+        this.httpOptions
+      )
+      .pipe(
+        map(async (result) => {
+          this.repository.create(result.data.user);
+          this.usersService.addUserTokens(
+            result.data.token,
+            result.data.refreshToken
+          );
+          await this.usersService
+            .getUser(username, password)
+            .then(async (user) => {
+              if (user) {
+                await this.usersService.updateUser(username, password);
+              } else {
+                await this.usersService
+                  .getUserByRole(username, result.data.user.role.id_role)
+                  .then(async (user) => {
+                    if (user) {
+                      await this.usersService.updateUser(
+                        username,
+                        password,
+                        result.data.user.role.id_role
+                      );
+                    } else {
+                      await this.usersService.addUser(result, password);
+                    }
+                  });
+              }
+            });
+          return result;
+        })
+      );
+  }
+  authenticateWithoutDeviceid(username: string, password: string) {
+    const body = {
+      username,
+      password
     };
 
     return this.http
@@ -84,6 +130,22 @@ export class AuthService {
       );
   }
 
+
+  getUserWithDeviceId(deviceId: string) {
+    return new Promise((resolve, reject) => {
+      const body = { deviceId };
+      // let body='1CC1DA1F-3183-4DC1-A430-AD540AB150AC'
+      const headers = new HttpHeaders().set('Content-Type', 'application/json');
+      return this.http.post<any>(`${this.url}/auth/getUserByDeviceId`, body, { headers }).pipe().subscribe({
+        next: (res) => {
+          resolve(res)
+        }, error: (err) => {
+          reject(err)
+        }
+      });
+    })
+  }
+
   /**
    * Reset password the user
    */
@@ -91,8 +153,11 @@ export class AuthService {
     const body = {
       email,
     };
+    console.log("mail");
+    
     return this.http
       .post<AuthModel>(`${this.url}/auth/recoveryPassword`, body)
+      // .post<AuthModel>(`http://localhost:8000/api/auth/recoveryPassword`, body)
       .pipe(
         map((result) => {
           return result;
@@ -178,10 +243,16 @@ export class AuthService {
   /**
    * Remove unwanted storage and redirect to login.
    */
+
+   tokenKey='token';
+   RefreshTokenKey='refreshToken';
   logout() {
-    localStorage.clear();
+    this.eventSrv.publish('fetchUSerData')
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.RefreshTokenKey);
     this.storage.remove('auth');
     this.nav.navigateRoot('/');
+
   }
 
   /**

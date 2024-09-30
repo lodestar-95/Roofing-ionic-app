@@ -1,7 +1,7 @@
 <ion-item class="ion-no-padding">
   <ion-grid>
     <ion-row>
-       
+
       <ion-col size="1" size-xs  [ngClass]="status">
         <ion-icon [color]="status != 'gray-status' ? 'light' : 'medium'" class="icon-flag" *ngIf="status != 'draft-status'"
           name="flag"></ion-icon>
@@ -16,12 +16,12 @@
           </ion-col>
           <ion-col size="3" class="aling-center">
             <div class="aling-right">
-              <ion-icon 
-                color="medium" 
-                class="clock-color" 
+              <ion-icon
+                color="medium"
+                class="clock-color"
                 name="alarm-outline">
             </ion-icon>
-              <ion-label color="tertiary" class="sf-pro-regular roofing-title-popup aling-left">{{nextContactDate}}
+              <ion-label color="tertiary" class="sf-pro-regular roofing-title-popup aling-left">{{nextContactDate}} - {{projectStatus}}
               </ion-label>
             </div>
           </ion-col>

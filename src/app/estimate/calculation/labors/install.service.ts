@@ -281,7 +281,6 @@ export class InstallLaborService {
         }
 
         let layerLabor = labors.filter(labor => {
-            //console.log(labor.id_material_type_shingle + " == " + shingle.id_material_type);
             return labor.id_material_type_shingle == shingle.id_material_type;
         });
 

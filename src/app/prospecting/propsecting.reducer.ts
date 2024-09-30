@@ -7,20 +7,27 @@ import {
   unSetProjects,
   setProject,
   unSetProject,
+  setBugs
 } from './prospecting.actions';
 
 export interface State {
   projects: Project[];
   project: Project;
+  reportbugs: any[];
 }
 
 export const initialState: State = {
   projects: [],
+  reportbugs: [],
   project: null
 };
 
 const _prospectingReducer = createReducer(
   initialState,
+  on(setBugs, (state, { bug }) => ({
+    ...state,
+    reportbugs: [...state.reportbugs, bug],
+  })),
   on(setProjects, (state, { projects }) => ({
     ...state,
     projects: [...projects],

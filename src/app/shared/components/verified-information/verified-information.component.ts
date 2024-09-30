@@ -9,15 +9,15 @@ export class VerifiedInformationComponent implements OnInit {
   @Output() optionEmited = new EventEmitter();
   @Input() isVerified: boolean;
   @Input() showIconError: boolean;
-  @Input() title: string = 'Verified information';
+  @Input() title: string = 'Verify information';
 
   constructor() { }
 
   ngOnInit() {}
 
   onVerifiedInformation(){
-
-    this.optionEmited.emit(this.isVerified);
+    //this.isVerified = !this.isVerified; // Alternar el estado
+    this.optionEmited.emit(this.isVerified); // Emitir el nuevo estado
   }
 
 }

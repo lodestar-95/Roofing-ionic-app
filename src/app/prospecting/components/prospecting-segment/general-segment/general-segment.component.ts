@@ -23,6 +23,7 @@ import { Subscription } from 'rxjs';
 import { SyncProjectsService } from 'src/app/services/sync-projects.service';
 import { RolesPermissionsService } from 'src/app/shared/helpers/roles-permissions.service';
 import { GeneralService } from 'src/app/estimate/calculation/materials/general.service';
+import { Version } from 'src/app/models/version.model';
 
 @Component({
   selector: 'app-general-segment',
@@ -37,6 +38,7 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
   @ViewChild('emailInput', { static: false }) emailInput!: IonInput;
   project: Project;
   building: Building;
+  version: Version;
   buildings: Building[];
   isOverlay: boolean;
 
@@ -46,6 +48,7 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
 
   warrantyOption: WarrantyOption;
   inwshieldRow: InwshieldRow;
+  inwshieldRowPrev: number | null = null;
   costIntegration: CostIntegration;
   wasting: number;
 
@@ -60,6 +63,8 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
   jobTypesTearoffId: number;
   inwshieldDeclinedId: number;
 
+  needSelectionVerified:boolean = false;
+
   constructor(
     private catalogsService: CatalogsService,
     private store: Store<AppState>,
@@ -71,6 +76,8 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
   ) {
     this.storeSubs = this.store.select('projects').subscribe(state => {
       this.project = state.project;
+
+      this.version = this.project.versions.find(x => x.active);
       if (!this.project || this.project?.versions?.length == 0) {
         return;
       }
@@ -106,11 +113,11 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
     this.inwshieldDeclinedId = await this.general.getConstDecimalValue('inwshield_declined');
   }
 
-  async getJobTypesTearoffId(){
+  async getJobTypesTearoffId() {
     this.jobTypesTearoffId = await this.general.getConstDecimalValue('job_types_tear_off');
   }
 
-  async getCostIntegrationDeclinedId(){
+  async getCostIntegrationDeclinedId() {
     this.windWarrantyDeclinedId = await this.general.getConstDecimalValue('cost_integration_declined');
   }
 
@@ -159,25 +166,56 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
   /**
    * Get inwshield rows catalog
    */
-  getInwshieldRows() {
-    this.catalogsService.getInwshieldRows().then(result => {
-      this.isNewConstruction().then(isNewConstruction=>{
-        this.isTearoffAndInstall().then(isTearoff => {
-          if (isTearoff){
+  async getInwshieldRows() {
+    try {
+        const result = await this.catalogsService.getInwshieldRows();
+        const isNewConstruction = await this.isNewConstruction();
+        const isTearoff = await this.isTearoffAndInstall();
+        
+        if (isTearoff) {
+          this.inwshieldRows = result.data.filter(inwshieldRow => inwshieldRow.id != this.inwshieldDeclinedId);
+        } else {
+          const isTearOffOnly = await this.isTearoffOnly();
+          if (isTearOffOnly) {
             this.inwshieldRows = result.data.filter(inwshieldRow => inwshieldRow.id != this.inwshieldDeclinedId);
-          }else{
-            this.isTearoffOnly().then( isTearOffOnly => {
-              if (isTearOffOnly){
+          } else {
+            this.inwshieldRows = result.data;
+          }
+        }
+    
+        if (this.building.psb_measure) {
+          const idInwshieldRowsSelected = this.building.psb_measure.id_inwshield_rows;
+    
+          this.inwshieldRows.forEach(x => {
+            if (x.id == idInwshieldRowsSelected) {
+              x.isChecked = true;
+              this.inwshieldRow = x;
+            }
+            if (isNewConstruction && x.id == 3) {
+              x.sub_title = 'Upgrades using 3 feet on eaves and valleys and using 6 feet on eaves and 3 feets on valleys will be added in proposal.';
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error getting inwshield rows:', error);
+      }
+    /*
+    this.catalogsService.getInwshieldRows().then(result => {
+      this.isNewConstruction().then(isNewConstruction => {
+        this.isTearoffAndInstall().then(isTearoff => {
+          if (isTearoff) {
+            this.inwshieldRows = result.data.filter(inwshieldRow => inwshieldRow.id != this.inwshieldDeclinedId);
+          } else {
+            this.isTearoffOnly().then(isTearOffOnly => {
+              if (isTearOffOnly) {
                 this.inwshieldRows = result.data.filter(inwshieldRow => inwshieldRow.id != this.inwshieldDeclinedId);
-              }else{
+              } else {
                 this.inwshieldRows = result.data;
               }
             });
           }
-          console.log('>>>>inw');
-          console.log(this.inwshieldRows);
           if (this.building.psb_measure) {
-            const idInwshieldRowsSelected = this.building.psb_measure.id_inwshield_rows;
+              const idInwshieldRowsSelected = this.building.psb_measure.id_inwshield_rows;
 
             this.inwshieldRows.map(x => {
               if (x.id == idInwshieldRowsSelected) {
@@ -191,7 +229,7 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
           }
         });
       });
-    });
+    });*/
   }
 
   async isNewConstruction() {
@@ -229,6 +267,11 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
     });
   }
 
+  getStepSlope(): boolean {
+    const hasStepSlopes = this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 4 && !x.deletedAt) ?? false
+    return hasStepSlopes;
+  }
+
   /**
    * Save shingle WarrantyOption
    * @param warrantyOption
@@ -254,56 +297,14 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
    * @param inwshieldRow
    */
   onOptionSelectedInwshieldRows(inwshieldRow: any) {
-    this.inwshieldRow = inwshieldRow;
-    this.isFormValid = false;
-
     const shingle: PsbMeasures = {
       ...this.building.psb_measure,
-      // inwshield_rows: { ...this.inwshieldRow },
-      id_inwshield_rows: this.inwshieldRow.id
+      //id_inwshield_rows: this.inwshieldRow.id
     };
 
-    if (inwshieldRow.id == 3) {
-      shingle.psb_selected_materials = shingle.psb_selected_materials?.map(x => {
-        if (x.id_material_category == 30) {
-          return { ...x, deletedAt: new Date() };
-        } else {
-          return x;
-        }
-      });
-    }
-
-    if (inwshieldRow.id == 4) {
-      shingle.psb_selected_materials = shingle.psb_selected_materials?.map(x => {
-        if (x.id_material_category == 34) {
-          return { ...x, deletedAt: new Date() };
-        } else {
-          return x;
-        }
-      });
-    }
-
-    if (inwshieldRow.id != 3 && this.findResource(12) && !this.selectionInWOk()) {
-      shingle.psb_verifieds = shingle.psb_verifieds.map(x => {
-        if (x.id_resource == 12) {
-          return { ...x, is_verified: false };
-        } else {
-          return x;
-        }
-      });
-    }
-
-    if (inwshieldRow.id != 4 && this.findResource(12) && !this.selectionUnderlaymentOk()) {
-      shingle.psb_verifieds = shingle.psb_verifieds.map(x => {
-        if (x.id_resource == 12) {
-          return { ...x, is_verified: false };
-        } else {
-          return x;
-        }
-      });
-    }
-
-    this.projectService.saveProjectShingleBuilding(shingle);
+    this.inwshieldRowPrev = shingle.id_inwshield_rows;
+    this.inwshieldRow = inwshieldRow;
+    this.isFormValid = false;
   }
 
   selectionInWOk() {
@@ -438,63 +439,136 @@ export class GeneralSegmentComponent implements OnInit, OnDestroy {
    * Verified information before save data
    * @returns
    */
-  confirm(event) {
-    if (event) {
-      const psb_verifieds = this.projectService.getShingleVerifiedInformation(
-        6,
-        !this.verifiedActive
-      );
 
-      const shingle: PsbMeasures = {
-        ...this.building.psb_measure,
-        verified_general: !this.verifiedActive,
-        psb_verifieds
-      };
-      this.projectService.saveProjectShingleBuilding(shingle);
-      setTimeout(() => {
-        if (!event) {
-          this.synProjects.syncOffline();
-          this.changeSegmentEmmited.emit('roof-slopes');
-        }
-      }, 500);
-    } else {
-      if (!this.validJobTypeForInW){
-        this.costIntegration = this.costIntegrations.filter(x => x.id === this.windWarrantyDeclinedId)[0];
-        this.costIntegration.isChecked= true;
-      }
-      if (!this.warrantyOption) {
-        this.presentToast('warrantyOption not found!');
-        return;
-      } else if (!this.costIntegration) {
-        this.presentToast('Cost integration not found!');
-        return;
-      } else if (!this.wasting) {
-        this.presentToast('Wasting not found!');
-        return;
-      } else if (this.validJobTypeForInW && !this.inwshieldRow) {
-        this.presentToast('Inwshield row not found!');
-        return;
-      } else {
-        const psb_verifieds = this.projectService.getShingleVerifiedInformation(
-          6,
-          !this.verifiedActive
-        );
-
-        const shingle: PsbMeasures = {
-          ...this.building.psb_measure,
-          verified_general: !this.verifiedActive,
-          psb_verifieds
-        };
-        this.projectService.saveProjectShingleBuilding(shingle);
-        setTimeout(() => {
-          if (!event) {
-            this.synProjects.syncOffline();
-            this.changeSegmentEmmited.emit('roof-slopes');
-          }
-        }, 500);
-      }
-    }
+  createnowDateString() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString();
+    const day = currentDate.getDate().toString();
+    const dateString = '-' + day + '/' + month + '/' + year;
+    return dateString;
   }
+
+  checkwithDate(project_name: string) {
+    const datePattern = /\b(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+    const endsWithDate = datePattern.test(project_name);
+    return endsWithDate;
+  }
+
+
+    async confirm(event) {
+        let update_date;
+        if (this.checkwithDate(this.version.project_version)) {
+            update_date = this.version.project_version;
+        } else {
+            update_date = this.version.project_version + this.createnowDateString();
+        }
+
+        if (event) {
+            const psb_verifieds = this.projectService.getShingleVerifiedInformation(
+                6,
+                !this.verifiedActive
+            );
+
+            const shingle: PsbMeasures = {
+                ...this.building.psb_measure,
+                verified_general: !this.verifiedActive,
+                psb_verifieds
+            };
+
+            this.projectService.saveVersion({ ...this.version, project_version: update_date });
+            this.projectService.saveProjectShingleBuilding(shingle);
+            setTimeout(() => {
+                if (!event) {
+                this.synProjects.syncOffline();
+                this.changeSegmentEmmited.emit('roof-slopes');
+                }
+            }, 500);
+        } else {
+
+            if (!this.validJobTypeForInW) {
+                this.costIntegration = this.costIntegrations.filter(x => x.id === this.windWarrantyDeclinedId)[0];
+                this.costIntegration.isChecked = true;
+            }
+            if (!this.warrantyOption) {
+                this.presentToast('warrantyOption not found!');
+                return;
+            } else if (!this.costIntegration) {
+                this.presentToast('Cost integration not found!');
+                return;
+            } else if (!this.wasting) {
+                this.presentToast('Wasting not found!');
+                return;
+            } else if (this.validJobTypeForInW && !this.inwshieldRow) {
+                this.presentToast('Inwshield row not found!');
+                return;
+            } else {
+                const psb_verifieds = this.projectService.getShingleVerifiedInformation(
+                6,
+                !this.verifiedActive
+                );
+
+                const inwshieldRowId = this.inwshieldRow.id;
+                let needUnselectChk:boolean = false;
+
+                const shingle: PsbMeasures = {
+                    ...this.building.psb_measure,
+                    id_inwshield_rows: inwshieldRowId,
+                    verified_general: true,
+                    psb_verifieds
+                };
+
+                //Decline = 3: Eliminar Ice and Water shield pero sin deseleccionar
+                if (inwshieldRowId == 3) {
+                    shingle.psb_selected_materials = shingle.psb_selected_materials?.map(x => {
+                        if (x.id_material_category == 30) {
+                            return { ...x, deletedAt: new Date() };
+                        } else {
+                            return x;
+                        }
+                    });
+                }
+
+                //Complete roof = 4
+                if (inwshieldRowId == 4) {
+                    needUnselectChk = (this.inwshieldRowPrev==3)?true:false;
+
+                    shingle.psb_selected_materials = shingle.psb_selected_materials?.map(x => {
+                    if (x.id_material_category == 34) {
+                        return { ...x, deletedAt: new Date() };
+                    } else {
+                        return x;
+                    }
+                    });
+                }
+
+                //3 & 3 =  1
+                if (inwshieldRowId == 1) {
+                    needUnselectChk = (this.inwshieldRowPrev==3 || this.getStepSlope())?true:false;
+                }
+
+                //6 & 3 =  2
+                if (inwshieldRowId == 2) {
+                    needUnselectChk = (this.inwshieldRowPrev==3 || this.getStepSlope())?true:false;
+                }
+
+                if(needUnselectChk){
+                    shingle.psb_verifieds = shingle.psb_verifieds.filter(item => item.id_resource !== 12);
+                    console.log('shingle.psb_verifieds', shingle.psb_verifieds)
+                }
+                
+                await this.projectService.saveProjectShingleBuilding(shingle);
+
+                setTimeout(() => {
+                if (!event) {
+                    this.synProjects.syncOffline();
+                    this.changeSegmentEmmited.emit('roof-slopes');
+                    this.projectService.saveVersion({ ...this.version, project_version: update_date });
+                }
+                }, 1000);
+            }
+        }
+    }
 
   validateRolePermission() {
     this.rolesPermissionsService

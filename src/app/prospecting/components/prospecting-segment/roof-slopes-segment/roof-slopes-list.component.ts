@@ -374,9 +374,15 @@ export class RoofSlopesListComponent implements OnInit, OnDestroy {
   }
 
   findResource(idResource: number) {
-    const verifiedInformation = this.building.psb_measure.psb_verifieds.find(
-      x => x.id_resource == idResource
-    );
+    let verifiedInformation;
+    if(this.building.psb_measure.psb_verifieds !== undefined) {
+      verifiedInformation = this.building.psb_measure.psb_verifieds.find(
+        x => x.id_resource == idResource
+      );
+    } else{
+      return false;
+    }
+
     return verifiedInformation ? verifiedInformation.is_verified : false;
   }
 

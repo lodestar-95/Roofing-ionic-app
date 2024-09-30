@@ -570,87 +570,96 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
    * @returns
    */
   async onVerifiedCheked(event) {
-    let aRestar = 0;
-    if (!this.validPitchAngleFlatRoof) {aRestar++;}
-    if (!this.validPitchAngleLowSlope) {aRestar++;}
-    if (!this.validPitchAngleSteepSlope) {aRestar++;}
-
-    const totalModals = 7 - aRestar;
-
-    const verifiedInformation = this.projectShingleBuilding.psb_verifieds
-      ? [...this.projectShingleBuilding.psb_verifieds]
-      : [];
-
-    const verified = verifiedInformation.filter(
-      x => x.id_resource >= 13 && x.id_resource <= 21 && x.is_verified
-    );
-
-    if (verified.length >= totalModals) {
-      this.showIconError = false;
-      const psb_verifieds = this.projectService.getShingleVerifiedInformation(
-        9,
-        !this.otherMeasuresActive
-      );
-
-      const shingle: PsbMeasures = {
-        ...this.building.psb_measure,
-        psb_verifieds
-      };
-
-      if(shingle.hips_lf === 0 && shingle.ridge_lf === 0) {
-        const upgradeRidgeventsId = await this.general.getConstDecimalValue('upgrade_ridgevents');
-        const costIntegrationDeclinedId = await this.general.getConstDecimalValue('cost_integration_declined');
-        const resourceSelectionId = await this.general.getConstDecimalValue('resource_selection');
-
-        shingle.psb_verifieds = shingle.psb_verifieds.filter(item => item.id_resource !== resourceSelectionId);
-
-        if(shingle.psb_upgrades && shingle.psb_upgrades.length > 0 ){
-
-          shingle.psb_upgrades = shingle.psb_upgrades.map(x => {
-            if(x.id_upgrade === upgradeRidgeventsId) {
-              return {...x, id_cost_integration: costIntegrationDeclinedId};
-            }
-            return x;
-          });
-        } else {
-          shingle.psb_upgrades = [{
-            id_upgrade: upgradeRidgeventsId,
-            id: null,
-            id_project: this.project.id,
-            id_cost_integration: costIntegrationDeclinedId,
-            isModified: null,
-        }
-          ];
-        }
-
-        const categoryRidgecapId = await this.general.getConstDecimalValue('category_ridgecap');
-        if(shingle.psb_selected_materials){
-          shingle.psb_selected_materials = shingle.psb_selected_materials.map(
-            x => {
-              if (x.id_material_category === categoryRidgecapId) {
-                return {...x, deletedAt:  new Date()};
-              }
-
-            return x;}
+        let aRestar = 0;
+        if (!this.validPitchAngleFlatRoof) {aRestar++;}
+        if (!this.validPitchAngleLowSlope) {aRestar++;}
+        if (!this.validPitchAngleSteepSlope) {aRestar++;}
+    
+        const totalModals = 7 - aRestar;
+    
+        const verifiedInformation = this.projectShingleBuilding.psb_verifieds
+          ? [...this.projectShingleBuilding.psb_verifieds]
+          : [];
+    
+        const verified = verifiedInformation.filter(
+          x => x.id_resource >= 13 && x.id_resource <= 21 && x.is_verified
+        );
+    
+        if (verified.length >= totalModals) {
+          this.showIconError = false;
+          let psb_verifieds = this.projectService.getShingleVerifiedInformation(
+            9,
+            !this.otherMeasuresActive
           );
+    
+          const shingle: PsbMeasures = {
+            ...this.projectShingleBuilding,
+            psb_verifieds,
+          };
+    
+          if(shingle.hips_lf > 0 && shingle.ridge_lf > 0 && !event) {
+            shingle.psb_verifieds = shingle.psb_verifieds.filter(item => item.id_resource !== 12);
+          }
+    
+          if(shingle.hips_lf === 0 && shingle.ridge_lf === 0) {
+    
+            //tenemos que eliminar los materiales id_material_category: 7
+            if (shingle.psb_selected_materials) {
+                shingle.psb_selected_materials = shingle.psb_selected_materials.map(x => {
+                  if (x.id_material_category == 7) {
+                    return { ...x, deletedAt: new Date() };
+                  }
+                  return x;
+                });
+            }
+    
+            const upgradeRidgeventsId = await this.general.getConstDecimalValue('upgrade_ridgevents');
+            const costIntegrationDeclinedId = await this.general.getConstDecimalValue('cost_integration_declined');
+            const resourceSelectionId = await this.general.getConstDecimalValue('resource_selection');
+    
+            if(shingle.psb_upgrades && shingle.psb_upgrades.length > 0 ){
+    
+              shingle.psb_upgrades = shingle.psb_upgrades.map(x => {
+                if(x.id_upgrade === upgradeRidgeventsId) {
+                  return {...x, id_cost_integration: costIntegrationDeclinedId};
+                }
+                return x;
+              });
+            } else {
+              shingle.psb_upgrades = [{
+                id_upgrade: upgradeRidgeventsId,
+                id: null,
+                id_project: this.project.id,
+                id_cost_integration: costIntegrationDeclinedId,
+                isModified: null,
+            }
+              ];
+            }
+    
+            const categoryRidgecapId = await this.general.getConstDecimalValue('category_ridgecap');
+            if(shingle.psb_selected_materials){
+              shingle.psb_selected_materials = shingle.psb_selected_materials.map(
+                x => {
+                  if (x.id_material_category === categoryRidgecapId) {
+                    return {...x, deletedAt:  new Date()};
+                  }
+    
+                return x;}
+              );
+            }
+    
+          }
+
+            this.projectService.saveProjectShingleBuilding(shingle);
+            setTimeout(() => {
+              if (!event) {
+                this.synProjects.syncOffline();
+                this.changeSegmentEmmited.emit('options');
+              }
+            }, 500);
+        } else {
+          this.showIconError = true;
         }
-
-
-
-
-
-      }
-      this.projectService.saveProjectShingleBuilding(shingle);
-      setTimeout(() => {
-        if (!event) {
-          this.synProjects.syncOffline();
-          this.changeSegmentEmmited.emit('options');
-        }
-      }, 500);
-
-    } else {
-      this.showIconError = true;
-    }
   }
 
   validateChanges() {

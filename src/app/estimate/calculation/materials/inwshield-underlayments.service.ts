@@ -24,7 +24,6 @@ export class INWShieldUnderlaymentsService {
   }
 
   async calculateInWShieldMeasures(building: Building) {
-    //console.log(">>>>>2");
     if (building.psb_measure.psb_slopes == null) {
       return ERRORS.NO_SLOPE;
     }
@@ -33,15 +32,11 @@ export class INWShieldUnderlaymentsService {
     const wasting = measures.wasting;
     let totalInWSQ;
     let totalUnderlayment;
-    //console.log(">>wasting");
-    //console.log(wasting);
     let inwShieldCalculation = await this.calculateInWShield(
       measures,
       wasting,
       totalInWSQ
     );
-    //console.log(">>inwShieldCalculation");
-    //console.log(inwShieldCalculation);
     let underlaymentCalculation = await this.calculateUnderlayment(
       measures,
       wasting,
@@ -67,7 +62,6 @@ export class INWShieldUnderlaymentsService {
   };
 
   async calculateUnderlayment(measures, wasting, inwShieldCalculation) {
-    console.log('>>> underlayment');
     let shingles = await this.shingle.getShingles();
     //wasting = wasting + 1;
     let plasticCapsCalculation;
@@ -85,16 +79,11 @@ export class INWShieldUnderlaymentsService {
     const concept_types_underlayment_partial_calc = await this.general.getConstValue('concept_types_underlayment_partial_calc');
     let calculations = [];
 
-    //console.log('>>> underlayment 2');
-    //console.log(category_underlayment);
     for (let shingle of shingles) {
       let steepSlopeSQ = this.calculateSteepSlopeUnderlaymentSQ(
         measures.psb_slopes,
         wasting
       );
-      //console.log('>>> steepSlopeSQ');
-      //console.log(steepSlopeSQ);
-      //console.log(materials);
 
       let categoryMaterials = this.general.getMaterial(
         materials,
@@ -103,8 +92,6 @@ export class INWShieldUnderlaymentsService {
       //if(categoryMaterials.lenght == 0){
       //  continue;
       //}
-      //console.log('>>> categoryMaterials');
-      console.log('calculateUnderlayment');
       let materialSelected = this.general.getSelectedMaterial(
         categoryMaterials,
         measures,
@@ -115,8 +102,6 @@ export class INWShieldUnderlaymentsService {
         //TODO: verificar si se quita este contiunue por ya tener un material para material no encontrado.
         continue;
       }
-      //console.log('>>> materialSelected');
-      //console.log(materialSelected);
 
       materialSelected = materialSelected[0];
       stepSlopeUnderlaymentCalculation = this.addPartialCalcule(
@@ -129,7 +114,6 @@ export class INWShieldUnderlaymentsService {
         materialSelected
       );
 
-      console.log('>>> underlayment for 1');
       const isInWShieldDeclined = measures.id_inwshield_rows == 3;
       let steepSlopeToRestSQ = isInWShieldDeclined ? 0 : await this.calculateSteepSlopeInWShieldSQToRest(
         measures,
@@ -193,7 +177,6 @@ export class INWShieldUnderlaymentsService {
       calculations = [...calculations, ...calculation];
     }
 
-    console.log('>>> underlayment fin');
     return calculations;
   };
 
@@ -227,8 +210,6 @@ export class INWShieldUnderlaymentsService {
 
     const category_inw_shield = await this.general.getConstValue('category_inw_shield');
     const concept_types_inwshield_partial_calc = await this.general.getConstValue('concept_types_inwshield_partial_calc');
-    //console.log('concept_types_inwshield_partial_calc');
-    //console.log(concept_types_inwshield_partial_calc);
     let rows = await this.getSelectedInWShieldRows(measures);
     const isCompleteRoof = (rows?.id ?? 0) == 4;
     const isDeclined = (rows?.id ?? 0) == 3;
@@ -238,29 +219,26 @@ export class INWShieldUnderlaymentsService {
         materials,
         category_inw_shield
       )[0];
+
       let categoryMaterials = this.general.getMaterial(
         materials,
         category_inw_shield
       );
 
-      console.log('>>>>===++++>>>>>>====');
-      console.log('calculateInWShield');
       let materialSelected = this.general.getSelectedMaterial(
         categoryMaterials,
         measures,
         category_inw_shield,
         shingle
       );
-      console.log('===========================');
+
       if (!materialSelected || materialSelected.length == 0) {
         continue;
       }
       materialSelected = materialSelected[0];
 
-
-      if(!(isCompleteRoof || isDeclined)){
-        let flatRoofSQ = this.calculateFlatRoofInWShieldSQ(measures, wasting);
-        //console.log(flatRoofSQ);
+      if(!isDeclined){
+        const flatRoofSQ = this.calculateFlatRoofInWShieldSQ(measures, wasting);
 
         flatInWCalculation = this.addPartialCalcule(
           flatRoofSQ,
@@ -273,7 +251,6 @@ export class INWShieldUnderlaymentsService {
         );
 
         let lowSlopeSQ = this.calculateLowSlopeInWShieldSQ(measures, wasting);
-        //console.log(lowSlopeSQ);
         lowSlopeInWCalculation = this.addPartialCalcule(
           lowSlopeSQ,
           'InW Shield in Low Slope',
@@ -291,13 +268,6 @@ export class INWShieldUnderlaymentsService {
               let valleysLowSlopeLF = measures.valleys_lf_steep_slope;
               let evesStartersStepSlopesLF = measures.eves_starters_lf_steep_slope * (await this.getSelectedInWShieldRows(measures)).rows_eves;
               let evesValleysLF = (valleysLowSlopeLF + evesStartersStepSlopesLF) * (1+(wasting/100));
-              console.log("evesValleysLF");
-              console.log(measures);
-              console.log(valleysLowSlopeLF);
-              console.log(await this.getSelectedInWShieldRows(measures));
-              console.log(measures.eves_starters_lf_steep_slope);
-              console.log(evesStartersStepSlopesLF);
-              console.log(evesValleysLF);
               let evesValleysLFCvg = evesValleysLF/
         */
 
@@ -308,7 +278,6 @@ export class INWShieldUnderlaymentsService {
           wasting,
           shingle
         );
-        //console.log(steepSlopeSQ);
 
         steepSlopeInWCalculation = this.addPartialCalcule(
           steepSlopeSQ,
@@ -320,16 +289,12 @@ export class INWShieldUnderlaymentsService {
           materialSelected
         );
         totalInWSQ = flatRoofSQ + steepSlopeSQ + lowSlopeSQ;
-        //console.log(totalInWSQ);
 
         const inWmaterial = this.general.getFirstMaterial(materials, category_inw_shield);
         if (!inWmaterial) throw new NotFoundMaterialException('InW Shield');
         totalInWSQ += this.getCricketsInWS(measures, inWmaterial);
-        //console.log(totalInWSQ);
         totalInWSQ += this.getChimneyInWS(measures, inWmaterial);
-        //console.log(totalInWSQ);
         totalInWSQ += this.getSkylightInWS(measures, inWmaterial);
-        //console.log(totalInWSQ);
 
         inwCalculation = await this.calculateCost(
           totalInWSQ,
@@ -387,15 +352,12 @@ export class INWShieldUnderlaymentsService {
     let materials = this.materialList;
     let material = this.general.getMaterial(materials, category)[0];
     let categoryMaterials = this.general.getMaterial(materials, category);
-    console.log('calculateCost');
     let materialSelected = this.general.getSelectedMaterial(
       categoryMaterials,
       measures,
       category,
       shingle
     )[0];
-    console.log('++++++++++++++++++++materialSelected');
-    console.log(materialSelected);
     let materialCalculations = await this.general.calculateCostJustOneShingle(
       sq,
       materialSelected,
@@ -428,8 +390,6 @@ export class INWShieldUnderlaymentsService {
     if(rows.id == 4){
       return this.calculateSteepSlopeInWShieldSQCompleteRoof(measures, wasting);
     }
-    //console.log("*****1");
-    //console.log(measures.id_inwshield_rows);
     const category_inw_shield = await this.general.getConstValue('category_inw_shield');
     let inwSteepSlopeLF =
       (valleysStepSlopesLF + (evesStartersStepSlopesLF * rows.rows_eves)) *
@@ -439,7 +399,6 @@ export class INWShieldUnderlaymentsService {
       materials,
       category_inw_shield
     );
-    console.log('calculateSteepSlopeInWShieldSQ');
     let inwMaterial = this.general.getSelectedMaterial(
       inwShieldsMaterials,
       measures,
@@ -461,8 +420,6 @@ export class INWShieldUnderlaymentsService {
 
   async getSelectedInWShieldRows(measures) {
     let idInWShieldRows = measures.id_inwshield_rows;
-    //console.log("*******");
-    //console.log(idInWShieldRows);
     let InWShieldRows = await this.catalogs
       .getInwshieldRows()
       .then(inws => inws.data.filter((inw) => (inw.id == idInWShieldRows)));
@@ -491,15 +448,12 @@ export class INWShieldUnderlaymentsService {
     newCalc.value = sq;
     let materials = this.materialList;
     let inwShieldsMaterials = this.general.getMaterial(materials, category);
-    console.log('addPartialCalcule');
     let inwMaterial = this.general.getSelectedMaterial(
       inwShieldsMaterials,
       measures,
       category,
       shingle
     )[0];
-    console.log('inw shield');
-    console.log(inwMaterial);
     newCalc.id_concept = inwMaterial.id;
     newCalc.id_material_type = materialSelected.id_material_type;
     newCalc.id_material_type_shingle = shingle.id_material_type;
@@ -524,7 +478,6 @@ export class INWShieldUnderlaymentsService {
       materials,
       category_inw_shield
     );
-    console.log('calculateSteepSlopeInWShieldSQToRest');
     let inwMaterial = this.general.getSelectedMaterial(
       inwShieldsMaterials,
       measures,
