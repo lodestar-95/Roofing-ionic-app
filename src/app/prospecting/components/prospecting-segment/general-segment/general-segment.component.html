@@ -33,12 +33,11 @@
             type="tel"
             name="wasting"
             [(ngModel)]="wasting"
-            (ngModelChange)="onWastingChanged()"
+            (blur)="onWastingChanged()"
             class="native-input sc-ion-input-ios"
             placeholder="0-50%"
-            mask="99%"
+            mask="00"
             suffix="%" />
-          <ion-input type="hidden" placeholder="Awesome Input"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>

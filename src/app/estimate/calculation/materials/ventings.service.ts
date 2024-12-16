@@ -36,8 +36,6 @@ export class VentingsService {
   async calculateVentingCost(measures) {
     let ventilationCalculations = [];
     const shingles = await this.shingle.getShingles();
-    console.log('=================calculateVentingCost');
-    console.log(this.materialList);
 
     const category_jvent4 = await this.general.getConstValue('category_jvent4');
     const jVent4 = this.general.getFirstMaterial(this.materialList, category_jvent4);
@@ -93,6 +91,11 @@ export class VentingsService {
       powerVent,
       shingles
     );
+
+//In place
+//In place and to be replaced
+//Add new
+//Ridgevent as upgrade
 
     let ridgeVentLF = measures.vent_is_ridgevent_in_place ? measures.vent_ridgevent_lf ?? measures.ridge_lf : measures.ridge_lf ?? measures.vent_ridgevent_lf;
     if(!measures.vent_is_ridgevent_in_place){

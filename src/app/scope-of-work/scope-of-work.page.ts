@@ -91,7 +91,6 @@ export class ScopeOfWorkPage implements OnInit {
       let shingle_lines = this.project.versions[0].shingle_lines.length === 1 ? true : false;
       let measure = this.project.versions[0].buildings.find(x => x.psb_measure);
 
-      // console.log("measure.psb_measure.psb_material_calculations",measure.psb_measure.psb_material_calculations);
 
       // psb_options should have only records with is_built_in = true in order to show accept icon. Only consider records with deleted_at = null.
       let Is_built = measure.psb_measure.psb_options.find(item => item.deletedAt)
@@ -196,8 +195,6 @@ export class ScopeOfWorkPage implements OnInit {
 
     let reject_message;
 
-    console.log("this.project.id_reject_reason ", this.project.id_reject_reason);
-
     if (this.project.id_reject_reason !== null)
       if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
         reject_message = "This proposal was marked as " + this.project.reject_reason;
@@ -247,8 +244,6 @@ export class ScopeOfWorkPage implements OnInit {
         project_status: "Lead"
       }
     };
-
-    console.log(projectUpdated);
 
     await this.projectService.update(this.project.id, projectUpdated);
     this.changeVersionEmited.emit(true);
@@ -344,9 +339,9 @@ export class ScopeOfWorkPage implements OnInit {
   }
 
   goToScope() {
-    this.nav.navigateForward('pdf-viewer-page', {
-      queryParams: { project: this.project }
-    });
+    localStorage.removeItem('storeproject');
+    localStorage.setItem('storeproject', JSON.stringify(this.project));
+    this.nav.navigateForward('pdf-viewer-page');
   }
   async openPriceModal() {
     const modal = await this.modalController.create({

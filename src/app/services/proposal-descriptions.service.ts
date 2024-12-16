@@ -11,6 +11,8 @@ import { Version } from '../models/version.model';
 import { GeneralService } from '../estimate/calculation/materials/general.service';
 import { PsbMeasures } from '../models/psb-measures.model';
 import { MaterialService } from './material.service';
+import { Project } from '../models/project.model';
+import { Trademark } from '../models/trademark.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +61,6 @@ export class ProposalDescriptionsService {
    *Funciones para generar textos
    */
   async generateText(_scope, _building, _version, _materials, _project) {
-    console.log('generateText');
     this.version = { ..._version };
     this.building = { ..._building };
     this.materials = _materials;
@@ -69,7 +70,6 @@ export class ProposalDescriptionsService {
   }
 
   async processData(_scope): Promise<string> {
-    console.log('processData');
     if (_scope.is_architectural) {
       this.descriptions = this.repositoryData
         .filter(x => x.is_architectural == true)
@@ -82,15 +82,12 @@ export class ProposalDescriptionsService {
     const text = _scope.is_verified && _scope.scope_of_work?.length > 0
       ? _scope.scope_of_work
       : await this.getTagsText();
-    console.log(text);
     return text;
   }
 
   async getTagsText() {
     let text = '';
-    console.log('getTagsText');
     for (const element of this.descriptions) {
-      console.log(element.description);
       if (element.description.includes('[skyLight')) {
         const skyDescription = (await this.skylightBindData(element.description)).trim();
         if (skyDescription?.length > 0) {
@@ -106,8 +103,6 @@ export class ProposalDescriptionsService {
         }
       }
     }
-    console.log("text");
-    console.log(text);
     return text;
   }
   private async bindScopeData(description: string): Promise<string> {
@@ -121,7 +116,6 @@ export class ProposalDescriptionsService {
         description = description.replace(tag, `${tagValue}`);
       }
     }
-    console.log(description);
     return description;
   }
 
@@ -157,7 +151,7 @@ export class ProposalDescriptionsService {
         return this.hasChimneys();
       case '[hasCrickets]':
         return this.hasCrickets();
-      case'[hasCricketsFlatRoof]':
+      case '[hasCricketsFlatRoof]':
         return this.hasCricketsFlatRoof();
       case '[hasNotChimneys]':
         return this.hasNotChimneys();
@@ -220,7 +214,7 @@ export class ProposalDescriptionsService {
       case '[FlatRoof]':
         return this.flatRoof();
       case '[isLowSlope]':
-        return this.isLowSlope();
+        return await this.isLowSlope();
       case '[isSteepSlope]':
         return this.isSteepSlope();
       case '[qtyCustomSkylights]':
@@ -296,17 +290,21 @@ export class ProposalDescriptionsService {
       case '[notSiddingChimneyWithCricket]':
         return this.hasChimneyWithCricket();
       case '[addOrReplaceMetalVents]':
-          return this.addOrReplaceMetalVents();
+        return this.addOrReplaceMetalVents();
       case '[MetalVents]':
-            return this.hasMetalVents();
+        return this.hasMetalVents();
       case '[QtyMetalVent4]':
-            return this.hasQtyMetalVent4();
+        return this.hasQtyMetalVent4();
       case '[QtyMetalVent6]':
-            return this.hasQtyMetalVent6();
+        return this.hasQtyMetalVent6();
       case '[NamePresidentialStarter]':
-            return await this.findMaterialNameByKey('category_presidential_starters', 'luxury starter');
+        return await this.findMaterial('category_presidential_starters', 'luxury starter');
       case '[NameArchitecturalStarter]':
-            return await this.findMaterialNameByKey('category_starters', 'regular starter');
+        return await this.findMaterial('category_starters', 'regular starter');
+      case '[hasInWCompleteRoof]':
+        return await this.hasInWCompleteRoof();
+      case '[InWManufacture]':
+        return await this.inWManufacture();
       default:
         return this.removeLineKey;
     }
@@ -315,20 +313,46 @@ export class ProposalDescriptionsService {
   async hasMetalVents() {
     //return this.removeLineKey;
     let stringMetalVents = '';
-    console.log("hasMetalVents");
     const needMetalVents = this.identifyMetalVents();
     if (needMetalVents) {
       const need4jVents = this.identifyQtyMetalVent4();
       const need6jVents = this.identifyQtyMetalVent6();
       const QtyMetalVents = this.building?.psb_measure?.vent_metal_artict_replace_pc +
       this.building?.psb_measure?.vent_metal_artict_cut_in_pc;
+      const categoryMetalArtictVents = await this.general.getConstDecimalValue(
+        'category_metal_artict_vents'
+      );
 
-      const matalVentsName = await this.findMaterialNameByKey('category_metal_artict_vents');
-      console.log(matalVentsName);
-      const descriptionMetalVents = await this.general.getConstValue('description_metal_vents');
-      console.log(descriptionMetalVents);
-      stringMetalVents = String(descriptionMetalVents).replace('[QtyMetalVents]', `${QtyMetalVents}`).replace('[MetalVentsName]', matalVentsName)
-      if (need4jVents || need6jVents) stringMetalVents = stringMetalVents+', '
+      //se recuperan todos los tipos de materiales
+      const {data: materialTypesData} = await this.catalogService.getMeasuresMaterialTypes();
+
+      //se filtran los tipos de materiales por la categoria de vents
+      const materialsTypesIds = materialTypesData.filter(item => item.id_material_category === categoryMetalArtictVents).map(item => item.id)
+
+      //se recuperan los datos de materiales
+      const {data: materialsData} = await this.materialService.getMaterials(); //
+
+      //se filtran los datos de materiales por los tipos que correspondan a la categoria de vents en materialsTypesIds
+      const materialsIds = materialsData.filter(item => materialsTypesIds.includes(item.id_material_type)).map(item => item.id);
+
+      //se recupera la información de listas de precios de todos los materiales
+      const {data: materialPricesListData} = await this.materialService.getMaterialPricesList();
+
+      //se filtra la información de lista de precios con base a los materiales filtrados materialsIds
+      const materialPricesListIds = materialPricesListData.filter(item => materialsIds.includes(item.id_material)).map(item => Number(item.id));
+
+
+      //se filtran los psb_material_calculations con base a las listas de precios filtradas en materialPricesListIds
+      const psbMaterialCalcSelected = this.building.psb_measure.psb_material_calculations.find(item => materialPricesListIds.includes(item.id_material_price_list*1));
+      console.log('psbMaterialCalcSelected',psbMaterialCalcSelected);
+
+        const materialPricesListSelected = materialPricesListData.find(item => psbMaterialCalcSelected.id_material_price_list == item.id);
+        const materialSelected = materialsData.find(item => materialPricesListSelected.id_material == item.id);
+        //const matalVentsName = materialSelected.material;
+        const matalVentsName = await this.findMaterial('category_metal_artict_vents');
+        const descriptionMetalVents = await this.general.getConstValue('description_metal_vents');
+        stringMetalVents = String(descriptionMetalVents).replace('[QtyMetalVents]', `${QtyMetalVents}`).replace('[MetalVentsName]', matalVentsName)
+        if (need4jVents || need6jVents) stringMetalVents = stringMetalVents+', '
       return stringMetalVents;
     } else return stringMetalVents
   }
@@ -339,8 +363,8 @@ export class ProposalDescriptionsService {
     if (need4jVents) {
       const jVent4Pc = this.building?.psb_measure?.vent_j_vent_4_pc;
       const description4jVents = await this.general.getConstValue('description_4j_vents');
-      stringMetalVents = stringMetalVents+ String(description4jVents).replace('[QtyMetalVent4]', `${jVent4Pc}`);
-      if (need6jVents) stringMetalVents = stringMetalVents+', '
+      stringMetalVents = stringMetalVents + String(description4jVents).replace('[QtyMetalVent4]', `${jVent4Pc}`);
+      if (need6jVents) stringMetalVents = stringMetalVents + ', '
       return stringMetalVents;
     } else return stringMetalVents;
   }
@@ -349,9 +373,9 @@ export class ProposalDescriptionsService {
 
     const need6jVents = this.identifyQtyMetalVent6();
     if (need6jVents) {
-      const jVent6Pc =  this.building?.psb_measure?.vent_j_vent_6_pc;
+      const jVent6Pc = this.building?.psb_measure?.vent_j_vent_6_pc;
       const description6jVents = await this.general.getConstValue('description_6j_vents');
-      stringMetalVents = stringMetalVents+ String(description6jVents).replace('[QtyMetalVent6]', `${jVent6Pc}`);
+      stringMetalVents = stringMetalVents + String(description6jVents).replace('[QtyMetalVent6]', `${jVent6Pc}`);
       return stringMetalVents;
     } else return stringMetalVents;
   }
@@ -366,7 +390,7 @@ export class ProposalDescriptionsService {
 
   identifyMetalVents() {
     return this.building?.psb_measure?.vent_metal_artict_replace_pc +
-        this.building?.psb_measure?.vent_metal_artict_cut_in_pc > 0;
+      this.building?.psb_measure?.vent_metal_artict_cut_in_pc > 0;
   };
 
   identifyQtyMetalVent4() {
@@ -378,7 +402,6 @@ export class ProposalDescriptionsService {
   };
 
   showSACap() {
-    console.log("showSACap");
     if (this.building?.psb_measure?.psb_slopes?.filter(x => x.pitch < 2).length > 0) {
       return "";
     }
@@ -466,9 +489,9 @@ export class ProposalDescriptionsService {
         x => x.id == this.building?.psb_measure?.id_metal_eves_rakes_flat_roof
       )?.size + '';
       if (size) {
-        if(size == '2'){
+        if (size == '2') {
           size = size + '" oversized';
-        }else{
+        } else {
           size = size + '"';
         }
         sizes.push(size);
@@ -479,9 +502,9 @@ export class ProposalDescriptionsService {
         x => x.id == this.building?.psb_measure?.id_metal_eves_starters_low_slope
       )?.size + '';
       if (size) {
-        if(size == '2'){
+        if (size == '2') {
           size = size + '" oversized';
-        }else{
+        } else {
           size = size + '"';
         }
         sizes.push(size);
@@ -492,9 +515,9 @@ export class ProposalDescriptionsService {
         x => x.id == this.building?.psb_measure?.id_metal_lss_starters_lf
       )?.size + '';
       if (size) {
-        if(size == '2'){
+        if (size == '2') {
           size = size + '" oversized';
-        }else{
+        } else {
           size = size + '"';
         }
         sizes.push(size);
@@ -505,9 +528,9 @@ export class ProposalDescriptionsService {
         x => x.id == this.building?.psb_measure?.id_metal_rakes_low_steep_slope
       )?.size + '';
       if (size) {
-        if(size == '2'){
+        if (size == '2') {
           size = size + '" oversized';
-        }else{
+        } else {
           size = size + '"';
         }
         sizes.push(size);
@@ -894,8 +917,35 @@ export class ProposalDescriptionsService {
       : this.removeLineKey;
   }
 
-  isLowSlope() {
+  async isLowSlope() {
+
+    // busco id de la categoria en generals
+    const idTearOff = await this.general.getConstDecimalValue(
+      'job_types_tear_off'
+    );
+
+    const idNewConstruction = await this.general.getConstDecimalValue(
+      'job_types_new_construction'
+    );
+
+
+    const idInstallOnly = await this.general.getConstDecimalValue(
+      'job_types_install_only'
+    );
+    const generalsTypes = [idTearOff, idNewConstruction, idInstallOnly];
+
+    const idInwshield33 = await this.general.getConstDecimalValue(
+      'inwshield_3_3'
+    );
+
+    const idInwshield63 = await this.general.getConstDecimalValue(
+      'inwshield_6_3'
+    );
+    const generalsInw = [idInwshield33, idInwshield63];
+
     return this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 2 && x.pitch < 4 && !x.deletedAt)
+      && (generalsTypes.includes(this.building.id_job_type)
+        && (generalsInw.includes(this.building.psb_measure.id_inwshield_rows)))
       ? ''
       : this.removeLineKey;
   }
@@ -1132,7 +1182,7 @@ export class ProposalDescriptionsService {
       .find(x => x.id_cost_integration == cost_integration_built_in
         && x.id_upgrade == upgrade_ridgevents);
 
-    return upgrade &&  !this.building.psb_measure.vent_is_ridgevent_in_place? '' : this.removeLineKey;
+    return upgrade && !this.building.psb_measure.vent_is_ridgevent_in_place ? '' : this.removeLineKey;
   }
 
   async windBuiltin() {
@@ -1415,42 +1465,128 @@ export class ProposalDescriptionsService {
     return exists ? '' : this.removeLineKey;
   }
 
-  async findMaterialNameByKey(key: string, textMoreOneLuxury:string = null) {
-	// busco id de la categoria en generals
-  const categoryMetalArtictVents = await this.general.getConstDecimalValue(
-    key
-  );
+  async findMaterial(key: string, textMoreOneLuxury: string = null) {
+    // busco id de la categoria en generals
+    const categoryMetalArtictVents = await this.general.getConstDecimalValue(
+      key
+    );
 
-// obtengo material tipes relacionados con la categoria
-  const {data: materialTypesData} = await this.catalogService.getMeasuresMaterialTypes();
-  const materialsTypesIds = materialTypesData.filter(item => item.id_material_category === categoryMetalArtictVents).map(item => item.id)
-    
+    // obtengo material tipes relacionados con la categoria
+    const { data: materialTypesData } = await this.catalogService.getMeasuresMaterialTypes();
+    const materialsTypesIds = materialTypesData.filter(item => item.id_material_category === categoryMetalArtictVents).map(item => item.id)
+
     // obtengo los materials relacionados a esos material tipes
-  const {data: materialsData} = await this.materialService.getMaterials(); //
-  const materialsIds = materialsData.filter(item => materialsTypesIds.includes(item.id_material_type)).map(item => item.id)
-    
-    // obtengo los material price list relacionados a los materials ids
-  const {data: materialPricesListData} = await this.materialService.getMaterialPricesList();
-  const materialPricesListIds = materialPricesListData.filter(item => materialsIds.includes(item.id_material)).map(item => Number(item.id))
-  
-  // obtengo en los materiales calculados relacionados con materials price list ids
-  const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialPricesListIds.includes(item.id_material_price_list))
-  if(psbMaterialCalcSelectedList.length > 1 && textMoreOneLuxury)
-  return textMoreOneLuxury;
-  
-  const psbMaterialCalcSelected = psbMaterialCalcSelectedList[0];
+    const { data: materialsData } = await this.materialService.getMaterials(); //
+    const materialsIds = materialsData.filter(item => materialsTypesIds.includes(item.id_material_type)).map(item => Number(item.id))
 
-  // obtengo los materials price list selected relacionados a los ids de  materiales calculados
-  const materialPricesListSelected = materialPricesListData.find(item => psbMaterialCalcSelected.id_material_price_list == item.id);
-  
-  // busco el id material en catalogo de materiales 
-  const materialSelected = materialsData.find(item => materialPricesListSelected.id_material == item.id);
-  
-  // obtengo el nombre del material
-  const materialName = materialSelected.material;
+    // obtengo en los materiales calculados relacionados con materials price list ids
+    const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialsIds.includes(item.id_concept))
+    if (psbMaterialCalcSelectedList.length > 1 && textMoreOneLuxury)
+      return textMoreOneLuxury;
+    const psbMaterialCalcSelected = psbMaterialCalcSelectedList[0];
 
-  return materialName;
+    if (!psbMaterialCalcSelected) {
+      return this.removeLineKey;
+    }
+
+    // busco el id material en catalogo de materiales
+    const materialSelected = materialsData.find(item => psbMaterialCalcSelectedList[0].id_concept == item.id);
+
+    // obtengo el nombre del material
+    const materialName = materialSelected.material;
+
+    return materialName;
   }
 
+  async hasInWCompleteRoof() {
+    const inwshieldComplete = await this.general.getConstDecimalValue('inwshield_complete');
+    const activeVersion: Version = this.project.versions.find(x => x.active);
+    const idInwshieldRows: number = activeVersion.buildings[0].psb_measure.id_inwshield_rows;
+    if (idInwshieldRows == inwshieldComplete)
+      return '';
+    else
+      return this.removeLineKey;
+  }
+
+  async inWManufacture() {
+    // busco id de la categoria en generals
+    const categoryInwShield = await this.general.getConstDecimalValue(
+      'category_inw_shield'
+    );
+
+    // obtengo material tipes relacionados con la categoria
+    const { data: materialTypesData } = await this.catalogService.getMeasuresMaterialTypes();
+    const materialsTypesIds = materialTypesData.filter(item => item.id_material_category === categoryInwShield).map(item => item.id)
+
+    // obtengo los materials relacionados a esos material tipes
+    const { data: materialsData } = await this.materialService.getMaterials(); //
+    const materialsIds = materialsData.filter(item => materialsTypesIds.includes(item.id_material_type)).map(item => Number(item.id))
+
+    // obtengo en los materiales calculados relacionados con materials price list ids
+    /*const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialPricesListIds.includes(item.id_material_price_list))
+    if(psbMaterialCalcSelectedList.length > 1 && textMoreOneLuxury)
+    return textMoreOneLuxury;*/
+    const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialsIds.includes(item.id_concept))
+
+    //selecciono el unico
+    const psbMaterialCalcSelected = psbMaterialCalcSelectedList[0];
+    if (!psbMaterialCalcSelected) return this.removeLineKey;
+    // busco el id material en catalogo de materiales
+    const materialSelected = materialsData.find(item => psbMaterialCalcSelectedList[0].id_concept == item.id);
+
+    // obtengo el id_trademark  del material
+    const idTrademark = materialSelected.id_trademark;
+
+    //Obtengo los trademarks y filtro con el idTrademark selected
+    const { data: trademarks } = await this.catalogService.getTrademarks();
+    const trademark: Trademark = trademarks.find(item => item.id === idTrademark)
+    return trademark.trademark;
+  }
+
+  /*
+    async findMaterialNameByKey(key: string, textMoreOneLuxury:string = null) {
+      // busco id de la categoria en generals
+      const categoryMetalArtictVents = await this.general.getConstDecimalValue(
+        key
+      );
+
+    // obtengo material tipes relacionados con la categoria
+      const {data: materialTypesData} = await this.catalogService.getMeasuresMaterialTypes();
+      const materialsTypesIds = materialTypesData.filter(item => item.id_material_category === categoryMetalArtictVents).map(item => item.id)
+
+        // obtengo los materials relacionados a esos material tipes
+      const {data: materialsData} = await this.materialService.getMaterials(); //
+      const materialsIds = materialsData.filter(item => materialsTypesIds.includes(item.id_material_type)).map(item => item.id)
+
+        // obtengo los material price list relacionados a los materials ids
+      const {data: materialPricesListData} = await this.materialService.getMaterialPricesList();
+      const materialPricesListIds = materialPricesListData.filter(item => materialsIds.includes(item.id_material)).map(item => Number(item.id))
+
+      // obtengo en los materiales calculados relacionados con materials price list ids
+      const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialPricesListIds.includes(item.id_material_price_list))
+      if(psbMaterialCalcSelectedList.length > 1 && textMoreOneLuxury)
+      return textMoreOneLuxury;
+      console.log(materialsData);
+      console.log(materialPricesListIds);
+      console.log(materialPricesListData);
+      console.log(psbMaterialCalcSelectedList);
+      console.log(this.building.psb_measure.psb_material_calculations);
+      const psbMaterialCalcSelected = psbMaterialCalcSelectedList[0];
+
+      if(!psbMaterialCalcSelected){
+        return "NO MATERIAL IDENTIFIED: " + key;
+      }
+      // obtengo los materials price list selected relacionados a los ids de  materiales calculados
+      const materialPricesListSelected = materialPricesListData.find(item => psbMaterialCalcSelected.id_material_price_list == item.id);
+
+      // busco el id material en catalogo de materiales
+      const materialSelected = materialsData.find(item => materialPricesListSelected.id_material == item.id);
+
+      // obtengo el nombre del material
+      const materialName = materialSelected.material;
+
+      return materialName;
+    }
+  */
 }
 

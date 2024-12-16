@@ -59,7 +59,6 @@ export class SkylightService {
                 );
                 if (skylights && skylights.length > 0 && skylights[0].qty>0){
                     skylights.forEach(skylight => {
-                        console.log('labor skylight', skylight)
                       laborCalculation.qty += skylight.qty;
                     });
                 }*/

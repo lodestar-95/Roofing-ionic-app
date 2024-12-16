@@ -27,7 +27,6 @@ export class NetworkValidateService {
     //if (this.platform.is('hybrid')) {
       // watch network for a disconnection
       this.disconnectSubscription = this.network.onDisconnect().subscribe(() => {
-        console.log('network was disconnected :-(');
         this.isConnected = false;
 
         this.evtSrv.publish('network:update',this.isConnected)
@@ -37,7 +36,6 @@ export class NetworkValidateService {
 
       // watch network for a connection
       this.connectSubscription = this.network.onConnect().subscribe(() => {
-        console.log('network connected!', this.network.type);
         this.isConnected = true;
 
         this.evtSrv.publish('network:update',this.isConnected)
@@ -47,7 +45,6 @@ export class NetworkValidateService {
         // prior to doing any api requests as well.
         setTimeout(() => {
           if (this.network.type === 'wifi') {
-            console.log('we got a wifi connection, woohoo!');
         this.evtSrv.publish('network:update',this.isConnected)
 
           }

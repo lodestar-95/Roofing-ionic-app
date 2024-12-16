@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { SyncProjectsService } from '../services/sync-projects.service';
 import { ServeCLI } from '@ionic/cli/lib/serve';
 import { SyncCatalogsService } from '../services/sync-catalogs.service';
+import { NetworkValidateService } from '../shared/helpers/network-validate.service';
 
 @Component({
   selector: 'app-prospecting',
@@ -47,6 +48,7 @@ export class ProspectingPage implements OnInit, OnDestroy {
 
   id: number;
   contactDate: any;
+  offline: boolean = false;
 
   constructor(
     private modalController: ModalController,
@@ -59,6 +61,7 @@ export class ProspectingPage implements OnInit, OnDestroy {
     private nav: NavController,
     private synprojects: SyncProjectsService,
     private syncCatalogs: SyncCatalogsService,
+    private networkService: NetworkValidateService
   ) {
     this.repository = new ProjectsRepository(this.storage, `projects`);
 
@@ -66,8 +69,22 @@ export class ProspectingPage implements OnInit, OnDestroy {
       this.projects = state.projects;
       this.loadProject();
     });
-
+    this.offline = !networkService.isConnected;
     this.syncCatalogs.update();
+  }
+  
+  ngOnInit() {
+    this.loading.loading(true);
+    this.auth.getAuthUser().then(user => {
+      this.user = user;
+      this.idUserRole = parseInt(user.role.id_role);
+    });
+
+    this.configService.getConfig(1).then(config => {
+      if (config) this.daysProposalDelayed = parseInt(config.data.value);
+    });
+    this.loadProjectStorage();
+    // this.getNewProjects(null);
   }
 
   ngOnDestroy(): void {
@@ -87,19 +104,7 @@ export class ProspectingPage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.loading.loading(true);
-    this.auth.getAuthUser().then(user => {
-      this.user = user;
-      this.idUserRole = parseInt(user.role.id_role);
-    });
-
-    this.configService.getConfig(1).then(config => {
-      if (config) this.daysProposalDelayed = parseInt(config.data.value);
-    });
-    this.loadProjectStorage();
-    // this.getNewProjects(null);
-  }
+  
 
   getNewProjects(event) {
     this.projectService

@@ -215,7 +215,6 @@ export class ScopeOfWorkListComponent implements OnInit, OnDestroy {
         }
         newScopes.push(_scope);
       }
-console.log("await this.dS.generateText finished");
       const previosLength = newScopes.length;
       const architecturalScope = newScopes.find(x => x.is_architectural == true);
       const presidentialScope = newScopes.find(x => x.is_architectural == false);
@@ -226,7 +225,6 @@ console.log("await this.dS.generateText finished");
       const buildingUpdated = { ...building, isModified: true, pb_scopes: newScopes };
       buildings.push(buildingUpdated);
     }
-    console.log("updateBuildings");
 
     if (count > 0) {
       const version: Version = { ...this.version, isModified: true, buildings };
@@ -235,19 +233,14 @@ console.log("await this.dS.generateText finished");
       const hashcode = this.hash.getHashCode(JSON.stringify(versionWithoutScope));
       localStorage.setItem('versionCode', hashcode.toString());
       this.processing = false;
-      console.log("versionCode");
     }
-    console.log("hideLoading");
     this.hideLoading();
-    console.log("hideLoading finished");
   }
 
   private hideLoading() {
     this.processCount--;
-    console.log(this.processCount);
 
     if (this.processCount <= 0) {
-      console.log("this.loadingService.hide()");
       this.loadingService.hide();
     }
   }

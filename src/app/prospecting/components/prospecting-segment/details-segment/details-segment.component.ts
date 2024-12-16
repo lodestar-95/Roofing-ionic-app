@@ -102,12 +102,10 @@ export class DetailsSegmentComponent implements OnInit, OnDestroy {
     this.cricketsNoRequired = this.findModuleNoRequired(1);
     this.chimneysNoRequired = this.findModuleNoRequired(2);
     this.skylightsNoRequired = this.findModuleNoRequired(3);
-    console.log('this.skylightsNoRequired', this.skylightsNoRequired)
     this.detailsActive = this.findModal(8);
   }
 
   findModuleNoRequired(idResource: number) {
-    console.log('this.projectShingleNoRequired',this.projectShingleNoRequired)
     const required = this.projectShingleNoRequired.find(
       (x) => x.id_resource == idResource
     );

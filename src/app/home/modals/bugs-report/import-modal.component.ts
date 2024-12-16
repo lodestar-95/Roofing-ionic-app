@@ -29,15 +29,14 @@ export class ImportModalComponent implements OnInit, OnDestroy {
     this.getBugsReportsList();
   }
 
-  onScroll(event: any): void {
-    // Get the current scroll position and threshold values
-    console.log(event.detail);
+  onScroll(event: Event): void {
+    // Get the current scroll position and threshold values.
+    const ionScrollEvent = event as CustomEvent;
 
-    const scrollTop = event.detail.scrollTop;
+    const scrollTop = ionScrollEvent.detail.scrollTop;
     const scrollHeight = document.getElementById('reportbugs').scrollHeight;
-
     // Check if we are near the bottom of the content
-    if (scrollTop >= 1000 * this.iconHeight && this.hasMore && !this.loading) {
+    if (scrollHeight - scrollTop < 1000 && this.hasMore && !this.loading) {
       this.getBugsReportsList();
       this.iconHeight += 1;
     }

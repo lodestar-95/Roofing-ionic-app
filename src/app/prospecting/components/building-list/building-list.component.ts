@@ -146,11 +146,10 @@ export class BuildingListComponent implements OnInit {
   }
 
   isDisabledBrand() {
-    const rolesForbiden = [1, 2];
+    /*const rolesForbiden = [1, 2];
     if (rolesForbiden.includes(parseInt(this.user?.role.id_role)) && this.project.id_user_saleman != this.user?.id) {
       return true;
-    }
-
+    }*/
     return this.validCheckbox;
   }
 
@@ -420,7 +419,7 @@ export class BuildingListComponent implements OnInit {
   }
 
   onVerifiedCheked() {
-    
+
     if (this.validCheckbox) {
       this.version = { ...this.version, is_verified: false, isModified: true};
       this.projectService.saveVersion(this.version);

@@ -1,3 +1,4 @@
+import { DeleteComponent } from 'src/app/prospecting/modals/delete/delete.component';
 import { Trademark } from './../models/trademark.model';
 import { Building } from './../models/building.model';
 import { Component, OnInit } from '@angular/core';
@@ -19,6 +20,9 @@ import { ProjectsService } from '../services/projects.service';
 import { Project } from '../models/project.model';
 import { GeneralService } from '../estimate/calculation/materials/general.service';
 import { SyncProjectsService } from '../services/sync-projects.service';
+import { Printer, PrintOptions } from '@ionic-native/printer/ngx';
+import { Version } from '../models/version.model';
+import { MaterialService } from '../services/material.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 (window as any).pdfWorkerSrc = '../../assets/js/pdf.worker.min.js';
 
@@ -31,7 +35,9 @@ export class PdfViewerPagePage implements OnInit {
   project: Project;
   pdfSrc: any;
   pdfs = [];
+  printerpdf: any;
   pdfObject: any;
+  pdfObjectPrinter: any;
   totalPages: any;
   page = 1;
   proposalValid: number = 30;
@@ -44,7 +50,7 @@ export class PdfViewerPagePage implements OnInit {
   buildinTxt: String = 'Storage';
   typeTxt: string = 'Architectural';
   ///
-  shingleLines: any;
+  shingleLines: any[] = [];
   buildings: any;
   trademarks: any;
   MaterialTypes: any;
@@ -63,7 +69,37 @@ export class PdfViewerPagePage implements OnInit {
   canSendEmail = true;
   canChangeStatus = false;
 
+  // add number and type heading
+  buildingNumber = 0;
+  buildingTypeLength = 0;
+
+  docDefinition: any[] = [];
+  generatingNumber = 0;
+  disablePrinter: boolean = false;
+
+  finalProposal = {
+    isFinal: false,
+    shingleColor: false, // Shingle and Ridge color
+    dripEdgeColor: false, // Drip Edge color
+    flashingColor: false,
+    sACapColor: false,
+    atticVentColor: false,
+    soffitVentColor: false,
+    regletColor: false
+  };
+
+
+
+  amount = '';
+  finalProposaltext:boolean =  false;
+
+  docuSignpropoalpdf:any
+  /**
+ * Shingle and Ridge color: -> shingleColor
+Drip Edge color: -> dripEdgeColor
+ */
   constructor(
+    private printer: Printer,
     private navController: NavController,
     private activatedRoute: ActivatedRoute,
     private file: File,
@@ -76,10 +112,11 @@ export class PdfViewerPagePage implements OnInit {
     private loadingCtrl: LoadingController,
     private projectService: ProjectsService,
     private general: GeneralService,
-    private synProjects: SyncProjectsService
+    private synProjects: SyncProjectsService,
+    private materialService: MaterialService
   ) {
-    this.project = this.activatedRoute.snapshot.queryParams.project;
-    console.log(this.activatedRoute);
+    const storeproject = localStorage.getItem('storeproject');
+    this.project = JSON.parse(storeproject);
 
     this.loadingCtrl
       .create({
@@ -124,7 +161,7 @@ export class PdfViewerPagePage implements OnInit {
 
         this.stName = this.project.st_name;
         this.stAddress = this.project.st_address;
-        this.stPhone = this.project.st_phone ? `P: ${this.project.st_phone}` : '';
+        this.stPhone = this.project.st_phone ? `Ph#: ${this.project.st_phone}` : '';
         this.stEmail = this.project.st_email ? `E: ${this.project.st_email}` : '';
         this.datePdf = this.formatDate(new Date());
 
@@ -133,6 +170,7 @@ export class PdfViewerPagePage implements OnInit {
         if (version) {
           this.costType = version.id_cost_type != undefined ? version.id_cost_type : 1;
           this.buildings = version.buildings;
+          this.buildingNumber = this.buildings.length;
           this.shingleLines =
             version.shingle_lines != undefined
               ? version.shingle_lines.filter(f => f.is_selected)
@@ -157,15 +195,21 @@ export class PdfViewerPagePage implements OnInit {
             return resp.data;
           });
 
-          if (version.pv_colors != undefined) {
-            version.pv_colors.forEach(color => {
-              this.colors.push({
-                group: groups.find(g => g.id == color.id_group).group,
-                color: groupColors.find(gc => gc.id == color.id_group_color).color
+          try {
+            if (version.pv_colors != undefined) {
+              version.pv_colors.forEach(color => {
+                this.colors.push({
+                  group: groups.find(g => g.id == color.id_group).group,
+                  color: groupColors.find(gc => gc.id == color.id_group_color).color
+                });
               });
-            });
+            }
+          } catch (error) {
+            console.log(error);
           }
         }
+        // this.buildingNumber = this.buildingOp.length;
+
         this.dataSelect();
       }
       //////////////
@@ -234,6 +278,7 @@ export class PdfViewerPagePage implements OnInit {
   }
 
   async dataSelect() {
+    // this.disablePrinter = Iscreatepdf;
     const currentVersion = this.project.versions.find(x => x.active);
     //catalogos de materiales
     this.MaterialTypes = await this.catalogsService
@@ -251,14 +296,14 @@ export class PdfViewerPagePage implements OnInit {
 
     //obtener materiales de shingle
     let materials = [];
-    this.shingleLines.forEach(shingle => {
-      let material = this.MaterialTypes.find(e => e.id == shingle.id_material_type);
-      materials.push(material);
-    });
 
+    if (this.shingleLines.length > 0) {
+      this.shingleLines.forEach(shingle => {
+        let material = this.MaterialTypes.find(e => e.id == shingle.id_material_type);
+        materials.push(material);
+      });
+    }
     let buildingsType = [];
-
-
     let _shingleLineName = materials.length == 1 ? materials[0].material_type : '';
 
     this.buildings.forEach(bOpt => {
@@ -363,6 +408,8 @@ export class PdfViewerPagePage implements OnInit {
       }
 
       buildingsType.push(building);
+      const _typeOp = this.typeOp.filter(op => op.active);
+      this.buildingTypeLength = _typeOp.length;
       //}
     });
 
@@ -371,7 +418,6 @@ export class PdfViewerPagePage implements OnInit {
       let optionsArray = [];
       if (building.building.psb_measure.hasOwnProperty('psb_options')) {
         building.building.psb_measure.psb_options.forEach((element, index) => {
-
           if (!element.is_built_in) {
             optionsArray.push({
               name: `Option ${index + 1}`,
@@ -382,18 +428,24 @@ export class PdfViewerPagePage implements OnInit {
         });
       }
 
+
       for (const [key, type] of building.types.entries()) {
-        this.typeTxt =
-          type.Architectural && type.Architectural.active
-            ? 'Architectural'
-            : 'Luxury';
+
         let isActive = false;
         if (key == 0) {
           isActive = type.Presidential.active;
         } else {
           isActive = type.Architectural.active;
         }
+
         if (isActive) {
+          if(this.generatingNumber == 0) {
+            if(type.Architectural != undefined)
+              this.typeTxt = type.Architectural && type.Architectural.active ? 'Architectural' : 'Luxury';
+            else {
+              this.typeTxt = 'Luxury';
+            }
+          }
           let scope;
           if (key == 0) {
             scope = building.building.pb_scopes.find(sc => !sc.is_architectural);
@@ -406,7 +458,9 @@ export class PdfViewerPagePage implements OnInit {
           let currentBuilding = this.buildings.find(e => e.id == building.building.id);
           let upgrades =
             mainBuilding.psb_measure.psb_upgrades != undefined
-              ? mainBuilding.psb_measure.psb_upgrades.filter(f => f.id_cost_integration == 2)
+              ? mainBuilding.psb_measure.psb_upgrades.filter(
+                  f => f.id_cost_integration == 2
+                )
               : [];
           let upgradesConceptType = [];
           let buildingUpgrades = this.calculations.find(
@@ -418,14 +472,29 @@ export class PdfViewerPagePage implements OnInit {
               bu => bu.id_upgrade == upgrade.id_upgrade
             );
             costBuildingUpgrades?.forEach(costUpgrade => {
-              if (currentVersion.shingle_lines.some(x =>
-                x.id_material_type == costUpgrade.id_material_type_shingle
-                && x.is_selected == true)) {
-                const shingleline = materials.find(x => x.id == costUpgrade.id_material_type_shingle);
-                const shingleName = logos.mark.find(x => x.id == shingleline.id_trademark)?.trademark;
-                const upgradeName = conceptType.find(e => e.id == upgrade.id_upgrade).upgrade;
+              if (
+                currentVersion.shingle_lines.some(
+                  x =>
+                    x.id_material_type == costUpgrade.id_material_type_shingle &&
+                    x.is_selected == true
+                )
+              ) {
+                const shingleline = materials.find(
+                  x => x.id == costUpgrade.id_material_type_shingle
+                );
+                const shingleName = logos.mark.find(
+                  x => x.id == shingleline.id_trademark
+                )?.trademark;
+                const upgradeName = conceptType.find(
+                  e => e.id == upgrade.id_upgrade
+                ).upgrade;
 
-                if (shingleName && !upgradesConceptType.some(x => x.shingle == shingleName && x.name == upgradeName)) {
+                if (
+                  shingleName &&
+                  !upgradesConceptType.some(
+                    x => x.shingle == shingleName && x.name == upgradeName
+                  )
+                ) {
                   upgradesConceptType.push({
                     name: upgradeName,
                     value: costUpgrade != undefined ? costUpgrade.total : 0,
@@ -438,6 +507,7 @@ export class PdfViewerPagePage implements OnInit {
 
           const footerText = await this.general.getConstValue('pdf_footer_text');
 
+          await this.checkIsFinalProposal(currentVersion, building.building.id);
           this.generatePdf(
             building,
             logos,
@@ -445,59 +515,58 @@ export class PdfViewerPagePage implements OnInit {
             key == 0 ? 'Luxury' : 'Architectural',
             optionsArray,
             upgradesConceptType,
-            footerText
+            footerText,
           );
         }
-
       }
     }
-    this.getPdfs();
   }
 
-  async getJobType(trademarks, building){
-    trademarks = trademarks.reduce((acc,item)=>{
-      if(!acc.includes(item)){
+  async getJobType(trademarks, building) {
+    trademarks = trademarks.reduce((acc, item) => {
+      if (!acc.includes(item)) {
         acc.push(item);
       }
       return acc;
-    },[]);
-    console.log(trademarks);
+    }, []);
 
     let materialCategories = [];
     this.shingleLines.forEach(shingle => {
       let material = this.MaterialTypes.find(e => e.id == shingle.id_material_type);
       materialCategories.push(material.id_material_category);
     });
-    console.log('materialCategories');
-    console.log(materialCategories);
-    const category_shingle_architectural = await this.general.getConstValue('category_shingle_architectural');
-    const category_shingle_presidential = await this.general.getConstValue('category_shingle_presidential');
-    console.log(category_shingle_architectural);
-    console.log(category_shingle_presidential);
-    console.log(materialCategories.filter( x => category_shingle_presidential.includes(x)));
+    const category_shingle_architectural = await this.general.getConstValue(
+      'category_shingle_architectural'
+    );
+    const category_shingle_presidential = await this.general.getConstValue(
+      'category_shingle_presidential'
+    );
 
     let materialCategory = '';
-    if (materialCategories.filter( x => category_shingle_architectural.includes(x)).length > 0){
+    if (
+      materialCategories.filter(x => category_shingle_architectural.includes(x)).length >
+      0
+    ) {
       materialCategory = 'Architectural Asphalt Shingle';
     }
-    if (materialCategories.filter( x => category_shingle_presidential.includes(x)).length > 0){
-      console.log('entre');
-      if(materialCategory != ''){
+    if (
+      materialCategories.filter(x => category_shingle_presidential.includes(x)).length > 0
+    ) {
+      if (materialCategory != '') {
         materialCategory += ' and ';
       }
       materialCategory += 'Luxury Asphalt Shingle';
     }
 
     let jobType = `${building.building.job_type.job_type} on ${building.building.description} with ${building.shingleLineName}`;
-    const job_types_new_construction = await this.general.getConstDecimalValue('job_types_new_construction');
+    const job_types_new_construction = await this.general.getConstDecimalValue(
+      'job_types_new_construction'
+    );
     let shingleType;
-    console.log(building);
-    console.log(building.building);
-    console.log(this.shingleLines[0]);
-    if(building.building.job_type.id == job_types_new_construction){
-      if(this.trademarks.length > 1){
+    if (building.building.job_type.id == job_types_new_construction) {
+      if (this.trademarks.length > 1) {
         shingleType = '';
-      }else{
+      } else {
         shingleType = trademarks[0];
       }
       jobType = `Dry sheet and shingle installation on ${building.building.description} with ${building.shingleLineName} ${materialCategory}`;
@@ -505,8 +574,115 @@ export class PdfViewerPagePage implements OnInit {
     return jobType;
   }
 
-  async generatePdf(building, logos, scope, type, optionsList, upgrades, footerText) {
+  // Function to group items into columns of four elements (two pairs)
+  groupColumns(items, Ismail) {
+    let columnsArray = [];
+    let textFlashing = false;
+    for (var i = 0; i < items.length; i += 2) {
+      var columns = [];
+      columns.push({
+        width: '50%',
+        columns: [...items[i].value]
+      }); // Add first pair
+      if (items[i + 1]) {
+        columns.push({
+          width: '50%',
+          columns: [...items[i + 1].value]
+        }); // Add second pair if exists
+      }
+      columnsArray.push({
+        columns: columns
+      });
+      if (items[i]?.underText) {
+        columnsArray.push(items[i]?.underText);
+      }
+      if (items[i + 1]?.underText) {
+        items[i + 1].underText[0].margin = [300, 0, 0, 10];
+        columnsArray.push(items[i + 1]?.underText);
+      }
+
+      columnsArray.push({ text: '', margin: [0, 10] }); // Add spacing
+    }
+   if(Ismail) {
+    columnsArray.push(
+      { text: '', margin: [0, 10] },
+      {
+        text: 'Total Proposal Amount ' + this.amount,
+        alignment: 'center',
+        bold: true,
+        color: 'blue',
+        margin: [0, 20, 0, 20]
+      },
+      { text: '', margin: [0, 10] },
+      {
+        columns: [
+          {
+            width: 'auto',
+            text: 'Customer signature:'
+          },
+          {
+            width: '*',
+            text: '#Signature#'
+          },
+          {
+            width: 'auto',
+            text: 'Acceptance date:'
+          },
+          {
+            width: '*',
+            text: '#AcceptanceDate#'
+          }
+        ]
+      }
+    );
+   } else {
+    columnsArray.push(
+      { text: '', margin: [0, 10] },
+      {
+        text: 'Total Proposal Amount ' + this.amount,
+        alignment: 'center',
+        bold: true,
+        color: 'blue',
+        margin: [0, 20, 0, 20]
+      },
+      { text: '', margin: [0, 10] },
+      {
+        columns: [
+          {
+            width: 'auto',
+            text: 'Customer signature:'
+          },
+          {
+            width: '*',
+            text: '_______________________'
+          },
+          {
+            width: 'auto',
+            text: 'Acceptance date:'
+          },
+          {
+            width: '*',
+            text: '_______________________'
+          }
+        ]
+      }
+    );
+
+   }
+    return columnsArray;
+  }
+
+  async generatePdf(
+    building,
+    logos,
+    scope,
+    type,
+    optionsList,
+    upgrades,
+    footerText,
+  ) {
     const logo4 = this.logosM[4];
+
     let tableLogos = [
       {
         image: this.logosM[0],
@@ -519,6 +695,7 @@ export class PdfViewerPagePage implements OnInit {
       ''
     ];
     let shingleTrademarks = [];
+
     this.trademarks.forEach(async trademark => {
       shingleTrademarks.push(trademark.trademark);
       switch (trademark.id) {
@@ -566,7 +743,17 @@ export class PdfViewerPagePage implements OnInit {
       }
     });
 
-    let colorPdf = [];
+    let images = {};
+    let indeximage = 0;
+
+    tableLogos.map(logo => {
+      if (logo != '') {
+        images[`$$pdfmake$$${indeximage + 1}`] = logo['image'];
+        indeximage++;
+      }
+    });
+
+    /*let colorPdf = [];
     this.colors.forEach((color, key) => {
       let alignment;
       switch (key) {
@@ -586,7 +773,7 @@ export class PdfViewerPagePage implements OnInit {
         text: [{ text: `${color.group} color: `, bold: true }, { text: color.color }],
         alignment: alignment
       });
-    });
+    });*/
     //Total
     var amountTotals = [];
     if (logos.calculations.length == 0) {
@@ -597,6 +784,7 @@ export class PdfViewerPagePage implements OnInit {
       ]);
     }
     logos.calculations.forEach((amount, index) => {
+      this.amount = formatCurrency(amount.value, 'en-US', '$');
       var row = [];
       if (index == 0) {
         row.push({ text: 'Total proposal amount: ', bold: true, alignment: 'right' });
@@ -626,7 +814,13 @@ export class PdfViewerPagePage implements OnInit {
         row.push('');
       }
       row.push(
-        [{ text: `${upgrade.name} with ${upgrade.shingle}: `, bold: true, alignment: 'right' }],
+        [
+          {
+            text: `${upgrade.name} with ${upgrade.shingle}: `,
+            bold: true,
+            alignment: 'right'
+          }
+        ],
         [{ text: formatCurrency(upgrade.value, 'en-US', '$') }]
       );
       upgradeTotals.push(row);
@@ -657,107 +851,280 @@ export class PdfViewerPagePage implements OnInit {
       optionalsTotals.push(row);
     });
 
-    let sowText = scope?.scope_of_work?.split('- ') ?? '';
+    let sowText = scope?.scope_of_work?.split('- ') ?? [''];
 
     //Set Job text
     let jobType = await this.getJobType(shingleTrademarks, building);
 
-    let docDefinition = {
-      pageMargins: [40, 20, 40, 60],
-      content: [
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto', 'auto', 'auto'],
-            body: [tableLogos, ['', '', '', '']]
-          }
-        },
-        {
-          columns: [{
-            //split text
-            text: [
-              { text: 'Proposal ', style: ['proposal'] }
-            ],
-            style: ['columnsStyle']
-          },
-          { text: this.datePdf, alignment: 'right', style: ['proposalMin'] },
+    let signSections = [];
+    let FinaldocDefinitionpdf
+    if (this.finalProposal.isFinal) {
+      signSections.push({ text: '', margin: [0, 10] });
+      var content = [];
+      var selectedItems = [];
+
+      // Collect the selected items based on finalProposal booleans
+      let finalProposalDocItems = {
+        shingleColor: {
+          value: [
+            {
+              width: 'auto',
+              text: 'Shingle and Ridge color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '_______________________'
+            }
+          ]
+        }, // Shingle and Ridge color
+        dripEdgeColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '              Drip Edge color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '_______________________'
+            }
+          ]
+        }, // Drip Edge color
+        flashingColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '               Flashing color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '_______________________'
+            }
+          ],
+          underText: [
+            {
+              text: '(Pipe flashing, J vents, Louver vents, powder fans, exhaust\nvents, roll metal, 3x5x10 end wall, screws, spray paint)',
+              fontSize: 8,
+              margin: [60, 0, 0, 10]
+            }
           ]
         },
-        {
-          columns: [
-            //paragraphs
-            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
-            [{ text: this.stPhone, alignment: 'right' },
-            { text: this.stEmail, alignment: 'right' }]
-          ],
-          style: ['columnsStyle']
-        },
-        {
-          //split text
-          text: [{ text: 'Job: ' }, { text: jobType }],
-          style: ['fontSizeText', 'columnsStyle']
-        },
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*'],
-            body: [[''], ['']]
-          }
-        },
-        {
-          //split text
-          text: [
-            { text: 'Scope of work/ Building: ' },
-            { text: building.building.description }
-          ],
-          style: ['scopeWork', 'columnsStyle']
-        },
-        {
-          // to treat a paragraph as a bulleted list, set an array of items under the ul key
-          ul: sowText,
-          style: ['columnsStyle'],
-          pageBreak: 'after'
-        },
-        //page 2
-        {
-          columns: [{
-            //split text
-            text: [
-              { text: 'Proposal ', style: ['proposal'] }
-            ],
-            style: ['columnsStyle']
-          },
-          { text: this.datePdf, alignment: 'right', style: ['proposalMin'] },
+        sACapColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '                   SA Cap color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '_______________________'
+            }
           ]
         },
-        {
-          columns: [
-            //paragraphs
-            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
-            [{ text: this.stPhone, alignment: 'right' },
-            { text: this.stEmail, alignment: 'right' }]
-          ],
-          style: ['columnsStyle']
+        atticVentColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '           Attic Vents color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '_______________________'
+            }
+          ]
         },
-        {
-          //split text
-          text: [{ text: 'Job: ' }, { text: jobType }],
-          style: ['fontSizeText', 'columnsStyle']
+        soffitVentColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '           Soffit Vents color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '_______________________'
+            }
+          ]
         },
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['*'],
-            body: [[''], ['']]
+        regletColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '                   Reglet color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '_______________________'
+            }
+          ]
+        }
+      };
+
+      for (var key in this.finalProposal) {
+        if (this.finalProposal.hasOwnProperty(key) && this.finalProposal[key]) {
+          if (finalProposalDocItems.hasOwnProperty(key)) {
+            selectedItems.push(finalProposalDocItems[key]);
           }
+        }
+      }
+
+      signSections.push(...this.groupColumns(selectedItems, false));
+
+      // create docusignment pdf file
+
+
+      let mailsignSections= [];
+      selectedItems = [];
+
+      mailsignSections.push({ text: '', margin: [0, 10] });
+      let SignProposalDocItems = {
+        shingleColor: {
+          value: [
+            {
+              width: 'auto',
+              text: 'Shingle and Ridge color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '#ShingleColor#',
+            }
+          ]
+        }, // Shingle and Ridge color
+        dripEdgeColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '              Drip Edge color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: "#DripEdgeColor#"
+            }
+          ]
+        }, // Drip Edge color
+        flashingColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '               Flashing color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '#FlashingColor#'
+            }
+          ],
+          underText: [
+            {
+              text: '(Pipe flashing, J vents, Louver vents, powder fans, exhaust\nvents, roll metal, 3x5x10 end wall, screws, spray paint)',
+              fontSize: 8,
+              margin: [60, 0, 0, 10]
+            }
+          ]
         },
-        {
-          columns: colorPdf,
-          style: ['columnsStyle']
+        sACapColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '                   SA Cap color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '#SACapColor#'
+            }
+          ]
         },
+        atticVentColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '           Attic Vents color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '#AtticVentColor#'
+            }
+          ]
+        },
+        soffitVentColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '           Soffit Vents color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '#SoffitVentColor#'
+            }
+          ]
+        },
+        regletColor: {
+          value: [
+            {
+              width: 'auto',
+              text: '                   Reglet color:',
+              preserveLeadingSpaces: true
+            },
+            {
+              width: '*',
+              text: '#RegleColor#'
+            }
+          ]
+        }
+      };
+
+      for (var key in this.finalProposal) {
+        if (this.finalProposal.hasOwnProperty(key) && this.finalProposal[key]) {
+          if (SignProposalDocItems.hasOwnProperty(key)) {
+            selectedItems.push(SignProposalDocItems[key]);
+          }
+        }
+      }
+
+      mailsignSections.push(...this.groupColumns(selectedItems, true));
+      FinaldocDefinitionpdf = this.makedocDfinitionpdf(tableLogos, jobType, building, sowText, mailsignSections, footerText, logo4, images)
+
+      this.pdfObjectPrinter = pdfMake.createPdf(FinaldocDefinitionpdf);
+      // for test
+      // this.getPdfs();
+      // this.pdfObjectPrinter.open();
+      if (this.platform.is('cordova')) {
+        this.pdfObjectPrinter.getBuffer(buffer => {
+          var blob = new Blob([buffer], { type: 'application/pdf' });
+          var path;
+
+          if (this.platform.is('ios')) {
+            path = this.file.documentsDirectory;
+          } else if (this.platform.is('android')) {
+            path = this.file.externalDataDirectory;
+          }
+
+          this.file
+            .writeFile(
+              path,
+              'docuSignpropoalpdf.pdf',
+              blob,
+              { replace: true }
+            )
+            .then(entry => {
+              console.log("docuSignproposal pdf printerd");
+
+              this.docuSignpropoalpdf = path + 'docuSignpropoalpdf.pdf';
+            });
+        });
+      }
+    } else {
+      signSections.push(
         {
           layout: 'lightHorizontalLines',
           table: {
@@ -813,7 +1180,104 @@ export class PdfViewerPagePage implements OnInit {
             body: optionalsTotals,
             alignment: 'rigth'
           }
+        }
+      );
+    }
+    //Set Document Definition
+
+    if (this.generatingNumber < this.buildingNumber * this.buildingTypeLength) {
+      this.docDefinition.push(
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto', 'auto', 'auto'],
+            body: [tableLogos, ['', '', '', '']]
+          },
+          pageBreak: this.docDefinition.length != 0 ? 'before' : ''
         },
+        {
+          columns: [
+            {
+              //split text
+              text: [{ text: 'Proposal ', style: ['proposal'] }]
+            },
+            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
+          ]
+        },
+        {
+          columns: [
+            //paragraphs
+            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
+            [
+              { text: this.stPhone, alignment: 'right' },
+              { text: this.stEmail, alignment: 'right' }
+            ]
+          ],
+          style: ['columnsStyle']
+        },
+        {
+          //split text
+          text: [{ text: 'Job: ' }, { text: jobType }],
+          style: ['fontSizeText', 'columnsStyle']
+        },
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*'],
+            body: [[''], ['']]
+          }
+        },
+        {
+          //split text
+          text: [
+            { text: 'Scope of work/ Building: ' },
+            { text: building.building.description }
+          ],
+          style: ['scopeWork', 'columnsStyle']
+        },
+        {
+          // to treat a paragraph as a bulleted list, set an array of items under the ul key
+          ul: sowText,
+          style: ['columnsStyle'],
+          pageBreak: 'after'
+        },
+        //page 2
+        {
+          columns: [
+            {
+              //split text
+              text: [{ text: 'Proposal ', style: ['proposal'] }]
+            },
+            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
+          ]
+        },
+        {
+          columns: [
+            //paragraphs
+            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
+            [
+              { text: this.stPhone, alignment: 'right' },
+              { text: this.stEmail, alignment: 'right' }
+            ]
+          ],
+          style: ['columnsStyle']
+        },
+        {
+          //split text
+          text: [{ text: 'Job: ' }, { text: jobType }],
+          style: ['fontSizeText', 'columnsStyle']
+        },
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*'],
+            body: [[''], ['']]
+          }
+        },
+        ...signSections,
         {
           columns: [
             //paragraphs
@@ -829,8 +1293,313 @@ export class PdfViewerPagePage implements OnInit {
               },
               {
                 text:
-                  'A 3.5% processing fee will be charged on all credit/debit card payments. Excludes: Unforeseen removal or '+
-                  'cutting of siding, mold remediation, framing, roof deck, fascia, soffit, gutters, metal trims, HVAC, '+
+                  'A 3.5% processing fee will be charged on all credit/debit card payments. Excludes: Unforeseen removal or ' +
+                  'cutting of siding, mold remediation, framing, roof deck, fascia, soffit, gutters, metal trims, HVAC, ' +
+                  'snow removal, and any damage due to vibrations, damages to existing skylight and sheet rock.',
+                alignment: 'center',
+                fontSize: 8,
+                bold: true
+              }
+            ]
+          ],
+          style: ['columnsStyle'],
+          marginTop: 100
+        },
+        {
+          columns: [
+            //paragraphs
+            [
+              {
+                text: 'Thank you for choosing E&H Roofing for all your roofing needs',
+                alignment: 'center',
+                bold: true
+              },
+              {
+                text: `Proposal valid for ${this.proposalValid} days`,
+                alignment: 'center',
+                bold: true
+              }
+            ]
+          ],
+          style: ['columnsStyle']
+        }
+      );
+    }
+
+  this.generatingNumber++;
+  let Isend = this.generatingNumber == this.buildingNumber * this.buildingTypeLength;
+
+  let docDefinitionpdf = {
+    pageMargins: [40, 20, 40, 60],
+    content: this.docDefinition,
+    footer: function (currentPage) {
+      return [
+        {
+          text: currentPage == 1 ? footerText : '',
+          bold: true,
+          marginLeft: 35,
+          alignment: 'center'
+        },
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['auto', 'auto', 'auto'],
+            body: [
+              ['', '', ''],
+              [
+                [
+                  { text: 'Office Ph#: (208) 608-5569', style: ['footerText'] },
+                  { text: 'office@ehroofing.com', style: ['footerNetwork'] }
+                ],
+                [
+                  {
+                    text: 'Adress: 9530 S Powerline Rd, Nampa, ID 83686',
+                    style: ['footerText']
+                  },
+                  { text: 'www.ehroofing.com', style: ['footerNetwork'] }
+                ],
+                [
+                  {
+                    image: logo4,
+                    width: 60
+                  }
+                ]
+              ]
+            ]
+          },
+          style: ['tableStyles']
+        }
+      ];
+    },
+    //css
+    styles: {
+      proposal: {
+        fontSize: 22,
+        bold: true
+      },
+      proposalMin: {
+        fontSize: 16,
+        bold: true
+      },
+      columnsStyle: {
+        marginTop: 10
+      },
+      fontSizeText: {
+        fontSize: 12
+      },
+      scopeWork: {
+        fontSize: 17,
+        bold: true
+      },
+      footerText: {
+        fontSize: 12,
+        bold: true
+      },
+      footerNetwork: {
+        color: '#007aff',
+        bold: true
+      },
+      tableStyles: {
+        marginLeft: 40,
+        marginRight: 10
+      }
+    },
+    images
+  };
+  let singledocDefinitionpdf = this.makedocDfinitionpdf(tableLogos, jobType, building, sowText, signSections, footerText, logo4, images)
+
+  // for test
+  // this.pdfs = [...this.pdfs, {
+  //   idBuilding: building.building.id,
+  //   type: type,
+  //   urlPDF: 'test.pdf',
+  //   file: this.urlpath,
+  //   isFinal: this.finalProposal.isFinal
+  // }];
+
+
+
+
+  this.pdfObject = pdfMake.createPdf(singledocDefinitionpdf);
+  if (this.platform.is('cordova')) {
+    this.pdfObject.getBuffer(buffer => {
+      var blob = new Blob([buffer], { type: 'application/pdf' });
+      var path;
+
+      if (this.platform.is('ios')) {
+        path = this.file.documentsDirectory;
+      } else if (this.platform.is('android')) {
+        path = this.file.externalDataDirectory;
+      }
+
+      this.file
+        .writeFile(
+          path,
+          'Proposal_' + building.building.id + '_' + type + '_'+ this.generatingNumber + '.pdf',
+          blob,
+          { replace: true }
+        )
+        .then(entry => {
+
+          this.urlpath = `${path}Proposal_${building.building.id}_${type}_${this.generatingNumber}.pdf`;
+          let win: any = window;
+          var myURL = win.Ionic.WebView.convertFileSrc(this.urlpath);
+          this.pdfs = [...this.pdfs, {
+            idBuilding: building.building.id,
+            type: type,
+            urlPDF: myURL,
+            file: this.urlpath,
+            isFinal: this.finalProposal.isFinal
+          }];
+        });
+    });
+  }
+  if (Isend) {
+    this.pdfObjectPrinter = pdfMake.createPdf(docDefinitionpdf);
+    // this.getPdfs();// for test
+
+
+    if (this.platform.is('cordova')) {
+      this.pdfObjectPrinter.getBuffer(buffer => {
+        var blob = new Blob([buffer], { type: 'application/pdf' });
+        var path;
+
+        if (this.platform.is('ios')) {
+          path = this.file.documentsDirectory;
+        } else if (this.platform.is('android')) {
+          path = this.file.externalDataDirectory;
+        }
+
+        this.file
+          .writeFile(
+            path,
+            'Proposal_' + building.building.id + 'printer.pdf',
+            blob,
+            { replace: true }
+          )
+          .then(entry => {
+            this.printerpdf = path + 'Proposal_' + building.building.id + 'printer.pdf';
+            this.getPdfs();
+          });
+      });
+    }
+  }
+  this.pdfObject.open();
+  }
+
+
+  makedocDfinitionpdf(tableLogos, jobType, building, sowText, signSections, footerText, logo4, images) {
+    return   {
+      pageMargins: [40, 20, 40, 60],
+      content: [
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto', 'auto', 'auto'],
+            body: [tableLogos, ['', '', '', '']]
+          }
+        },
+        {
+          columns: [
+            {
+              //split text
+              text: [{ text: 'Proposal ', style: ['proposal'] }]
+            },
+            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
+          ]
+        },
+        {
+          columns: [
+            //paragraphs
+            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
+            [
+              { text: this.stPhone, alignment: 'right' },
+              { text: this.stEmail, alignment: 'right' }
+            ]
+          ],
+          style: ['columnsStyle']
+        },
+        {
+          //split text
+          text: [{ text: 'Job: ' }, { text: jobType }],
+          style: ['fontSizeText', 'columnsStyle']
+        },
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*'],
+            body: [[''], ['']]
+          }
+        },
+        {
+          //split text
+          text: [
+            { text: 'Scope of work/ Building: ' },
+            { text: building.building.description }
+          ],
+          style: ['scopeWork', 'columnsStyle']
+        },
+        {
+          // to treat a paragraph as a bulleted list, set an array of items under the ul key
+          ul: sowText,
+          style: ['columnsStyle'],
+          pageBreak: 'after'
+        },
+        //page 2
+        {
+          columns: [
+            {
+              //split text
+              text: [{ text: 'Proposal ', style: ['proposal'] }]
+            },
+            { text: this.datePdf, alignment: 'right', style: ['proposalMin'] }
+          ]
+        },
+        {
+          columns: [
+            //paragraphs
+            [`Customer Name: ${this.stName}`, `Job Address: ${this.stAddress}`],
+            [
+              { text: this.stPhone, alignment: 'right' },
+              { text: this.stEmail, alignment: 'right' }
+            ]
+          ],
+          style: ['columnsStyle']
+        },
+        {
+          //split text
+          text: [{ text: 'Job: ' }, { text: jobType }],
+          style: ['fontSizeText', 'columnsStyle']
+        },
+        {
+          layout: 'lightHorizontalLines',
+          table: {
+            headerRows: 1,
+            widths: ['*'],
+            body: [[''], ['']]
+          }
+        },
+        ...signSections,
+        {
+          columns: [
+            //paragraphs
+            [
+              {
+                text:
+                  'Terms: All accounts due and payable 10 days from date work is completed.  A finance charge of ' +
+                  '1 ½ per month which is 18% per annum will be charged on the unpaid balance of past due accounts.' +
+                  'Customer agrees to pay a reasonable attorney’s fee and other costs of collection after default ' +
+                  'and referral to an attorney. A 15% restocking fee will be charged if job is canceled without notice. ',
+                alignment: 'center',
+                fontSize: 8
+              },
+              {
+                text:
+                  'A 3.5% processing fee will be charged on all credit/debit card payments. Excludes: Unforeseen removal or ' +
+                  'cutting of siding, mold remediation, framing, roof deck, fascia, soffit, gutters, metal trims, HVAC, ' +
                   'snow removal, and any damage due to vibrations, damages to existing skylight and sheet rock.',
                 alignment: 'center',
                 fontSize: 8,
@@ -877,7 +1646,7 @@ export class PdfViewerPagePage implements OnInit {
                 ['', '', ''],
                 [
                   [
-                    { text: 'Office contact: # (208) 608-5569', style: ['footerText'] },
+                    { text: 'Office Ph#: (208) 608-5569', style: ['footerText'] },
                     { text: 'office@ehroofing.com', style: ['footerNetwork'] }
                   ],
                   [
@@ -898,7 +1667,7 @@ export class PdfViewerPagePage implements OnInit {
             },
             style: ['tableStyles']
           }
-        ]
+        ];
       },
       //css
       styles: {
@@ -932,44 +1701,38 @@ export class PdfViewerPagePage implements OnInit {
           marginLeft: 40,
           marginRight: 10
         }
-      }
+      },
+      images
     };
 
-    this.pdfObject = pdfMake.createPdf(docDefinition);
-    if (this.platform.is('cordova')) {
-      this.pdfObject.getBuffer(buffer => {
-        var blob = new Blob([buffer], { type: 'application/pdf' });
-        var path;
+  }
+  PrinterFunction() {
+    // this.pdfObjectPrinter.open(); // test
+    this.printer
+    .print(this.printerpdf, {
+      name: 'My PDF'
+    })
+    .then(
+      () => {
+        console.log('Print success!');
+        // this.disablePrinter = false;
+      },
+      error => {
+        console.error('Print failed:', error);
+      }
+    )
+    .catch(err => {
+      console.error('Unexpected error:', err);
+    });
+  }
 
-        if (this.platform.is('ios')) {
-          path = this.file.documentsDirectory;
-        } else if (this.platform.is('android')) {
-          path = this.file.externalDataDirectory;
-        }
-
-        this.file
-          .writeFile(
-            path,
-            'Proposal_' + building.building.id + '_' + type + '.pdf',
-            blob,
-            { replace: true }
-          )
-          .then(entry => {
-            this.urlpath = `${path}Proposal_${building.building.id}_${type}.pdf`;
-            let win: any = window;
-            var myURL = win.Ionic.WebView.convertFileSrc(this.urlpath);
-            this.pdfs.push({
-              idBuilding: building.building.id,
-              type: type,
-              urlPDF: myURL,
-              file: this.urlpath
-            });
-          });
-      });
-
-      return true;
-    }
-    this.pdfObject.open();
+  async blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   }
 
   selectPage(selectedPage) {
@@ -992,9 +1755,17 @@ export class PdfViewerPagePage implements OnInit {
       return;
     }
     this.buildingOp[0].id;
-    let init = this.pdfs.find(
-      pdf => pdf.idBuilding == this.buildingOp[0].id && pdf.type == this.typeTxt
-    );
+
+    console.log(this.pdfs);
+    let init
+
+    this.pdfs.forEach((pdf) => {
+
+      if(pdf.idBuilding == this.buildingOp[0].id && pdf.type == this.typeTxt) {
+        init = pdf;
+      }
+    })
+
     if (init != undefined) {
       this.pdfSrc = init.urlPDF;
     }
@@ -1056,11 +1827,30 @@ export class PdfViewerPagePage implements OnInit {
     });
     let mailTo = mailArray.length != 0 ? mailArray : '';
 
+    console.log("mail", mailTo);
+
+
     if (this.platform.is('cordova')) {
       let attachments = [];
       this.pdfs.forEach(pdf => {
         attachments.push(pdf.file);
       });
+
+      console.log("test final attachments: " + attachments);
+
+
+      if(this.finalProposaltext == true) {
+        attachments = [];
+        // this.file.checkFile(this.file.dataDirectory, 'docuSignpropoalpdf.pdf')
+        // .then(() => {
+          attachments.push(this.docuSignpropoalpdf);
+        // })
+        // .catch(err => {
+          // console.error("File not found:", err);
+        // });
+      }
+      console.log("test final attachments: " + attachments);
+      // 2024-10-18 11:55:36.541313-0600 E&H[546:52784] test final attachments: file:///var/mobile/Containers/Data/Application/D3EB6FC1-82E4-45D2-BDCB-6AF314349114/Documents/docuSignpropoalpdf.pdf
 
       //let app;
       this.emailComposer.getClients().then(apps => {
@@ -1089,6 +1879,7 @@ export class PdfViewerPagePage implements OnInit {
   }
 
   async openPopover(ev, op) {
+
     const _typeOp = this.typeOp.filter(op => op.active);
     const modal = await this.popoverController.create({
       component: PopoverOptionsListComponent,
@@ -1110,6 +1901,7 @@ export class PdfViewerPagePage implements OnInit {
     } else {
       this.typeTxt = popOverOpSelected.option;
     }
+
     this.page = 1;
     if (this.pdfs.length > 0) {
       this.pdfSrc = this.pdfs.find(
@@ -1117,6 +1909,12 @@ export class PdfViewerPagePage implements OnInit {
           pdf.idBuilding == this.buildingOp.find(b => b.selected).id &&
           pdf.type == this.typeOp.find(t => t.selected).option
       ).urlPDF;
+
+      this.finalProposaltext = this.pdfs.find(
+        pdf =>
+          pdf.idBuilding == this.buildingOp.find(b => b.selected).id &&
+          pdf.type == this.typeOp.find(t => t.selected).option
+      ).isFinal;
     }
   }
 
@@ -1137,40 +1935,41 @@ export class PdfViewerPagePage implements OnInit {
     ];
     const day = [
       '',
-      '1st',
-      '2nd',
-      '3rd',
-      '4th',
-      '5th',
-      '6th',
-      '7th',
-      '8th',
-      '9th',
-      '10th',
-      '11th',
-      '12th',
-      '13th',
-      '14th',
-      '15th',
-      '16th',
-      '17th',
-      '18th',
-      '19th',
-      '20th',
-      '21st',
-      '22nd',
-      '23rd',
-      '24th',
-      '25th',
-      '26th',
-      '27th',
-      '28th',
-      '29th',
-      '30th',
-      '31st'
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '20',
+      '21',
+      '22',
+      '23',
+      '24',
+      '25',
+      '26',
+      '27',
+      '28',
+      '29',
+      '30',
+      '31'
     ];
-    var newDate = `${month[date.getMonth()]} ${day[date.getDate()]
-      } ${date.getFullYear()}`;
+    var newDate = `${month[date.getMonth()]} ${
+      day[date.getDate()]
+    }, ${date.getFullYear()}`;
     return newDate;
   }
 
@@ -1189,5 +1988,144 @@ export class PdfViewerPagePage implements OnInit {
       this.synProjects.syncOffline();
       this.navController.navigateForward('home/prospecting');
     }, 500);
+  }
+
+  async checkIsFinalProposal(version: Version, buildingId): Promise<void> {
+    const checkShinglesToFinal =
+      version.shingle_lines.filter(
+        item => item.deletedAt === null && item.is_selected === true
+      ).length === 1;
+    const checkPsbUpgradesToFinal =
+      version.buildings
+        .find(item => item.id == buildingId)
+        .psb_measure.psb_upgrades.filter(item => item.id_cost_integration === 2)
+        .length === 0;
+    const checkPsbOptionsToFinal =
+      version.buildings
+        .find(item => item.id == buildingId)
+        .psb_measure.psb_options.filter(
+          item => !item.is_built_in && item.deletedAt === null
+        ).length === 0;
+
+    this.finalProposal.isFinal =
+      checkShinglesToFinal && checkPsbUpgradesToFinal && checkPsbOptionsToFinal;
+
+      this.finalProposaltext = this.finalProposal.isFinal;
+    // Flashing color
+    const pipeFlashing =
+      (await this.checkPsbMaterialCalcSelectedList(
+        'category_pipe_flashing3in1',
+        buildingId
+      )) &&
+      (await this.checkPsbMaterialCalcSelectedList(
+        'category_pipe_flashing2in1',
+        buildingId
+      ));
+    const jVents =
+      (await this.checkPsbMaterialCalcSelectedList('category_jvent4', buildingId)) &&
+      (await this.checkPsbMaterialCalcSelectedList('category_jvent6', buildingId));
+    const powerFans =
+      (await this.checkPsbMaterialCalcSelectedList(
+        'category_solar_power_vents',
+        buildingId
+      )) &&
+      (await this.checkPsbMaterialCalcSelectedList('category_power_vents', buildingId));
+    const rollMetal = await this.checkPsbMaterialCalcSelectedList(
+      'category_rolled_metal',
+      buildingId
+    );
+    const endwall = await this.checkPsbMaterialCalcSelectedList(
+      'category_end_wall_metal',
+      buildingId
+    );
+    const sprayPaint = await this.checkPsbMaterialCalcSelectedList(
+      'category_spray_paint',
+      buildingId
+    );
+    const louvreVents = await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_6_without_ext', buildingId) &&
+                        await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_4_without_ext', buildingId) &&
+                        await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_6_with_ext', buildingId) &&
+                        await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_4_with_ext', buildingId)
+                      ;
+
+    this.finalProposal.flashingColor =
+      pipeFlashing ||
+      jVents ||
+      powerFans ||
+      rollMetal ||
+      endwall ||
+      sprayPaint ||
+      louvreVents;
+
+    //SA Cap color
+    this.finalProposal.sACapColor = await this.checkPsbMaterialCalcSelectedList(
+      'category_sa_cap',
+      buildingId
+    );
+
+    //Attic Vents color
+    this.finalProposal.atticVentColor = await this.checkPsbMaterialCalcSelectedList(
+      'category_metal_artict_vents',
+      buildingId
+    );
+
+    //Reglet color
+    this.finalProposal.regletColor = await this.checkPsbMaterialCalcSelectedList(
+      'category_ridglet',
+      buildingId
+    );
+
+    // category_soffit_vents
+    this.finalProposal.soffitVentColor = await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_6_16', buildingId) &&
+                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_4_16', buildingId) &&
+                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_2', buildingId) &&
+                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_3', buildingId) &&
+                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_4', buildingId)
+                                      ;
+
+    /*// category_soffit_vents
+    this.finalProposal.soffitVentColor = await this.checkPsbMaterialCalcSelectedList(
+      'category_soffit_vents',
+      buildingId
+    );
+    */
+
+    // Shingle and Ridge color and Drip Edge color
+    const jobMaterialTypeId = version.buildings.find(item => item.id == buildingId)
+      .job_material_type.id;
+    const jobMaterialTypeShingle = await this.general.getConstDecimalValue(
+      'job_material_type_shingle'
+    );
+    this.finalProposal.shingleColor = jobMaterialTypeId === jobMaterialTypeShingle;
+    this.finalProposal.dripEdgeColor = jobMaterialTypeId === jobMaterialTypeShingle;
+
+  }
+
+  async checkPsbMaterialCalcSelectedList(key: string, buildingId) {
+
+    // busco id de la categoria en generals
+    const categoryMetalArtictVents = await this.general.getConstDecimalValue(key);
+
+    // obtengo material tipes relacionados con la categoria
+    const { data: materialTypesData } =
+      await this.catalogsService.getMeasuresMaterialTypes();
+    const materialsTypesIds = materialTypesData
+      .filter(item => item.id_material_category === categoryMetalArtictVents)
+      .map(item => item.id);
+
+    // obtengo los materials relacionados a esos material tipes
+    const { data: materialsData } = await this.materialService.getMaterials(); //
+    const materialsIds = materialsData
+      .filter(item => materialsTypesIds.includes(item.id_material_type))
+      .map(item => Number(item.id));
+    const building = this.buildings.find(item => item.id == buildingId);
+    // obtengo en los materiales calculados relacionados con materials price list ids
+    const psbMaterialCalcSelectedList =
+      building.psb_measure.psb_material_calculations.filter(
+        item => materialsIds.includes(item.id_concept) && item.deletedAt == null
+      );
+
+    if (psbMaterialCalcSelectedList.length >= 1) return true;
+    else return false;
   }
 }

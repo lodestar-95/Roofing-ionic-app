@@ -26,9 +26,6 @@ export class JwtValidateService {
 
     // let m1 = moment(now).toDate();
     // let m2 = moment(exp).toDate();
-    // console.log('time now      :', m1);
-    // console.log('time exp token:', m2);
-    // console.log('Is valid date token?', !(now >= exp));
 
     return !(now >= exp);
   }

@@ -31,7 +31,6 @@ export class CheckboxListComponent implements OnInit {
     this.options.forEach(option => {
       this.chkLists.push({ ...option });
     });
-    console.log('this.options', this.options)
   }
 
   /**

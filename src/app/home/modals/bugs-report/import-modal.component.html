@@ -1,9 +1,9 @@
-<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)" id="reportbugs">
+<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)" >
     <ion-item class="modal-title-padding">
         <ion-label class="roofing-title">Import Bugs Report</ion-label>
     </ion-item>
 
-    <ion-list >
+    <ion-list id="reportbugs">
         <ion-item
             *ngFor="let bugsReport of bugsReportList; index as i"
             [ngClass]="{'highlight': selectedBugsReport?.id === bugsReport.id}"

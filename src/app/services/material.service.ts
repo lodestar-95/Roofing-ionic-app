@@ -311,7 +311,6 @@ export class MaterialService {
             const activeVersion = p.versions.find(x => x.active);
             activeVersion.buildings.map(b => b.psb_measure)
                 .forEach(m => {
-                  console.log(m);
                   if (m && m.psb_material_calculations){
                     calculations = [...calculations, ...m.psb_material_calculations.filter(x => x.isModified || isNaN(x.id))];
                   }else{

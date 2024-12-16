@@ -4,9 +4,11 @@
 
 export const environment = {
   production: false,
-  url: 'https://eh-roofing-gateway.herokuapp.com/api',
+  name: 'env',
+  url: 'https://eh-roofing-gateway.herokuapp.com/api',//dev
+  //url: 'https://ehroofing-gw-gateway-qa-b1b593482770.herokuapp.com/api',
   //url: 'https://ehroofing-gw-gateway-prd-e7655b826815.herokuapp.com/api',
-  // url: 'http://localhost:8000/api',
+  //url: 'http://localhost:8000/api',
 
   /** dropbox keys */
   //appKey:"57lwsplp5auk44k",

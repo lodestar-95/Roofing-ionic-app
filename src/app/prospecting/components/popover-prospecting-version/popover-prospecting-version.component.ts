@@ -41,8 +41,6 @@ export class PopoverProspectingVersionComponent implements OnInit {
     }
     this.currentVersionId = this.versions.find(v => v.active)?.id ?? 0;
 
-    console.log(this.versions);
-
     this.auth.getAuthUser().then((user) => {
       this.currentUserRoleId = parseInt(user.role.id_role);
       this.currentUserId = user.id;

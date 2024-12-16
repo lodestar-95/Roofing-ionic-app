@@ -13,11 +13,9 @@ export class PopoverMultipleOptionsComponent implements OnInit {
   constructor(private popoverController:PopoverController) { }
 
   ngOnInit() {
-    console.log("OPTIONS:", this.options);
   }
 
   optionSelected(option: Generic) {
-    console.log("option::", option);
     this.options.map((x) => {
       if (x.id === option.id) {
         x.selected = option.selected;

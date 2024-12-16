@@ -246,8 +246,6 @@ export class UpgradesSegmentComponent implements OnInit, OnDestroy {
       }
     );
 
-    //console.log(this.building.psb_measure.psb_upgrades_vent.solar_pv_del_pc);
-
   }
 
   async goAdvanceVentilation() {

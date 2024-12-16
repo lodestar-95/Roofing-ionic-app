@@ -87,8 +87,6 @@ export class DetailPage implements OnInit, OnDestroy {
 
       let measure = version.buildings.find(x => x.psb_measure);
 
-      // console.log("measure.psb_measure.psb_material_calculations",measure.psb_measure.psb_material_calculations);
-
       // psb_options should have only records with is_built_in = true in order to show accept icon. Only consider records with deleted_at = null.
       let optionsOK = measure.psb_measure.psb_options == undefined || !measure.psb_measure.psb_options.find(item =>
         item.deletedAt == null && !item.is_built_in
@@ -121,7 +119,6 @@ export class DetailPage implements OnInit, OnDestroy {
         }
         /*if (this.idUserRole > 2) {
           this.showMdlAcceptance = false;
-          console.log("this.idUserRole");
         }*/
       });
 
@@ -241,13 +238,15 @@ export class DetailPage implements OnInit, OnDestroy {
     this.rejectReasons = await (await this.rejectReasonService.getMockRejectReason()).data
 
     let reject_message;
-
-    if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
+    console.log(this.project.id_reject_reason);
+    if (this.project.id_reject_reason != null){
+      if(this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
       reject_message = "This proposal was marked as " + this.project.reject_reason;
+      }
+      else{
+        reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
+      }
     }
-    else
-      reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
-
     if (this.project.id_project_status >= 5) {
       const alert = await this.alertController.create({
         header: 'Are you sure you want accept this proposal?',
@@ -339,9 +338,11 @@ export class DetailPage implements OnInit, OnDestroy {
 
 
   goToScope() {
-    this.nav.navigateForward('pdf-viewer-page', {
-      queryParams: { project: this.project }
-    });
+    console.log("store");
+
+    localStorage.removeItem('storeproject');
+    localStorage.setItem('storeproject', JSON.stringify(this.project));
+    this.nav.navigateForward('pdf-viewer-page');
   }
   private createNewVersion(activeVersion: Version) {
     this.projectService.saveVersion({ ...this.version, active: false, is_current_version: false });

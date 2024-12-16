@@ -41,6 +41,19 @@ export class UsersService {
     this.storage.set('user', users);
   }
 
+  async updatepassword(username: string, password: string){
+    let users = await this.getUserAll();
+    users = users ? users : [];
+    users.forEach((user) => {
+      if (
+        user.username == username 
+      ) {
+        user.last_access_date = new Date();
+        user.password = password;
+      }
+    });
+    this.storage.set('user', users);
+  }
   // Get all object
   getUserAll(): Promise<any> {
     return this.storage.get('user').then((response) => {

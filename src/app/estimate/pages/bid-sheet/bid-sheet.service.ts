@@ -28,7 +28,6 @@ export class BidSheetService {
         const laborSections = this.getLaborSection(activeBuilding, this.activeMaterialTypeId);
         const laborTotals = this.getTotals(laborSections, 'Total labors');
         tables.push({ columnNames: [], sections: laborSections, totals: laborTotals });
-
         const tearOff = await this.getTearOffSection(activeBuilding, this.activeMaterialTypeId);
         let tearOffQtyTotals = this.getTotals(tearOff, 'Quantity', 'unit');
         tearOffQtyTotals = tearOffQtyTotals.map(x => ({ ...x, value: x.value }));
@@ -126,8 +125,6 @@ export class BidSheetService {
         for (const key of Object.keys(activeBuildings.calculations)) {
             activeBuildings.calculations[key] = activeBuildings.calculations[key].map(material => {
                 let bidsheet_order = this.materialPrices.find(x => x.id_material_type == material.id_material_type)?.bidsheet_order ?? 0;
-                //console.log('>>>>>>>>>>>>>DESCRIPTION>>>>>>>>>>>>>>>>');
-                //console.log(material);
                 if(!material.concept){
                   material.concept = 'ERROR';
                   material.coverage_description = 'MATERIAL NOT PROPERLY CONFIGURED, CHECK IT WITH APP ADMIN';
@@ -336,7 +333,6 @@ export class BidSheetService {
                 price: x.price,
                 total: x.value
             }));
-
         if (labors && labors.length > 0) {
             tableSection.push({
                 title: 'Tear Off', concepts: labors
@@ -389,9 +385,6 @@ export class BidSheetService {
                 total: x.value
             }));
 
-            console.log(activeBuildings.labors
-                .filter(x => x.id_material_type_shingle == materialTypeId && x.category == inwLaborId)
-                .flatMap(x => x.laborLayer));
 
         if (labors && labors.length > 0) {
             tableSection.push({

@@ -14,9 +14,10 @@ import Pako from 'pako';
 import { TouchID } from '@awesome-cordova-plugins/touch-id/ngx';
 import { Storage } from '@ionic/storage';
 //import { Device } from '@capacitor/device';
-import { Device } from '@ionic-native/device/ngx';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx/';
 import { Network } from '@awesome-cordova-plugins/network/ngx';
 import { EventService } from '../services/event.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +29,8 @@ export class LoginPage implements OnInit {
   username: string;
   password: string;
   code: string = '';
+  public env = environment.name;
+  public url = environment.url
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -46,12 +49,11 @@ export class LoginPage implements OnInit {
     private storage: Storage,
     private alertCtr: AlertController,
     private toastController: ToastController,
-    private device: Device,
     private netWork:Network,
-    private evtSrv:EventService
+    private evtSrv:EventService,
+    private uniqueDeviceID: UniqueDeviceID
     // private loading:LoadingService
   ) {
-    device = new Device();
     this.loginForm = this.formBuilder.group({
       username: [
         '',
@@ -121,13 +123,13 @@ export class LoginPage implements OnInit {
   await this.networkService.validateNetwork()
   }
 
- 
+
 
   async ngOnInit() {
     setTimeout(()=>{
       let userName=localStorage.getItem('lastUserName')
       if(this.networkService.isConnected){
-         
+
       }else{
         if(userName){
           this.user.setValue(userName)
@@ -136,12 +138,12 @@ export class LoginPage implements OnInit {
      },1000)
     this.menu.enable(false);
 
-    
+
   }
 
   login() {
     var that = this
-    
+
     if (this.loginForm.valid) {
       this.username = this.loginForm.controls['username'].value;
       this.password = this.loginForm.controls['password'].value;
@@ -151,16 +153,14 @@ export class LoginPage implements OnInit {
       if (this.networkService.isConnected) {
         this.authService.authenticate(this.username, this.password).subscribe(
           (response) => {
-            this.getInitialcatalogs();
-
             response.then((result) => {
               let userLoggedIn=localStorage.getItem('lastUserName')
               let userLoggedInPass=localStorage.getItem('lastUserPass')
               if(userLoggedIn){
-                
+
               }else{
                 localStorage.setItem('lastUserName',that.loginForm.controls.username.value)
-      
+
               }
 
               if(userLoggedInPass){
@@ -170,13 +170,13 @@ export class LoginPage implements OnInit {
               }
 
 
- 
+
               this.storage.set('lastUserName', that.loginForm.controls.username.value);
               this.storage.set('lastUserPass', that.loginForm.controls.password.value);
               this.storage.set('device_id', that.deviceId);
               if (result && result.isSuccess) {
                 // guardar storage
-               
+
                 this.navCtrl.navigateRoot('/home/prospecting');
 
 
@@ -206,10 +206,10 @@ export class LoginPage implements OnInit {
               let userLoggedIn=localStorage.getItem('lastUserName')
               let userLoggedInPass=localStorage.getItem('lastUserPass')
               if(userLoggedIn){
-                
+
               }else{
                 localStorage.setItem('lastUserName',that.loginForm.controls.username.value)
-              
+
               }
 
               if(userLoggedInPass){
@@ -217,7 +217,7 @@ export class LoginPage implements OnInit {
               }else{
                 localStorage.setItem('lastUserPass', that.loginForm.controls.password.value)
               }
- 
+
               this.storage.set('lastUserName', that.loginForm.controls.username.value);
               this.storage.set('lastUserPass', that.loginForm.controls.password.value);
               this.storage.set('device_id', that.deviceId);
@@ -239,7 +239,6 @@ export class LoginPage implements OnInit {
   async getUserByDeviceId() {
     // alert(JSON.stringify(this.deviceId))
     await this.authService.getUserWithDeviceId(this.deviceId).then((res: any) => {
-      console.log(res, 'UserFetched')
       this.userRes = res?.data?.user
       this.userEmail=this.userRes?.username
      if(this.userEmail){
@@ -271,10 +270,6 @@ export class LoginPage implements OnInit {
 
   changeNetwork(event) {
     this.networkService.isConnected = event.detail.checked;
-
-    
-
-    console.log(this.networkService.isConnected, 'networkChange')
   }
 
   get user() {
@@ -288,62 +283,6 @@ export class LoginPage implements OnInit {
    *
    * @author: Carlos Rodríguez
    */
-  getInitialcatalogs() {
-    this.catalogsService.getInitialcatalogs();
-    this.descriptionService.getProposalDescriptions();
-    this.materialService.downloadMaterialData();
-
-    console.log('PAKOOOOOOOO');
-
-    const pixpString = '{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}{"users":[{"id_user":"5","id_contact":"2","username":"inspector@gmail.com","id_role":"3","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"5"},{"id_user":"1","id_contact":"2","username":"captain-america@avengers.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"1"},{"id_user":"2","id_contact":"2","username":"pmanager@ehroofing.com","id_role":"4","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"2"},{"id_user":"4","id_contact":"2","username":"admin@gmail.com","id_role":"1","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"4"},{"id_user":"15","id_contact":"2","username":"genesis@ehroofing.com","id_role":"2","contact":{"id_contact":"2","first_name":"Eren","last_name":"Jeager","id_contact_type":1},"id":"15"},{"id_user":"8","id_contact":"3","username":"andrescetec1@hotmail.com","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"8"},{"id_user":"7","id_contact":"3","username":"azopiyactle@onikom.com.mx","id_role":"1","contact":{"id_contact":"3","first_name":"Andres","last_name":"Zopi","id_contact_type":1},"id":"7"},{"id_user":"3","id_contact":"4","username":"jalvarez@onikom.com.mx","id_role":"1","contact":{"id_contact":"4","first_name":"Peter","last_name":"Parker","id_contact_type":1},"id":"3"},{"id_user":"10","id_contact":"5","username":"joahnSponsor1234@gmail.com","id_role":"1","contact":{"id_contact":"5","first_name":"Bruce","last_name":"Banner","id_contact_type":1},"id":"10"},{"id_user":"11","id_contact":"6","username":"alberto.zarate@gmail.com","id_role":"4","contact":{"id_contact":"6","first_name":"Miles","last_name":"Morales","id_contact_type":1},"id":"11"},{"id_user":"14","id_contact":"7","username":"john@ehroofing.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"14"},{"id_user":"9","id_contact":"7","username":"pedroinspector1234@gmail.com","id_role":"3","contact":{"id_contact":"7","first_name":"John","last_name":"Fidanza","id_contact_type":1},"id":"9"},{"id_user":"12","id_contact":"10","username":"edgar@ehroofing.com","id_role":"1","contact":{"id_contact":"10","first_name":"Edgar","last_name":"Sanchez","id_contact_type":1},"id":"12"},{"id_user":"13","id_contact":"11","username":"betty@ehroofing.com","id_role":"1","contact":{"id_contact":"11","first_name":"Beatriz","last_name":"Coronel","id_contact_type":1},"id":"13"},{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6"}],"syncDate_6":"2024-02-14T23:20:16.340Z","resource_6":[{"resource":"Prospecting","id_resource_parent":null,"id":1},{"resource":"Report Bug","id_resource_parent":null,"id":24}],"user":[{"id_user":"6","id_contact":"12","username":"jim@ehroofing.com","id_role":"3","role":{"id_role":"3","role":"Inspector"},"contact":{"id_contact":"12","first_name":"Jim","last_name":"McLeod","id_contact_type":1},"id":"6","last_access_date":"2024-02-14T23:14:30.314Z","password":"12345678"}]}';
-
-    const deflator = new Pako.Deflate({
-      level: 6,
-      //to: 'string',
-      gzip: true,
-      header: {
-        text: true,
-        time: + new Date(),
-        comment: ""
-      }
-    });
-
-    deflator.push(pixpString, true);
-    console.log(pixpString.length);
-
-    // making a blob to be saved
-    const value = deflator.result;
-    console.log(value);
-    console.log(value.length);
-    console.log(value.byteLength);
-    const inflatorString = new Pako.Inflate({ to: 'string' });
-    inflatorString.push(value, true);
-    console.log(inflatorString.result);
-
-    /*
-    const inflatorString = new Pako.Inflate({ to: 'string' });
-    inflatorString.push("abc", true);
-    console.log(inflatorString.result);
-    const deflate = new Pako.Deflate({ level: 3, strategy: 2 });
-
-    const deflator = new Pako.Deflate({
-      gzip: true,
-      header: {
-          hcrc: true,
-          time: 1234567,
-          os: 15,
-          name: "test name",
-          comment: "test comment",
-          extra: [4, 5, 6],
-      },
-    });
-    //deflator.push('HOLA MUNDO', true);
-    inflatorString.push(deflator.result, true);
-    console.log(inflatorString.result);
-
-    console.log(inflatorString.result);
-    */
-  }
 
   async ionViewWillEnter() {
 
@@ -363,18 +302,24 @@ export class LoginPage implements OnInit {
     this.storage.get('device_id').then((res) => {
       tempDeviceId = res
     })
-
-
-
     await this.logDeviceInfo().then(async()=>{
       await this.getUserByDeviceId().then(()=>{
         if (tempDeviceId == this.deviceId) {
+
+          console.log("this.deviceId", this.deviceId);
+
           this.user.setValue(this.userEmail)
           // this.pass.setValue(this.savedUserpass)
-          // await this.scanFinger();
-          // this.login()
+          // this.scanFinger();
+
+          // this.router.navigate(['/home/prospecting']);
+          // this.uniqueDeviceID.get()
+          //    .then((uuid: any) =>{
+          //      this.deviceId = uuid;
+          //    })
+          //   .catch((error: any) => console.log(error));
           this.loading.loading(false)
-    
+
         } else {
           this.loading.loading(false)
           // alert('No user is registered with this device yet!')
@@ -383,19 +328,19 @@ export class LoginPage implements OnInit {
     });
 
 
-    
+
     if(this.networkService.isConnected){
 
      if(this.userEmail){
       this.user.setValue(this.userEmail)
      }
-      
+
     }else{
       if(userName){
         this.user.setValue(userName)
       }
     }
-   
+
 
   }
 
@@ -413,7 +358,6 @@ export class LoginPage implements OnInit {
 
   //     await this.login()
   //   }
-  //   // console.log(this.userRes, 'userRes')
   // }
 
   enableFingrPrint = false;
@@ -444,12 +388,12 @@ export class LoginPage implements OnInit {
                 this.user.setValue(this.userEmail)
                 if (this.savedUserpass) {
                   this.pass.setValue(this.savedUserpass)
-                } 
+                }
 
                 await this.login()
               }
-            
-          
+
+
 
 
           });
@@ -473,7 +417,7 @@ export class LoginPage implements OnInit {
         if (touchIdAvailable) {
           this.loading.loading(false)
           const fingerprintResult = await this.touchId.verifyFingerprint('Verify Your Touch ID').then(async (res) => {
-           
+
              if(userName){
               this.user.setValue(userName)
              }
@@ -482,11 +426,7 @@ export class LoginPage implements OnInit {
               this.pass.setValue(userPass)
 
              }
-
               this.login()
-            
-
-
           });
         } else {
           console.error('Touch ID not available');
@@ -494,30 +434,24 @@ export class LoginPage implements OnInit {
 
         }
       } catch (error) {
-
         console.error('Error while authenticating with fingerprint:', error);
       }
-    
+
    }
 
   }
   deviceInfo: any
   deviceId: any = ''
-  async logDeviceInfo() {
+async logDeviceInfo() {
     if (this.platform.is('hybrid')) {
       this.loading.loading(true);
-      //const decviceID = await Device.getId();
-      this.deviceId = this.device.uuid; //decviceID.identifier
-      console.log('device decviceID', this.deviceId);
-      // alert(JSON.stringify(this.deviceId))
+      await this.uniqueDeviceID.get()
+      .then((uuid: any) =>{
+        this.deviceId = uuid;
+      })
+     .catch((error: any) => console.log(error));
     }
   }
-
-
-
-
-
-
 
   async showToast() {
     let toast = await this.toastController.create({
@@ -532,7 +466,6 @@ export class LoginPage implements OnInit {
   async copyToClipboard(text: string) {
     try {
       await navigator.clipboard.writeText(text);
-      console.log('Text copied to clipboard:', text);
       this.showToast()
 
       // Optionally, display a success message to the user

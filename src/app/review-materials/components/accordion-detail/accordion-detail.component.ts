@@ -66,8 +66,6 @@ export class AccordionDetailComponent implements OnInit {
 
     const { data } = await modal.onWillDismiss();
 
-    console.log(data);
-
     if (data) {
       if (data.supplierId == 0) {
         const supplier = await this.materialService.addSupplier(data.supplierName, '');
