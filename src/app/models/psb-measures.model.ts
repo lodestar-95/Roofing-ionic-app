@@ -49,8 +49,10 @@ export class PsbMeasures implements Sync {
   
   isVent_modify: boolean;
   vent_j_vent_4_pc: number;
-  vent_j_vent_4_pc_remove: number;
-  vent_j_vent_4_pc_add: number;
+  vent_j_vent_4_replace: number;
+  vent_j_vent_4_remove: number;
+  vent_j_vent_4_add: number;
+  vent_j_vent_4_relocate: number;
   vent_j_vent_6_pc: number;
   vent_j_vent_6_pc_remove: number;
   vent_j_vent_6_pc_add: number;

@@ -25,8 +25,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   isVent_modify: boolean = false;
 
   vent4: number;
+  vent4Replace: number;
   vent4Remove: number;
   vent4Add: number;
+  vent4Relocate: number;
   vent6: number;
   vent6Remove: number;
   vent6Add: number;
@@ -381,18 +383,24 @@ export class VentingComponent implements OnInit, OnDestroy {
       }
 
       this.vent4 = this.building.psb_measure.vent_j_vent_4_pc;
-      this.vent4Add = this.building.psb_measure.vent_j_vent_4_pc_add;
-      this.vent4Remove = this.building.psb_measure.vent_j_vent_4_pc_remove;
+      this.vent4Replace = this.building.psb_measure.vent_j_vent_4_replace;
+      this.vent4Add = this.building.psb_measure.vent_j_vent_4_add;
+      this.vent4Remove = this.building.psb_measure.vent_j_vent_4_remove;
+      this.vent4Relocate = this.building.psb_measure.vent_j_vent_4_relocate;
 
       if (
         this.vent4 != undefined ||
+        this.vent4Replace != undefined ||
         this.vent4Add != undefined ||
-        this.vent4Remove != undefined
+        this.vent4Remove != undefined ||
+        this.vent4Relocate != undefined
       ) {
         if (
           this.vent4 +
-            this.vent4Add +
-            this.vent4Remove !==
+            this.vent4Replace +
+              this.vent4Add +
+                this.vent4Remove +
+                  this.vent4Relocate!==
           0
         )
         this.isvent4 = true;
@@ -570,8 +578,10 @@ export class VentingComponent implements OnInit, OnDestroy {
 
       psb_upgrades_vent,
       vent_j_vent_4_pc: this.vent4,
-      vent_j_vent_4_pc_add: this.vent4Add,
-      vent_j_vent_4_pc_remove: this.vent4Remove,
+      vent_j_vent_4_replace: this.vent4Replace,
+      vent_j_vent_4_add: this.vent4Add,
+      vent_j_vent_4_remove: this.vent4Remove,
+      vent_j_vent_4_relocate: this.vent4Relocate,
       vent_j_vent_6_pc: this.vent6,
       vent_j_vent_6_pc_add: this.vent6Add,
       vent_j_vent_6_pc_remove: this.vent6Remove,
@@ -867,8 +877,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   vent4Change(e): void {
     e.stopPropagation();
     this.vent4 = 0;
+    this.vent4Replace = 0;
     this.vent4Remove = 0;
     this.vent4Add = 0;
+    this.vent4Relocate = 0;
     this.isvent4 = !this.isvent4;
   }
   vent6Change(e): void {
