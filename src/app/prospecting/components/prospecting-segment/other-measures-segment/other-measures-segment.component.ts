@@ -284,18 +284,18 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
       },
       {
         description: 'J Vent 6” to remove and cover',
-        value: `${this.building.psb_measure.vent_j_vent_6_pc_remove} PC`,
-        visible: this.building.psb_measure.vent_j_vent_6_pc_remove ? true : false
+        value: `${this.building.psb_measure.vent_j_vent_6_remove} PC`,
+        visible: this.building.psb_measure.vent_j_vent_6_remove ? true : false
       },
       {
         description: 'J Vent 6” to keep',
-        value: `${this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_pc_remove} PC`,
-        visible: this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_pc_remove? true : false
+        value: `${this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_remove} PC`,
+        visible: this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_remove? true : false
       },
       {
         description: 'J Vent 6” to add',
-        value: `${this.building.psb_measure.vent_j_vent_6_pc_add} PC`,
-        visible: this.building.psb_measure.vent_j_vent_6_pc_add ? true : false
+        value: `${this.building.psb_measure.vent_j_vent_6_add} PC`,
+        visible: this.building.psb_measure.vent_j_vent_6_add ? true : false
       },
 
       {

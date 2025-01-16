@@ -30,8 +30,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   vent4Add: number;
   vent4Relocate: number;
   vent6: number;
+  vent6Replace: number;
   vent6Remove: number;
   vent6Add: number;
+  vent6Relocate: number;
   ridgeVent: number;
   isRidgeVent: boolean;
   isRidgeVentAddNew: boolean;
@@ -365,8 +367,7 @@ export class VentingComponent implements OnInit, OnDestroy {
 
       this.soffitVent616 = this.building.psb_measure.psb_soffitvents.soffitVent616;
       this.soffitVent616Add = this.building.psb_measure.psb_soffitvents.soffitVent616Add;
-      this.soffitVent616Remove =
-        this.building.psb_measure.psb_soffitvents.soffitVent616Remove;
+      this.soffitVent616Remove = this.building.psb_measure.psb_soffitvents.soffitVent616Remove;
 
       if (
         this.soffitVent616 != undefined ||
@@ -400,25 +401,31 @@ export class VentingComponent implements OnInit, OnDestroy {
             this.vent4Replace +
               this.vent4Add +
                 this.vent4Remove +
-                  this.vent4Relocate!==
+                  this.vent4Relocate !==
           0
         )
         this.isvent4 = true;
       }
 
       this.vent6 = this.building.psb_measure.vent_j_vent_6_pc;
-      this.vent6Add = this.building.psb_measure.vent_j_vent_6_pc_add;
-      this.vent6Remove = this.building.psb_measure.vent_j_vent_6_pc_remove;
+      this.vent6Replace = this.building.psb_measure.vent_j_vent_6_replace;
+      this.vent6Add = this.building.psb_measure.vent_j_vent_6_add;
+      this.vent6Remove = this.building.psb_measure.vent_j_vent_6_remove;
+      this.vent6Relocate = this.building.psb_measure.vent_j_vent_6_relocate;
 
       if (
         this.vent6 != undefined ||
+        this.vent6Replace != undefined ||
         this.vent6Add != undefined ||
-        this.vent6Remove != undefined
+        this.vent6Remove != undefined ||
+        this.vent6Relocate != undefined
       ) {
         if (
           this.vent6 +
-            this.vent6Add +
-            this.vent6Remove !==
+            this.vent6Replace +
+              this.vent6Add +
+               this.vent6Remove +
+                this.vent6Relocate !==
           0
         )
         this.isvent6 = true;
@@ -583,8 +590,10 @@ export class VentingComponent implements OnInit, OnDestroy {
       vent_j_vent_4_remove: this.vent4Remove,
       vent_j_vent_4_relocate: this.vent4Relocate,
       vent_j_vent_6_pc: this.vent6,
-      vent_j_vent_6_pc_add: this.vent6Add,
-      vent_j_vent_6_pc_remove: this.vent6Remove,
+      vent_j_vent_6_replace: this.vent6Replace,
+      vent_j_vent_6_add: this.vent6Add,
+      vent_j_vent_6_remove: this.vent6Remove,
+      vent_j_vent_6_relocate: this.vent6Relocate,
 
       isVent_modify: true,
       vent_ridgevent_lf: this.ridgeVent,
@@ -886,8 +895,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   vent6Change(e): void {
     e.stopPropagation();
     this.vent6 = 0;
+    this.vent6Replace = 0;
     this.vent6Remove = 0;
     this.vent6Add = 0;
+    this.vent6Relocate = 0;
     this.isvent6 = !this.isvent6;
   }
   louveredVent4WithExtensionsChange(e): void {

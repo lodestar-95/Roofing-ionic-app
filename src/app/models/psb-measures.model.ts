@@ -54,8 +54,10 @@ export class PsbMeasures implements Sync {
   vent_j_vent_4_add: number;
   vent_j_vent_4_relocate: number;
   vent_j_vent_6_pc: number;
-  vent_j_vent_6_pc_remove: number;
-  vent_j_vent_6_pc_add: number;
+  vent_j_vent_6_replace: number;
+  vent_j_vent_6_remove: number;
+  vent_j_vent_6_add: number;
+  vent_j_vent_6_relocate: number;
   
   vent_is_ridgevent_in_place: boolean;
   vent_is_ridgevent_add: boolean;
