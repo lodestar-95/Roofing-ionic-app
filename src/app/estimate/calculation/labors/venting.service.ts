@@ -18,7 +18,7 @@ export class VentingService {
         const shingles = await this.shingle.getShingles();
         const laborPrices = (await this.catalogs.getLaborPrices()).data;
 
-        const pluginVent = building.psb_measure.vent_metal_artict_replace;
+        const pluginVent = building.psb_measure.vent_metal_artict_add;
         const pluginVentCalculations = await this.calculatePluginVent(pluginVent, shingles, laborPrices);
 
         const isRidgeventBuiltin = await this.isRidgeventBultin(building);

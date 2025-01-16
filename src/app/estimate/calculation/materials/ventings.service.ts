@@ -70,7 +70,7 @@ export class VentingsService {
       jVent6,
       shingles
     );
-    const metal_artict_vent_pc = (measures.vent_metal_artict_add_pc
+    const metal_artict_vent_pc = (measures.vent_metal_artict_add
       ? measures.vent_metal_artict_add
       : 0) + (measures.vent_metal_artict_cut_in_pc
         ? measures.vent_metal_artict_cut_in_pc
