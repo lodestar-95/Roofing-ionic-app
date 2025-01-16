@@ -61,8 +61,10 @@ export class PsbMeasures implements Sync {
 
   vent_ridgevent_lf: number;
   vent_metal_artict: number;
-  vent_metal_artict_replace_pc: number;
-  vent_metal_artict_remove_pc: number;
+  vent_metal_artict_replace: number;
+  vent_metal_artict_add: number;
+  vent_metal_artict_remove: number;
+  vent_metal_artict_relocate: number;
   vent_metal_artict_cut_in_pc: number;
 
   vent_solar_power_vent_pc: number;
@@ -141,8 +143,10 @@ export class PsbMeasures implements Sync {
     this.vent_j_vent_6_pc = null;
     this.vent_is_ridgevent_in_place = null;
     this.vent_ridgevent_lf = null;
-    this.vent_metal_artict_replace_pc = null;
-    this.vent_metal_artict_remove_pc = null;
+    this.vent_metal_artict_replace = null;
+    this.vent_metal_artict_add = null;
+    this.vent_metal_artict_remove = null;
+    this.vent_metal_artict_relocate = null;
     this.vent_metal_artict_cut_in_pc = null;
     this.vent_solar_power_vent_pc = null;
     this.vent_power_vent_pc = null;

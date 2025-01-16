@@ -242,18 +242,18 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
       },
       {
         description: 'Metal Attic Vents to remove and cover',
-        value: `${this.building.psb_measure.vent_metal_artict_remove_pc} PC`,
-        visible: this.building.psb_measure.vent_metal_artict_remove_pc ? true : false
+        value: `${this.building.psb_measure.vent_metal_artict_remove} PC`,
+        visible: this.building.psb_measure.vent_metal_artict_remove ? true : false
       },
       {
         description: 'Metal Attic Vents to keep',
-        value: `${this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove_pc} PC`,
-        visible: this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove_pc > 0? true : false
+        value: `${this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove} PC`,
+        visible: this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove > 0? true : false
       },
       {
         description: 'Metal Attic Vents to add',
-        value: `${this.building.psb_measure.vent_metal_artict_replace_pc} PC`,
-        visible: this.building.psb_measure.vent_metal_artict_replace_pc ? true : false
+        value: `${this.building.psb_measure.vent_metal_artict_replace} PC`,
+        visible: this.building.psb_measure.vent_metal_artict_replace ? true : false
       },
       
       

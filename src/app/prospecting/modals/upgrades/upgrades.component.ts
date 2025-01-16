@@ -154,8 +154,8 @@ export class UpgradesComponent implements OnInit, OnDestroy {
     this.ngForm
       .get('atticRemove')
       .setValue(
-        this.building.psb_measure.vent_metal_artict_replace_pc +
-        this.building.psb_measure.vent_metal_artict_remove_pc
+        this.building.psb_measure.vent_metal_artict_replace +
+        this.building.psb_measure.vent_metal_artict_remove
       );
 
     this.validateFrmData();

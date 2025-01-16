@@ -18,7 +18,7 @@ export class PlugRoofService {
     }
 
     async calculate(building: Building) {
-        const quantity = building?.psb_measure?.vent_metal_artict_remove_pc??0;
+        const quantity = building?.psb_measure?.vent_metal_artict_remove??0;
 
         const category_smart_plug_roof_patch = await this.general.getConstValue('category_smart_plug_roof_patch');
         const material = this.general.getFirstMaterial(this.materialList, category_smart_plug_roof_patch);

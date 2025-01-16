@@ -317,7 +317,7 @@ export class ProposalDescriptionsService {
     if (needMetalVents) {
       const need4jVents = this.identifyQtyMetalVent4();
       const need6jVents = this.identifyQtyMetalVent6();
-      const QtyMetalVents = this.building?.psb_measure?.vent_metal_artict_replace_pc +
+      const QtyMetalVents = this.building?.psb_measure?.vent_metal_artict_replace +
       this.building?.psb_measure?.vent_metal_artict_cut_in_pc;
       const categoryMetalArtictVents = await this.general.getConstDecimalValue(
         'category_metal_artict_vents'
@@ -389,7 +389,7 @@ export class ProposalDescriptionsService {
 
 
   identifyMetalVents() {
-    return this.building?.psb_measure?.vent_metal_artict_replace_pc +
+    return this.building?.psb_measure?.vent_metal_artict_replace +
       this.building?.psb_measure?.vent_metal_artict_cut_in_pc > 0;
   };
 
@@ -668,7 +668,7 @@ export class ProposalDescriptionsService {
 
   quantityMetalVents() {
     if (!this.building?.psb_measure?.vent_is_ridgevent_in_place) {
-      let quantity = this.building?.psb_measure?.vent_metal_artict_replace_pc ?? 0;
+      let quantity = this.building?.psb_measure?.vent_metal_artict_replace ?? 0;
       quantity += this.building?.psb_measure?.vent_metal_artict_cut_in_pc ?? 0;
       return quantity > 0 ? quantity : this.removeLineKey;
     }

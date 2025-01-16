@@ -277,9 +277,9 @@ export class RidgeVentsService {
             ...building,
             psb_measure: {
                 ...building.psb_measure,
-                vent_metal_artict_cut_in_pc: this.parseNumber(building.psb_measure.psb_upgrades_vent.attic_cutin_pc),
-                vent_metal_artict_remove_pc: this.parseNumber(building.psb_measure.psb_upgrades_vent.attic_remove_pc),
-                vent_metal_artict_replace_pc: this.parseNumber(building.psb_measure.psb_upgrades_vent.attic_replace_pc),
+                vent_metal_artict_cut_in: this.parseNumber(building.psb_measure.psb_upgrades_vent.attic_cutin_pc),
+                vent_metal_artict_remove: this.parseNumber(building.psb_measure.psb_upgrades_vent.attic_remove_pc),
+                vent_metal_artict_replace: this.parseNumber(building.psb_measure.psb_upgrades_vent.attic_replace_pc),
                 vent_power_vent_pc: this.parseNumber(building.psb_measure.psb_upgrades_vent.pv_new_pc),
                 vent_solar_power_vent_pc: this.parseNumber(building.psb_measure.psb_upgrades_vent.solar_pv_new_pc)
             }

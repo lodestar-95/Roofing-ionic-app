@@ -68,8 +68,11 @@ export class VentingComponent implements OnInit, OnDestroy {
   soffitVent4Add: number;
 
   metalArtticVents: number;
-  metalArtticVentsRemove: number;
+  metalArtticVentsReplace: number;
   metalArtticVentsAdd: number;
+  metalArtticVentsRemove: number;
+  metalArtticVentsRelocate: number;
+  
   cutNewMetalArtticVents: number;
   powerVent: number;
   powerVentRemove: number;
@@ -183,8 +186,10 @@ export class VentingComponent implements OnInit, OnDestroy {
       this.ridgeVent = undefined;
       this.isRidgeVent = true;
       this.metalArtticVents = undefined;
+      this.metalArtticVentsReplace = undefined;
       this.metalArtticVentsAdd = undefined;
       this.metalArtticVentsRemove = undefined;
+      this.metalArtticVentsRelocate = undefined;
       this.cutNewMetalArtticVents = undefined;
       this.solarPowerVent = undefined;
       this.powerVent = undefined;
@@ -430,18 +435,24 @@ export class VentingComponent implements OnInit, OnDestroy {
 
      
       this.metalArtticVents = this.building.psb_measure.vent_metal_artict;
-      this.metalArtticVentsAdd = this.building.psb_measure.vent_metal_artict_replace_pc;
-      this.metalArtticVentsRemove = this.building.psb_measure.vent_metal_artict_remove_pc;
+      this.metalArtticVentsReplace = this.building.psb_measure.vent_metal_artict_replace;
+      this.metalArtticVentsAdd = this.building.psb_measure.vent_metal_artict_add;
+      this.metalArtticVentsRemove = this.building.psb_measure.vent_metal_artict_remove;
+      this.metalArtticVentsRelocate  = this.building.psb_measure.vent_metal_artict_relocate;
 
       if (
         this.metalArtticVents != undefined ||
+        this.metalArtticVentsReplace != undefined ||
         this.metalArtticVentsAdd != undefined ||
-        this.metalArtticVentsRemove != undefined
+        this.metalArtticVentsRemove != undefined ||
+        this.metalArtticVentsRelocate
       ) {
         if (
           this.metalArtticVents +
-            this.metalArtticVentsAdd +
-            this.metalArtticVentsRemove !==
+            this.metalArtticVentsReplace +
+              this.metalArtticVentsAdd +
+                this.metalArtticVentsRemove+
+                  this.metalArtticVentsRelocate !==
           0
         )
         this.ismetalArtticVents = true;
@@ -571,8 +582,10 @@ export class VentingComponent implements OnInit, OnDestroy {
       isridgeVent: this.isRidgeVent,
       vent_is_ridgevent_in_place: this.isinplace,
       vent_metal_artict: this.metalArtticVents,
-      vent_metal_artict_replace_pc: this.metalArtticVentsAdd,
-      vent_metal_artict_remove_pc: this.metalArtticVentsRemove,
+      vent_metal_artict_replace: this.metalArtticVentsReplace,
+      vent_metal_artict_add: this.metalArtticVentsAdd,
+      vent_metal_artict_remove: this.metalArtticVentsRemove,
+      vent_metal_artict_relocate: this.metalArtticVentsRelocate,
       vent_metal_artict_cut_in_pc: this.cutNewMetalArtticVents,
       vent_solar_power_vent_pc: this.solarPowerVent,
       vent_solar_power_vent_pc_add: this.solarPowerVentAdd,
@@ -845,8 +858,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   metalArtticVentsChange(e): void {
     e.stopPropagation();
     this.metalArtticVents = 0;
+    this.metalArtticVentsReplace = 0;
     this.metalArtticVentsRemove = 0;
     this.metalArtticVentsAdd = 0;
+    this.metalArtticVentsRelocate = 0;
     this.ismetalArtticVents = !this.ismetalArtticVents;
   }
   vent4Change(e): void {
