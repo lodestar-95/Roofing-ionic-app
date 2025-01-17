@@ -300,24 +300,24 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
 
       {
         description: 'Existing 4" LV with extensions',
-        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions} PC`,
-        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions ? true : false
+        value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions ? true : false
       },
 
       {
         description: '4" LV with extensions to remove and cover',
-        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove } PC`,
-        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove  ? true : false
+        value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove } PC`,
+        visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove  ? true : false
       },
       {
         description: '4" LV with extensions to keep',
-        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove} PC`,
-        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove? true : false
+        value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove? true : false
       },
       {
         description: '4" LV with extensions to add',
-        value: `${this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsAdd} PC`,
-        visible: this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsAdd ? true : false
+        value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_add} PC`,
+        visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_add ? true : false
       },
 
 

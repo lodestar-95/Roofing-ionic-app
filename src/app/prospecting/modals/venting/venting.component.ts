@@ -42,8 +42,10 @@ export class VentingComponent implements OnInit, OnDestroy {
 
   // psb_louvrevents
   louveredVent4WithExtensions: number;
+  louveredVent4WithExtensionsReplace: number;
   louveredVent4WithExtensionsRemove: number;
   louveredVent4WithExtensionsAdd: number;
+  louveredVent4WithExtensionsRelocate: number;
   louveredVent6WithExtensions: number;
   louveredVent6WithExtensionsRemove: number;
   louveredVent6WithExtensionsAdd: number;
@@ -205,21 +207,29 @@ export class VentingComponent implements OnInit, OnDestroy {
       this.noRequired = isNoRequired;
 
       this.louveredVent4WithExtensions =
-        this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensions;
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions;
+      this.louveredVent4WithExtensionsReplace = 
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_replace;
       this.louveredVent4WithExtensionsAdd =
-        this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsAdd;
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_add;
       this.louveredVent4WithExtensionsRemove =
-        this.building.psb_measure.psb_louvrevents.louveredVent4WithExtensionsRemove;
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove;
+      this.louveredVent4WithExtensionsRelocate = 
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_relocate;
 
       if (
         this.louveredVent4WithExtensions != undefined ||
+        this.louveredVent4WithExtensionsReplace != undefined ||
         this.louveredVent4WithExtensionsAdd != undefined ||
-        this.louveredVent4WithExtensionsRemove != undefined
+        this.louveredVent4WithExtensionsRemove != undefined ||
+        this.louveredVent4WithExtensionsRelocate != undefined
       ) {
         if (
-          this.louveredVent4WithExtensionsAdd +
+          this.louveredVent4WithExtensions +
+            this.louveredVent4WithExtensionsReplace +
             this.louveredVent4WithExtensionsAdd +
-            this.louveredVent4WithExtensionsRemove !==
+            this.louveredVent4WithExtensionsRemove +
+            this.louveredVent4WithExtensionsRelocate !==
           0
         ) {
           this.islouveredVent4WithExtensions = true;
@@ -227,11 +237,15 @@ export class VentingComponent implements OnInit, OnDestroy {
       }
 
       this.louveredVent4WithoutExtensions =
-        this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensions;
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions;
+      this.louveredVent4WithExtensionsReplace = 
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_replace;
       this.louveredVent4WithoutExtensionsAdd =
-        this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsAdd;
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_add;
       this.louveredVent4WithoutExtensionsRemove =
-        this.building.psb_measure.psb_louvrevents.louveredVent4WithoutExtensionsRemove;
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove;
+      this.louveredVent4WithExtensionsRelocate = 
+        this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_relocate
 
       if (
         this.louveredVent4WithoutExtensions != undefined ||
@@ -399,9 +413,9 @@ export class VentingComponent implements OnInit, OnDestroy {
         if (
           this.vent4 +
             this.vent4Replace +
-              this.vent4Add +
-                this.vent4Remove +
-                  this.vent4Relocate !==
+            this.vent4Add +
+            this.vent4Remove +
+            this.vent4Relocate !==
           0
         )
         this.isvent4 = true;
@@ -423,9 +437,9 @@ export class VentingComponent implements OnInit, OnDestroy {
         if (
           this.vent6 +
             this.vent6Replace +
-              this.vent6Add +
-               this.vent6Remove +
-                this.vent6Relocate !==
+            this.vent6Add +
+            this.vent6Remove +
+            this.vent6Relocate !==
           0
         )
         this.isvent6 = true;
@@ -465,9 +479,9 @@ export class VentingComponent implements OnInit, OnDestroy {
         if (
           this.metalArtticVents +
             this.metalArtticVentsReplace +
-              this.metalArtticVentsAdd +
-                this.metalArtticVentsRemove+
-                  this.metalArtticVentsRelocate !==
+            this.metalArtticVentsAdd +
+            this.metalArtticVentsRemove+
+            this.metalArtticVentsRelocate !==
           0
         )
         this.ismetalArtticVents = true;
@@ -642,9 +656,11 @@ export class VentingComponent implements OnInit, OnDestroy {
       psb_louvrevents: {
         id_psb_measure: this.building.psb_measure.id,
         id: uuidv4(),
-        louveredVent4WithExtensions: this.louveredVent4WithExtensions,
-        louveredVent4WithExtensionsRemove: this.louveredVent4WithExtensionsRemove,
-        louveredVent4WithExtensionsAdd: this.louveredVent4WithExtensionsAdd,
+        vent_louveredVent4WithExtensions: this.louveredVent4WithExtensions,
+        vent_louveredVent4WithExtensions_replace: this.louveredVent4WithExtensionsReplace,
+        vent_louveredVent4WithExtensions_remove: this.louveredVent4WithExtensionsRemove,
+        vent_louveredVent4WithExtensions_add: this.louveredVent4WithExtensionsAdd,
+        vent_louveredVent4WithExtensions_relocate: this.louveredVent4WithExtensionsRelocate,
         louveredVent6WithExtensions: this.louveredVent6WithExtensions,
         louveredVent6WithExtensionsRemove: this.louveredVent6WithExtensionsRemove,
         louveredVent6WithExtensionsAdd: this.louveredVent6WithExtensionsAdd,
@@ -904,8 +920,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   louveredVent4WithExtensionsChange(e): void {
     e.stopPropagation();
     this.louveredVent4WithExtensions = 0;
+    this.louveredVent4WithExtensionsReplace = 0;
     this.louveredVent4WithExtensionsRemove = 0;
     this.louveredVent4WithExtensionsAdd = 0;
+    this.louveredVent4WithExtensionsRelocate = 0;
     this.islouveredVent4WithExtensions = !this.islouveredVent4WithExtensions;
   }
   louveredVent6WithExtensionsChange(e): void {

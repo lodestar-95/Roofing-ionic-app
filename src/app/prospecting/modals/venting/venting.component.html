@@ -865,37 +865,46 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-            [color]="
-              noRequired &&
-              islouveredVent4WithExtensions &&
-              ((form?.controls?.louveredVent4WithExtensions?.status !== 'VALID' &&
-                form?.controls?.louveredVent4WithExtensions?.touched) ||
-                (form?.controls?.louveredVent4WithExtensionsRemove?.status !== 'VALID' &&
-                  form?.controls?.louveredVent4WithExtensionsRemove?.touched) ||
-                (form?.controls?.louveredVent4WithExtensionsAdd?.status !== 'VALID' &&
-                  form?.controls?.louveredVent4WithExtensionsAdd?.touched) ||
-                louveredVent4WithExtensionsRemove > louveredVent4WithExtensions)
-                ? 'danger'
-                : louveredVent4WithExtensions === undefined ||
-                  louveredVent4WithExtensionsRemove === undefined ||
-                  louveredVent4WithExtensionsAdd === undefined ||
-                  louveredVent4WithExtensions === null ||
-                  louveredVent4WithExtensionsRemove === null ||
-                  louveredVent4WithExtensionsAdd === null ||
-                  !islouveredVent4WithExtensions
-                ? 'dark'
-                : 'success'
-            "
-            >4" Louvered vents with extensions ({{
-              louveredVent4WithExtensions || 0
-            }}
-            Existing, {{ louveredVent4WithExtensionsRemove || 0 }} to remove,
-            {{
-              (louveredVent4WithExtensions || 0) -
-                (louveredVent4WithExtensionsRemove || 0)
-            }}
-            to keep, {{ louveredVent4WithExtensionsAdd || 0 }} to add)</ion-label
-          >
+          [color]="
+          noRequired &&
+          islouveredVent4WithExtensions &&
+          ((form?.controls?.louveredVent4WithExtensions?.status !== 'VALID' &&
+            form?.controls?.louveredVent4WithExtensions?.touched) ||
+            (form?.controls?.louveredVent4WithExtensionsReplace?.status !== 'VALID' &&
+              form?.controls?.louveredVent4WithExtensionsReplace?.touched) ||
+            (form?.controls?.louveredVent4WithExtensionsRemove?.status !== 'VALID' &&
+              form?.controls?.louveredVent4WithExtensionsRemove?.touched) ||
+            (form?.controls?.louveredVent4WithExtensionsAdd?.status !== 'VALID' &&
+              form?.controls?.louveredVent4WithExtensionsAdd?.touched) ||
+            (form?.controls?.louveredVent4WithExtensionsRelocate?.status !== 'VALID' &&
+              form?.controls?.louveredVent4WithExtensionsRelocate?.touched) ||
+            louveredVent4WithExtensionsReplace > louveredVent4WithExtensions ||
+            louveredVent4WithExtensionsRemove > louveredVent4WithExtensions ||
+            louveredVent4WithExtensionsRelocate > louveredVent4WithExtensions||
+            (louveredVent4WithExtensionsReplace + louveredVent4WithExtensionsRemove + louveredVent4WithExtensionsRelocate) > louveredVent4WithExtensions)
+            ? 'danger'
+            : louveredVent4WithExtensions === undefined ||
+              louveredVent4WithExtensionsReplace === undefined ||
+              louveredVent4WithExtensionsRemove === undefined ||
+              louveredVent4WithExtensionsAdd === undefined ||
+              louveredVent4WithExtensionsRelocate === undefined||
+              louveredVent4WithExtensions === null ||
+              louveredVent4WithExtensionsReplace === unll ||
+              louveredVent4WithExtensionsRemove === null ||
+              louveredVent4WithExtensionsAdd === null ||
+              louveredVent4WithExtensionsRelocate === null ||
+              !islouveredVent4WithExtensions
+            ? 'dark'
+            : 'success'
+        " 
+        >4" Louvered vents with extensions ({{ louveredVent4WithExtensions || 0 }} Existing,
+        {{ louveredVent4WithExtensionsReplace || 0 }} to replace,
+        {{ louveredVent4WithExtensionsRelocate || 0 }} to relocate,
+        {{ louveredVent4WithExtensionsRemove || 0 }} to remove,
+        {{ (louveredVent4WithExtensions || 0) - (louveredVent4WithExtensionsReplace || 0) - 
+          (louveredVent4WithExtensionsRelocate || 0) - (louveredVent4WithExtensionsRemove || 0)}} to reuse,
+        {{ louveredVent4WithExtensionsAdd || 0 }} to add)</ion-label
+      >
         </ion-item>
         <div class="ion-padding" slot="content">
           <ion-row>
@@ -929,60 +938,52 @@
               >
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
+              <ion-label color="gray"> To replace </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="louveredVent4WithExtensionsRemove"
-                  [(ngModel)]="louveredVent4WithExtensionsRemove"
+                  name="louveredVent4WithExtensionsReplace"
+                  [(ngModel)]="louveredVent4WithExtensionsReplace"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !islouveredVent4WithExtensions"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   islouveredVent4WithExtensions &&
-                  form?.controls?.louveredVent4WithExtensionsRemove?.status !== 'VALID' &&
-                  form?.controls?.louveredVent4WithExtensionsRemove?.touched
+                  form?.controls?.louveredVent4WithExtensionsReplace?.status !== 'VALID' &&
+                  form?.controls?.louveredVent4WithExtensionsReplace?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
               <h4 class="roofing-error ion-no-padding">
                 <ion-label
                   color="danger"
-                  *ngIf="louveredVent4WithExtensionsRemove > louveredVent4WithExtensions"
-                  >To remove lower than existing</ion-label
+                  *ngIf="louveredVent4WithExtensionsReplace > louveredVent4WithExtensions"
+                  >To replace lower than existing</ion-label
                 >
               </h4>
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{
-                    (louveredVent4WithExtensions || 0) -
-                      (louveredVent4WithExtensionsRemove || 0)
-                  }}
-                  PC</ion-label
-                >
-              </ion-item>
-            </ion-col>
-          </ion-row>
+
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To add </ion-label>
@@ -1014,6 +1015,114 @@
               >
             </ion-col>
           </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To remove </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="louveredVent4WithExtensionsRemove"
+                  [(ngModel)]="louveredVent4WithExtensionsRemove"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !islouveredVent4WithExtensions"></ion-input>
+                <p>PC</p>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  islouveredVent4WithExtensions &&
+                  form?.controls?.louveredVent4WithExtensionsRemove?.status !== 'VALID' &&
+                  form?.controls?.louveredVent4WithExtensionsRemove?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="louveredVent4WithExtensionsRemove > louveredVent4WithExtensions"
+                  >To remove lower than existing</ion-label
+                >
+              </h4>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To relocate </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="louveredVent4WithExtensionsRelocate"
+                  [(ngModel)]="louveredVent4WithExtensionsRelocate"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !islouveredVent4WithExtensions"></ion-input>
+                <p>PC</p>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  islouveredVent4WithExtensions &&
+                  form?.controls?.louveredVent4WithExtensionsRelocate?.status !== 'VALID' &&
+                  form?.controls?.louveredVent4WithExtensionsRelocate?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="louveredVent4WithExtensionsRelocate > louveredVent4WithExtensions"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To reuse </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="white" lines="none">
+                <ion-label color="gray"
+                  >{{
+                    ((louveredVent4WithExtensions || 0) - (louveredVent4WithExtensionsRemove || 0) - 
+                    (louveredVent4WithExtensionsRelocate || 0) - (louveredVent4WithExtensionsReplace)) || 0
+                  }}
+                  PC</ion-label
+                >
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          
         </div>
       </ion-accordion>
       <!-- Louvered vents with extensions -->
