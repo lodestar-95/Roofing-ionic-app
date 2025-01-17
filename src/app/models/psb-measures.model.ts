@@ -76,8 +76,10 @@ export class PsbMeasures implements Sync {
   vent_solar_power_vent_pc_remove: number;
 
   vent_power_vent_pc: number;
+  vent_power_vent_pc_replace: number;
   vent_power_vent_pc_add: number;
   vent_power_vent_pc_remove: number;
+  vent_power_vent_pc_relocate: number;
 
   isridgeVent: boolean;
   flash_step_4_4_8_lf: number;

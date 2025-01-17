@@ -2961,29 +2961,44 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-            [color]="
-              noRequired &&
-              ispowerVent &&
-              ((form?.controls?.powerVent?.status !== 'VALID' &&
-                form?.controls?.powerVent?.touched) ||
-                (form?.controls?.powerVentRemove?.status !== 'VALID' &&
-                  form?.controls?.powerVentRemove?.touched) ||
-                (form?.controls?.powerVentAdd?.status !== 'VALID' &&
-                  form?.controls?.powerVentAdd?.touched) ||
-                powerVentRemove > powerVent)
-                ? 'danger'
-                : powerVent === undefined ||
-                  powerVentRemove === undefined ||
-                  powerVentAdd === undefined ||
-                  powerVent === null ||
-                  powerVentRemove === null ||
-                  powerVentAdd === null ||
-                  !ispowerVent
-                ? 'dark'
-                : 'success'
-            "
-            >Power Vents ({{ powerVent || 0 }} Existing, {{ powerVentRemove || 0 }} to
-            remove, {{ (powerVent || 0) - (powerVentRemove || 0) }} to keep,
+          [color]="
+          noRequired &&
+          ispowerVent &&
+          ((form?.controls?.powerVent?.status !== 'VALID' &&
+            form?.controls?.powerVent?.touched) ||
+            (form?.controls?.powerVentReplace?.status !== 'VALID' &&
+              form?.controls?.powerVentReplace?.touched) ||
+            (form?.controls?.powerVentRemove?.status !== 'VALID' &&
+              form?.controls?.powerVentRemove?.touched) ||
+            (form?.controls?.powerVentAdd?.status !== 'VALID' &&
+              form?.controls?.powerVentAdd?.touched) ||
+            (form?.controls?.powerVentRelocate?.status !== 'VALID' &&
+            form?.controls?.powerVentRelocate?.touched) ||
+            powerVentReplace > powerVent ||
+            powerVentRemove > powerVent ||
+            powerVentRelocate > powerVent ||
+            (powerVentReplace + powerVentRemove + powerVentRelocate) > powerVent
+            )
+            ? 'danger'
+            : powerVent === undefined ||
+              powerVentReplace === undefined ||
+              powerVentRemove === undefined ||
+              powerVentAdd === undefined ||
+              powerVentRelocate === undefined ||
+              powerVent === null ||
+              powerVentReplace === null ||
+              powerVentRemove === null ||
+              powerVentAdd === null ||
+              powerVentRelocate ===null ||
+              !ispowerVent
+            ? 'dark'
+            : 'success'
+        "
+            >Power Vents ({{ powerVent || 0 }} Existing,
+            {{ powerVentReplace || 0 }} to replace,
+            {{ powerVentRelocate || 0 }} to relocate,
+            {{ powerVentRemove || 0 }} to remove,
+            {{ (powerVent || 0) - (powerVentReplace || 0) - (powerVentRelocate || 0) - (powerVentRemove || 0)}} to reuse,
             {{ powerVentAdd || 0 }} to add)</ion-label
           >
         </ion-item>
@@ -3019,54 +3034,52 @@
               >
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
+              <ion-label color="gray"> To replace </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="powerVentRemove"
-                  [(ngModel)]="powerVentRemove"
+                  name="powerVentReplace"
+                  [(ngModel)]="powerVentReplace"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !ispowerVent"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   ispowerVent &&
-                  form?.controls?.powerVentRemove?.status !== 'VALID' &&
-                  form?.controls?.powerVentRemove?.touched
+                  form?.controls?.powerVentReplace?.status !== 'VALID' &&
+                  form?.controls?.powerVentReplace?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
               <h4 class="roofing-error ion-no-padding">
-                <ion-label color="danger" *ngIf="powerVentRemove > powerVent"
-                  >To remove lower than existing</ion-label
+                <ion-label
+                  color="danger"
+                  *ngIf="powerVentReplace > powerVent"
+                  >To replace lower than existing</ion-label
                 >
               </h4>
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{ (powerVent || 0) - (powerVentRemove || 0) }} PC</ion-label
-                >
-              </ion-item>
-            </ion-col>
-          </ion-row>
+
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To add </ion-label>
@@ -3098,6 +3111,113 @@
               >
             </ion-col>
           </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To remove </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="powerVentRemove"
+                  [(ngModel)]="powerVentRemove"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !ispowerVent"></ion-input>
+                <p>PC</p>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  ispowerVent &&
+                  form?.controls?.powerVentRemove?.status !== 'VALID' &&
+                  form?.controls?.powerVentRemove?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="powerVentRemove > powerVent"
+                  >To remove lower than existing</ion-label
+                >
+              </h4>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To relocate </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="powerVentRelocate"
+                  [(ngModel)]="powerVentRelocate"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !ispowerVent"></ion-input>
+                <p>PC</p>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  ispowerVent &&
+                  form?.controls?.powerVentRelocate?.status !== 'VALID' &&
+                  form?.controls?.powerVentRelocate?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="powerVentRelocate > powerVent"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To reuse </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="white" lines="none">
+                <ion-label color="gray"
+                  >{{
+                    ((powerVent || 0) - (powerVentRemove || 0) - (powerVentRelocate || 0) - (powerVentReplace)) || 0
+                  }}
+                  PC</ion-label
+                >
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          
         </div>
       </ion-accordion>
       <!-- Power vents-->
