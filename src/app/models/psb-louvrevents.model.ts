@@ -16,7 +16,9 @@ export interface PsbLouveredVent {
   vent_louveredVent4WithoutExtensions_remove: number;
   vent_louveredVent4WithoutExtensions_add: number;
   vent_louveredVent4WithoutExtensions_relocate: number;
-  louveredVent6WithoutExtensions: number;
-  louveredVent6WithoutExtensionsRemove: number;
-  louveredVent6WithoutExtensionsAdd: number;
+  vent_louveredVent6WithoutExtensions: number;
+  vent_louveredVent6WithoutExtensions_replace: number;
+  vent_louveredVent6WithoutExtensions_remove: number;
+  vent_louveredVent6WithoutExtensions_add: number;
+  vent_louveredVent6WithoutExtensions_relocate: number;
 }
