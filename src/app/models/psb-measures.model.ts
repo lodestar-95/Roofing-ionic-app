@@ -50,9 +50,14 @@ export class PsbMeasures implements Sync {
   isVent_modify: boolean;
   vent_j_vent_4_pc: number;
   vent_j_vent_4_pc_remove: number;
+  vent_j_vent_4_pc_replace: number;
+  vent_j_vent_4_pc_relocate: number;
   vent_j_vent_4_pc_add: number;
+
   vent_j_vent_6_pc: number;
   vent_j_vent_6_pc_remove: number;
+  vent_j_vent_6_pc_replace: number;
+  vent_j_vent_6_pc_relocate: number;
   vent_j_vent_6_pc_add: number;
   
   vent_is_ridgevent_in_place: boolean;
@@ -63,15 +68,21 @@ export class PsbMeasures implements Sync {
   vent_metal_artict: number;
   vent_metal_artict_replace_pc: number;
   vent_metal_artict_remove_pc: number;
+  vent_metal_artict_relocate_pc: number;
+  vent_metal_artict_reuse_pc: number;
   vent_metal_artict_cut_in_pc: number;
 
   vent_solar_power_vent_pc: number;
   vent_solar_power_vent_pc_add: number;
   vent_solar_power_vent_pc_remove: number;
+  vent_solar_power_vent_pc_replace: number;
+  vent_solar_power_vent_pc_relocate: number;
 
   vent_power_vent_pc: number;
   vent_power_vent_pc_add: number;
   vent_power_vent_pc_remove: number;
+  vent_power_vent_pc_replace: number;
+  vent_power_vent_pc_relocate: number;
 
   isridgeVent: boolean;
   flash_step_4_4_8_lf: number;

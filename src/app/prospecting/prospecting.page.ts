@@ -72,7 +72,7 @@ export class ProspectingPage implements OnInit, OnDestroy {
     this.offline = !networkService.isConnected;
     this.syncCatalogs.update();
   }
-  
+
   ngOnInit() {
     this.loading.loading(true);
     this.auth.getAuthUser().then(user => {
@@ -103,8 +103,6 @@ export class ProspectingPage implements OnInit, OnDestroy {
       if (event) event.target.complete();
     });
   }
-
-  
 
   getNewProjects(event) {
     this.projectService
@@ -269,7 +267,7 @@ export class ProspectingPage implements OnInit, OnDestroy {
       switch (project.project_status?.id) {
         case 1:
         case 2:
-        //case 16:
+          //case 16:
           this.listPendingAcceptance.push(project);
           break;
         case 3:
@@ -291,6 +289,11 @@ export class ProspectingPage implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  //function call will be used next 
+  loadSum(id: number) {
+    // console.log(id + id);
   }
 
   contactGroupBy(objectArray, property) {

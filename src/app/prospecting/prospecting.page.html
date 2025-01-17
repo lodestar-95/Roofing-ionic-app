@@ -11,6 +11,7 @@
       <ion-button (click)="openFilterModal()">
         <ion-icon class="filter-icon" name="filter" color="dark"></ion-icon>
       </ion-button>
+    
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -19,6 +20,9 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  <ion-button (click)="loadSum(2)">
+    <ion-icon class="filter-icon" name="filter" color="dark"></ion-icon>
+  </ion-button>
 
   <ion-item lines="none" class="sf-pro-regular item-s">
     <ion-segment
