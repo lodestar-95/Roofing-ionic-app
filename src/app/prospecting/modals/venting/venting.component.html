@@ -100,7 +100,6 @@
               >
             </ion-col>
           </ion-row>
-
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To replace </ion-label>
@@ -145,84 +144,6 @@
               </h4>
             </ion-col>
           </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="metalArtticVentsAdd"
-                  [(ngModel)]="metalArtticVentsAdd"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !ismetalArtticVents"></ion-input>
-                <p>PC</p>
-              </ion-item>
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  ismetalArtticVents &&
-                  form?.controls?.metalArtticVentsAdd?.status !== 'VALID' &&
-                  form?.controls?.metalArtticVentsAdd?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="metalArtticVentsRemove"
-                  [(ngModel)]="metalArtticVentsRemove"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !ismetalArtticVents"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  ismetalArtticVents &&
-                  form?.controls?.metalArtticVentsRemove?.status !== 'VALID' &&
-                  form?.controls?.metalArtticVentsRemove?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="metalArtticVentsRemove > metalArtticVents"
-                  >To remove lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To relocate </ion-label>
@@ -267,7 +188,50 @@
               </h4>
             </ion-col>
           </ion-row>
-
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To remove </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="metalArtticVentsRemove"
+                  [(ngModel)]="metalArtticVentsRemove"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !ismetalArtticVents"></ion-input>
+                <p>PC</p>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  ismetalArtticVents &&
+                  form?.controls?.metalArtticVentsRemove?.status !== 'VALID' &&
+                  form?.controls?.metalArtticVentsRemove?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="metalArtticVentsRemove > metalArtticVents"
+                  >To remove lower than existing</ion-label
+                >
+              </h4>
+            </ion-col>
+          </ion-row>
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
@@ -283,7 +247,37 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="metalArtticVentsAdd"
+                  [(ngModel)]="metalArtticVentsAdd"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !ismetalArtticVents"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  ismetalArtticVents &&
+                  form?.controls?.metalArtticVentsAdd?.status !== 'VALID' &&
+                  form?.controls?.metalArtticVentsAdd?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row>
         </div>
       </ion-accordion>
       <ion-item lines="none" class="ion-no-padding padding-left">
@@ -428,33 +422,46 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="vent4Add"
-                  [(ngModel)]="vent4Add"
+                  name="vent4Relocate"
+                  [(ngModel)]="vent4Relocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !isvent4"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   isvent4 &&
-                  form?.controls?.vent4Add?.status !== 'VALID' &&
-                  form?.controls?.vent4Add?.touched
+                  form?.controls?.vent4Relocate?.status !== 'VALID' &&
+                  form?.controls?.vent4Relocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="vent4Relocate > vent4"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
 
@@ -505,51 +512,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="vent4Relocate"
-                  [(ngModel)]="vent4Relocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !isvent4"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  isvent4 &&
-                  form?.controls?.vent4Relocate?.status !== 'VALID' &&
-                  form?.controls?.vent4Relocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="vent4Relocate > vent4"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -563,7 +525,38 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="vent4Add"
+                  [(ngModel)]="vent4Add"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !isvent4"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  isvent4 &&
+                  form?.controls?.vent4Add?.status !== 'VALID' &&
+                  form?.controls?.vent4Add?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row>
         </div>
       </ion-accordion>
       <!-- 6” J vents -->
@@ -704,36 +697,49 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="vent6Add"
-                  [(ngModel)]="vent6Add"
+                  name="vent6Relocate"
+                  [(ngModel)]="vent6Relocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !isvent6"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   isvent6 &&
-                  form?.controls?.vent6Add?.status !== 'VALID' &&
-                  form?.controls?.vent6Add?.touched
+                  form?.controls?.vent6Relocate?.status !== 'VALID' &&
+                  form?.controls?.vent6Relocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="vent6Relocate > vent6"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
-
+          
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To remove </ion-label>
@@ -781,51 +787,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="vent6Relocate"
-                  [(ngModel)]="vent6Relocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !isvent6"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  isvent6 &&
-                  form?.controls?.vent6Relocate?.status !== 'VALID' &&
-                  form?.controls?.vent6Relocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="vent6Relocate > vent6"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -839,7 +800,38 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="vent6Add"
+                  [(ngModel)]="vent6Add"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !isvent6"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  isvent6 &&
+                  form?.controls?.vent6Add?.status !== 'VALID' &&
+                  form?.controls?.vent6Add?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row>
         </div>
       </ion-accordion>
       <ion-item lines="none" class="ion-no-padding padding-left">
@@ -986,33 +978,46 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="louveredVent4WithExtensionsAdd"
-                  [(ngModel)]="louveredVent4WithExtensionsAdd"
+                  name="louveredVent4WithExtensionsRelocate"
+                  [(ngModel)]="louveredVent4WithExtensionsRelocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !islouveredVent4WithExtensions"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   islouveredVent4WithExtensions &&
-                  form?.controls?.louveredVent4WithExtensionsAdd?.status !== 'VALID' &&
-                  form?.controls?.louveredVent4WithExtensionsAdd?.touched
+                  form?.controls?.louveredVent4WithExtensionsRelocate?.status !== 'VALID' &&
+                  form?.controls?.louveredVent4WithExtensionsRelocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="louveredVent4WithExtensionsRelocate > louveredVent4WithExtensions"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
 
@@ -1063,51 +1068,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="louveredVent4WithExtensionsRelocate"
-                  [(ngModel)]="louveredVent4WithExtensionsRelocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !islouveredVent4WithExtensions"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  islouveredVent4WithExtensions &&
-                  form?.controls?.louveredVent4WithExtensionsRelocate?.status !== 'VALID' &&
-                  form?.controls?.louveredVent4WithExtensionsRelocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="louveredVent4WithExtensionsRelocate > louveredVent4WithExtensions"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -1122,7 +1082,38 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="louveredVent4WithExtensionsAdd"
+                  [(ngModel)]="louveredVent4WithExtensionsAdd"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !islouveredVent4WithExtensions"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  islouveredVent4WithExtensions &&
+                  form?.controls?.louveredVent4WithExtensionsAdd?.status !== 'VALID' &&
+                  form?.controls?.louveredVent4WithExtensionsAdd?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row>
         </div>
       </ion-accordion>
       <!-- Louvered vents with extensions -->
@@ -1266,33 +1257,46 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="louveredVent6WithExtensionsAdd"
-                  [(ngModel)]="louveredVent6WithExtensionsAdd"
+                  name="louveredVent6WithExtensionsRelocate"
+                  [(ngModel)]="louveredVent6WithExtensionsRelocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !islouveredVent6WithExtensions"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   islouveredVent6WithExtensions &&
-                  form?.controls?.louveredVent6WithExtensionsAdd?.status !== 'VALID' &&
-                  form?.controls?.louveredVent6WithExtensionsAdd?.touched
+                  form?.controls?.louveredVent6WithExtensionsRelocate?.status !== 'VALID' &&
+                  form?.controls?.louveredVent6WithExtensionsRelocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="louveredVent6WithExtensionsRelocate > louveredVent6WithExtensions"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
 
@@ -1343,51 +1347,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="louveredVent6WithExtensionsRelocate"
-                  [(ngModel)]="louveredVent6WithExtensionsRelocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !islouveredVent6WithExtensions"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  islouveredVent6WithExtensions &&
-                  form?.controls?.louveredVent6WithExtensionsRelocate?.status !== 'VALID' &&
-                  form?.controls?.louveredVent6WithExtensionsRelocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="louveredVent6WithExtensionsRelocate > louveredVent6WithExtensions"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -1403,6 +1362,37 @@
             </ion-col>
           </ion-row>
           
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="louveredVent6WithExtensionsAdd"
+                  [(ngModel)]="louveredVent6WithExtensionsAdd"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !islouveredVent6WithExtensions"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  islouveredVent6WithExtensions &&
+                  form?.controls?.louveredVent6WithExtensionsAdd?.status !== 'VALID' &&
+                  form?.controls?.louveredVent6WithExtensionsAdd?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row> 
         </div>
       </ion-accordion>
       <!-- Louvered vents without extensions -->
@@ -1547,33 +1537,46 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="louveredVent4WithoutExtensionsAdd"
-                  [(ngModel)]="louveredVent4WithoutExtensionsAdd"
+                  name="louveredVent4WithoutExtensionsRelocate"
+                  [(ngModel)]="louveredVent4WithoutExtensionsRelocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !islouveredVent4WithoutExtensions"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   islouveredVent4WithoutExtensions &&
-                  form?.controls?.louveredVent4WithoutExtensionsAdd?.status !== 'VALID' &&
-                  form?.controls?.louveredVent4WithoutExtensionsAdd?.touched
+                  form?.controls?.louveredVent4WithoutExtensionsRelocate?.status !== 'VALID' &&
+                  form?.controls?.louveredVent4WithoutExtensionsRelocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="louveredVent4WithoutExtensionsRelocate > louveredVent4WithoutExtensions"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
 
@@ -1624,51 +1627,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="louveredVent4WithoutExtensionsRelocate"
-                  [(ngModel)]="louveredVent4WithoutExtensionsRelocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !islouveredVent4WithoutExtensions"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  islouveredVent4WithoutExtensions &&
-                  form?.controls?.louveredVent4WithoutExtensionsRelocate?.status !== 'VALID' &&
-                  form?.controls?.louveredVent4WithoutExtensionsRelocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="louveredVent4WithoutExtensionsRelocate > louveredVent4WithoutExtensions"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -1683,7 +1641,38 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="louveredVent4WithoutExtensionsAdd"
+                  [(ngModel)]="louveredVent4WithoutExtensionsAdd"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !islouveredVent4WithoutExtensions"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  islouveredVent4WithoutExtensions &&
+                  form?.controls?.louveredVent4WithoutExtensionsAdd?.status !== 'VALID' &&
+                  form?.controls?.louveredVent4WithoutExtensionsAdd?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row>  
         </div>
       </ion-accordion>
       <!-- Louvered vents without extensions -->
@@ -1828,33 +1817,46 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="louveredVent6WithoutExtensionsAdd"
-                  [(ngModel)]="louveredVent6WithoutExtensionsAdd"
+                  name="louveredVent6WithoutExtensionsRelocate"
+                  [(ngModel)]="louveredVent6WithoutExtensionsRelocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !islouveredVent6WithoutExtensions"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   islouveredVent6WithoutExtensions &&
-                  form?.controls?.louveredVent6WithoutExtensionsAdd?.status !== 'VALID' &&
-                  form?.controls?.louveredVent6WithoutExtensionsAdd?.touched
+                  form?.controls?.louveredVent6WithoutExtensionsRelocate?.status !== 'VALID' &&
+                  form?.controls?.louveredVent6WithoutExtensionsRelocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="louveredVent6WithoutExtensionsRelocate > louveredVent6WithoutExtensions"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
 
@@ -1905,51 +1907,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="louveredVent6WithoutExtensionsRelocate"
-                  [(ngModel)]="louveredVent6WithoutExtensionsRelocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !islouveredVent6WithoutExtensions"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  islouveredVent6WithoutExtensions &&
-                  form?.controls?.louveredVent6WithoutExtensionsRelocate?.status !== 'VALID' &&
-                  form?.controls?.louveredVent6WithoutExtensionsRelocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="louveredVent6WithoutExtensionsRelocate > louveredVent6WithoutExtensions"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -1964,7 +1921,38 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="louveredVent6WithoutExtensionsAdd"
+                  [(ngModel)]="louveredVent6WithoutExtensionsAdd"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !islouveredVent6WithoutExtensions"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  islouveredVent6WithoutExtensions &&
+                  form?.controls?.louveredVent6WithoutExtensionsAdd?.status !== 'VALID' &&
+                  form?.controls?.louveredVent6WithoutExtensionsAdd?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row>   
         </div>
       </ion-accordion>
       <ion-item lines="none" class="ion-no-padding padding-left">
@@ -3082,33 +3070,46 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="powerVentAdd"
-                  [(ngModel)]="powerVentAdd"
+                  name="powerVentRelocate"
+                  [(ngModel)]="powerVentRelocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !ispowerVent"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   ispowerVent &&
-                  form?.controls?.powerVentAdd?.status !== 'VALID' &&
-                  form?.controls?.powerVentAdd?.touched
+                  form?.controls?.powerVentRelocate?.status !== 'VALID' &&
+                  form?.controls?.powerVentRelocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="powerVentRelocate > powerVent"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
 
@@ -3159,51 +3160,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="powerVentRelocate"
-                  [(ngModel)]="powerVentRelocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !ispowerVent"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  ispowerVent &&
-                  form?.controls?.powerVentRelocate?.status !== 'VALID' &&
-                  form?.controls?.powerVentRelocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="powerVentRelocate > powerVent"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -3217,7 +3173,38 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="powerVentAdd"
+                  [(ngModel)]="powerVentAdd"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !ispowerVent"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  ispowerVent &&
+                  form?.controls?.powerVentAdd?.status !== 'VALID' &&
+                  form?.controls?.powerVentAdd?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row>  
         </div>
       </ion-accordion>
       <!-- Power vents-->
@@ -3359,33 +3346,46 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To add </ion-label>
+              <ion-label color="gray"> To relocate </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="solarPowerVentAdd"
-                  [(ngModel)]="solarPowerVentAdd"
+                  name="solarPowerVentRelocate"
+                  [(ngModel)]="solarPowerVentRelocate"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !issolarPowerVent"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   issolarPowerVent &&
-                  form?.controls?.solarPowerVentAdd?.status !== 'VALID' &&
-                  form?.controls?.solarPowerVentAdd?.touched
+                  form?.controls?.solarPowerVentRelocate?.status !== 'VALID' &&
+                  form?.controls?.solarPowerVentRelocate?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="solarPowerVentRelocate > solarPowerVent"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
             </ion-col>
           </ion-row>
 
@@ -3436,51 +3436,6 @@
 
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To relocate </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="solarPowerVentRelocate"
-                  [(ngModel)]="solarPowerVentRelocate"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  validator=""
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !issolarPowerVent"></ion-input>
-                <p>PC</p>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4"></ion-col>
-            <ion-col size-xs="4">
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  issolarPowerVent &&
-                  form?.controls?.solarPowerVentRelocate?.status !== 'VALID' &&
-                  form?.controls?.solarPowerVentRelocate?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label
-                  color="danger"
-                  *ngIf="solarPowerVentRelocate > solarPowerVent"
-                  >To relocate lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To reuse </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -3495,7 +3450,38 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To add </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="solarPowerVentAdd"
+                  [(ngModel)]="solarPowerVentAdd"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !issolarPowerVent"></ion-input>
+                <p>PC</p>
+              </ion-item>
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  issolarPowerVent &&
+                  form?.controls?.solarPowerVentAdd?.status !== 'VALID' &&
+                  form?.controls?.solarPowerVentAdd?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+            </ion-col>
+          </ion-row> 
         </div>
       </ion-accordion>
 
