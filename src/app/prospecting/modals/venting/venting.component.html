@@ -3229,10 +3229,7 @@
             class="cursor-pointer"
             (click)="solarPowerVentChange($event)"
             [disabled]="!noRequired">
-            <ion-icon
-              name="square-outline"
-              *ngIf="!issolarPowerVent"
-              class="icon"></ion-icon>
+            <ion-icon name="square-outline" *ngIf="!issolarPowerVent" class="icon"></ion-icon>
             <ion-icon
               name="checkbox"
               *ngIf="issolarPowerVent"
@@ -3240,30 +3237,45 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-            [color]="
-              noRequired &&
-              issolarPowerVent &&
-              ((form?.controls?.solarPowerVent?.status !== 'VALID' &&
-                form?.controls?.solarPowerVent?.touched) ||
-                (form?.controls?.solarPowerVentRemove?.status !== 'VALID' &&
-                  form?.controls?.solarPowerVentRemove?.touched) ||
-                (form?.controls?.solarPowerVentAdd?.status !== 'VALID' &&
-                  form?.controls?.solarPowerVentAdd?.touched) ||
-                solarPowerVentRemove > solarPowerVent)
-                ? 'danger'
-                : solarPowerVent === undefined ||
-                  solarPowerVentRemove === undefined ||
-                  solarPowerVentAdd === undefined ||
-                  solarPowerVent === null ||
-                  solarPowerVentRemove === null ||
-                  solarPowerVentAdd === null ||
-                  !issolarPowerVent
-                ? 'dark'
-                : 'success'
-            "
+          [color]="
+          noRequired &&
+          issolarPowerVent &&
+          ((form?.controls?.solarPowerVent?.status !== 'VALID' &&
+            form?.controls?.solarPowerVent?.touched) ||
+            (form?.controls?.solarPowerVentReplace?.status !== 'VALID' &&
+              form?.controls?.solarPowerVentReplace?.touched) ||
+            (form?.controls?.solarPowerVentRemove?.status !== 'VALID' &&
+              form?.controls?.solarPowerVentRemove?.touched) ||
+            (form?.controls?.solarPowerVentAdd?.status !== 'VALID' &&
+              form?.controls?.solarPowerVentAdd?.touched) ||
+            (form?.controls?.solarPowerVentRelocate?.status !== 'VALID' &&
+            form?.controls?.solarPowerVentRelocate?.touched) ||
+            solarPowerVentReplace > solarPowerVent ||
+            solarPowerVentRemove > solarPowerVent ||
+            solarPowerVentRelocate > solarPowerVent ||
+            (solarPowerVentReplace + solarPowerVentRemove + solarPowerVentRelocate) > solarPowerVent
+            )
+            ? 'danger'
+            : solarPowerVent === undefined ||
+              solarPowerVentReplace === undefined ||
+              solarPowerVentRemove === undefined ||
+              solarPowerVentAdd === undefined ||
+              solarPowerVentRelocate === undefined ||
+              solarPowerVent === null ||
+              solarPowerVentReplace === null ||
+              solarPowerVentRemove === null ||
+              solarPowerVentAdd === null ||
+              psolarPowerVentRelocate ===null ||
+              !issolarPowerVent
+            ? 'dark'
+            : 'success'
+        "
             >Solar Power Vents ({{ solarPowerVent || 0 }} Existing,
+            {{ solarPowerVentReplace || 0 }} to replace,
+            {{ solarPowerVentRelocate || 0 }} to relocate,
             {{ solarPowerVentRemove || 0 }} to remove,
-            {{ (solarPowerVent || 0) - (solarPowerVentRemove || 0) }} to keep,
+            {{ (solarPowerVent || 0) - (solarPowerVentReplace || 0) - 
+              (solarPowerVentRelocate || 0) - (solarPowerVentRemove || 0)}} to reuse,
             {{ solarPowerVentAdd || 0 }} to add)</ion-label
           >
         </ion-item>
@@ -3299,54 +3311,52 @@
               >
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
+              <ion-label color="gray"> To replace </ion-label>
             </ion-col>
             <ion-col size-xs="4">
               <ion-item color="light" lines="none">
                 <ion-input
-                  name="solarPowerVentRemove"
-                  [(ngModel)]="solarPowerVentRemove"
+                  name="solarPowerVentReplace"
+                  [(ngModel)]="solarPowerVentReplace"
                   class="ion-text-left ion-no-padding"
                   type="number"
                   pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
                   maxlength="3"
                   min="0"
                   placeholder="00"
                   [disabled]="!noRequired || !issolarPowerVent"></ion-input>
                 <p>PC</p>
               </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
               <ion-label
                 color="danger"
                 class="roofing-error"
                 *ngIf="
                   noRequired &&
                   issolarPowerVent &&
-                  form?.controls?.solarPowerVentRemove?.status !== 'VALID' &&
-                  form?.controls?.solarPowerVentRemove?.touched
+                  form?.controls?.solarPowerVentReplace?.status !== 'VALID' &&
+                  form?.controls?.solarPowerVentReplace?.touched
                 "
                 >Valid 0-999 value</ion-label
               >
               <h4 class="roofing-error ion-no-padding">
-                <ion-label color="danger" *ngIf="solarPowerVentRemove > solarPowerVent"
-                  >To remove lower than existing</ion-label
+                <ion-label
+                  color="danger"
+                  *ngIf="solarPowerVentReplace > solarPowerVent"
+                  >To replace lower than existing</ion-label
                 >
               </h4>
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{ (solarPowerVent || 0) - (solarPowerVentRemove || 0) }} PC</ion-label
-                >
-              </ion-item>
-            </ion-col>
-          </ion-row>
+
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To add </ion-label>
@@ -3362,8 +3372,7 @@
                   maxlength="3"
                   min="0"
                   placeholder="00"
-                  [disabled]="!noRequired || !issolarPowerVent">
-                </ion-input>
+                  [disabled]="!noRequired || !issolarPowerVent"></ion-input>
                 <p>PC</p>
               </ion-item>
               <ion-label
@@ -3379,6 +3388,114 @@
               >
             </ion-col>
           </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To remove </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="solarPowerVentRemove"
+                  [(ngModel)]="solarPowerVentRemove"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !issolarPowerVent"></ion-input>
+                <p>PC</p>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  issolarPowerVent &&
+                  form?.controls?.solarPowerVentRemove?.status !== 'VALID' &&
+                  form?.controls?.solarPowerVentRemove?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="solarPowerVentRemove > solarPowerVent"
+                  >To remove lower than existing</ion-label
+                >
+              </h4>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To relocate </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="light" lines="none">
+                <ion-input
+                  name="solarPowerVentRelocate"
+                  [(ngModel)]="solarPowerVentRelocate"
+                  class="ion-text-left ion-no-padding"
+                  type="number"
+                  pattern="^[1-9][0-9]{1,2}$|^\d$"
+                  validator=""
+                  maxlength="3"
+                  min="0"
+                  placeholder="00"
+                  [disabled]="!noRequired || !issolarPowerVent"></ion-input>
+                <p>PC</p>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="4"></ion-col>
+            <ion-col size-xs="4">
+              <ion-label
+                color="danger"
+                class="roofing-error"
+                *ngIf="
+                  noRequired &&
+                  issolarPowerVent &&
+                  form?.controls?.solarPowerVentRelocate?.status !== 'VALID' &&
+                  form?.controls?.solarPowerVentRelocate?.touched
+                "
+                >Valid 0-999 value</ion-label
+              >
+              <h4 class="roofing-error ion-no-padding">
+                <ion-label
+                  color="danger"
+                  *ngIf="solarPowerVentRelocate > solarPowerVent"
+                  >To relocate lower than existing</ion-label
+                >
+              </h4>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="4" style="align-content: center">
+              <ion-label color="gray"> To reuse </ion-label>
+            </ion-col>
+            <ion-col size-xs="4">
+              <ion-item color="white" lines="none">
+                <ion-label color="gray"
+                  >{{
+                    ((solarPowerVent || 0) - (solarPowerVentRemove || 0) - 
+                    (solarPowerVentRelocate || 0) - (solarPowerVentReplace)) || 0
+                  }}
+                  PC</ion-label
+                >
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          
         </div>
       </ion-accordion>
 

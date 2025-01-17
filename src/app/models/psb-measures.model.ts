@@ -72,8 +72,10 @@ export class PsbMeasures implements Sync {
   vent_metal_artict_cut_in_pc: number;
 
   vent_solar_power_vent_pc: number;
+  vent_solar_power_vent_pc_replace: number;
   vent_solar_power_vent_pc_add: number;
   vent_solar_power_vent_pc_remove: number;
+  vent_solar_power_vent_pc_relocate: number;
 
   vent_power_vent_pc: number;
   vent_power_vent_pc_replace: number;

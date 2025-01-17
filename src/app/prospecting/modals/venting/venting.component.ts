@@ -92,8 +92,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   powerVentAdd: number;
   powerVentRelocate: number;
   solarPowerVent: number;
+  solarPowerVentReplace: number;
   solarPowerVentRemove: number;
   solarPowerVentAdd: number;
+  solarPowerVentRelocate: number;
   soffitEvesIn: number;
   soffit_rakes_in: number;
   additionalSoffitEvesSf: number;
@@ -518,19 +520,24 @@ export class VentingComponent implements OnInit, OnDestroy {
       this.cutNewMetalArtticVents = this.building.psb_measure.vent_metal_artict_cut_in_pc;
 
       this.solarPowerVent = this.building.psb_measure.vent_solar_power_vent_pc;
+      this.solarPowerVentReplace = this.building.psb_measure.vent_solar_power_vent_pc_replace;
       this.solarPowerVentAdd = this.building.psb_measure.vent_solar_power_vent_pc_add;
-      this.solarPowerVentRemove =
-        this.building.psb_measure.vent_solar_power_vent_pc_remove;
+      this.solarPowerVentRemove = this.building.psb_measure.vent_solar_power_vent_pc_remove;
+      this.solarPowerVentRelocate = this.building.psb_measure.vent_solar_power_vent_pc_relocate;
 
       if (
         this.solarPowerVent != undefined ||
+        this.solarPowerVentReplace != undefined ||
         this.solarPowerVentAdd != undefined ||
-        this.solarPowerVentRemove != undefined
+        this.solarPowerVentRemove != undefined ||
+        this.solarPowerVentRelocate != undefined
       ) {
         if (
           this.solarPowerVent +
+            this.solarPowerVentReplace +
             this.solarPowerVentAdd +
-            this.solarPowerVentRemove !==
+            this.solarPowerVentRemove +
+            this.solarPowerVentRelocate !==
           0
         )
         this.issolarPowerVent = true;
@@ -655,8 +662,10 @@ export class VentingComponent implements OnInit, OnDestroy {
       vent_metal_artict_relocate: this.metalArtticVentsRelocate,
       vent_metal_artict_cut_in_pc: this.cutNewMetalArtticVents,
       vent_solar_power_vent_pc: this.solarPowerVent,
+      vent_solar_power_vent_pc_replace: this.solarPowerVentReplace,
       vent_solar_power_vent_pc_add: this.solarPowerVentAdd,
       vent_solar_power_vent_pc_remove: this.solarPowerVentRemove,
+      vent_solar_power_vent_pc_relocate: this.solarPowerVentRelocate,
       vent_power_vent_pc: this.powerVent,
       vent_power_vent_pc_replace: this.powerVentReplace,
       vent_power_vent_pc_add: this.powerVentAdd,
@@ -1049,8 +1058,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   solarPowerVentChange(e): void {
     e.stopPropagation();
     this.solarPowerVent = 0;
+    this.solarPowerVentReplace = 0;
     this.solarPowerVentRemove = 0;
     this.solarPowerVentAdd = 0;
+    this.solarPowerVentRelocate = 0;
     this.issolarPowerVent = !this.issolarPowerVent;
   }
 }
