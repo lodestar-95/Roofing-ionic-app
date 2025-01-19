@@ -1392,7 +1392,7 @@
                 >Valid 0-999 value</ion-label
               >
             </ion-col>
-          </ion-row> 
+          </ion-row>
         </div>
       </ion-accordion>
       <!-- Louvered vents without extensions -->
@@ -2129,26 +2129,19 @@
               issoffitVent416 &&
               ((form?.controls?.soffitVent416?.status !== 'VALID' &&
                 form?.controls?.soffitVent416?.touched) ||
-                (form?.controls?.soffitVent416Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent416Remove?.touched) ||
                 (form?.controls?.soffitVent416Add?.status !== 'VALID' &&
-                  form?.controls?.soffitVent416Add?.touched) ||
-                soffitVent416Remove > soffitVent416)
+                  form?.controls?.soffitVent416Add?.touched))
                 ? 'danger'
                 : soffitVent416 === undefined ||
-                  soffitVent416Remove === undefined ||
                   soffitVent416Add === undefined ||
                   soffitVent416 === null ||
-                  soffitVent416Remove === null ||
                   soffitVent416Add === null ||
                   !issoffitVent416
                 ? 'dark'
                 : 'success'
             "
-            >4" x 16" Soffit Vents ({{ soffitVent416 || 0 }} Existing,
-            {{ soffitVent416Remove || 0 }} to remove,
-            {{ (soffitVent416 || 0) - (soffitVent416Remove || 0) }} to keep,
-            {{ soffitVent416Add || 0 }} to add)</ion-label
+            >4" x 16" Soffit Vents  (
+              {{ soffitVent416Add || 0 }} to add)</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -2181,54 +2174,6 @@
                 "
                 >Valid 0-999 value</ion-label
               >
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="soffitVent416Remove"
-                  [(ngModel)]="soffitVent416Remove"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !issoffitVent416"></ion-input>
-                <p>PC</p>
-              </ion-item>
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  issoffitVent416 &&
-                  form?.controls?.soffitVent416Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent416Remove?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label color="danger" *ngIf="soffitVent416Remove > soffitVent416"
-                  >To remove lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{ (soffitVent416 || 0) - (soffitVent416Remove || 0) }} PC</ion-label
-                >
-              </ion-item>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -2289,25 +2234,18 @@
               issoffitVent616 &&
               ((form?.controls?.soffitVent616?.status !== 'VALID' &&
                 form?.controls?.soffitVent616?.touched) ||
-                (form?.controls?.soffitVent616Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent616Remove?.touched) ||
                 (form?.controls?.soffitVent616Add?.status !== 'VALID' &&
-                  form?.controls?.soffitVent616Add?.touched) ||
-                soffitVent616Remove > soffitVent616)
+                  form?.controls?.soffitVent616Add?.touched))
                 ? 'danger'
                 : soffitVent616 === undefined ||
-                  soffitVent616Remove === undefined ||
                   soffitVent616Add === undefined ||
                   soffitVent616 === null ||
-                  soffitVent616Remove === null ||
                   soffitVent616Add === null ||
                   !issoffitVent616
                 ? 'dark'
                 : 'success'
             "
-            >6" x 16" Soffit Vents ({{ soffitVent616 || 0 }} Existing,
-            {{ soffitVent616Remove || 0 }} to remove,
-            {{ (soffitVent616 || 0) - (soffitVent616Remove || 0) }} to keep,
+            >6" x 16" Soffit Vents (
             {{ soffitVent616Add || 0 }} to add)</ion-label
           >
         </ion-item>
@@ -2341,54 +2279,6 @@
                 "
                 >Valid 0-999 value</ion-label
               >
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="soffitVent616Remove"
-                  [(ngModel)]="soffitVent616Remove"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !issoffitVent616"></ion-input>
-                <p>PC</p>
-              </ion-item>
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  issoffitVent616 &&
-                  form?.controls?.soffitVent616Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent616Remove?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label color="danger" *ngIf="soffitVent616Remove > soffitVent616"
-                  >To remove lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{ (soffitVent616 || 0) - (soffitVent616Remove || 0) }} PC</ion-label
-                >
-              </ion-item>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -2449,25 +2339,18 @@
               issoffitVent2 &&
               ((form?.controls?.soffitVent2?.status !== 'VALID' &&
                 form?.controls?.soffitVent2?.touched) ||
-                (form?.controls?.soffitVent2Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent2Remove?.touched) ||
                 (form?.controls?.soffitVent2Add?.status !== 'VALID' &&
-                  form?.controls?.soffitVent2Add?.touched) ||
-                soffitVent2Remove > soffitVent2)
+                  form?.controls?.soffitVent2Add?.touched))
                 ? 'danger'
                 : soffitVent2 === undefined ||
-                  soffitVent2Remove === undefined ||
                   soffitVent2Add === undefined ||
                   soffitVent2 === null ||
-                  soffitVent2Remove === null ||
                   soffitVent2Add === null ||
                   !issoffitVent2
                 ? 'dark'
                 : 'success'
             "
-            >2" Soffit Vents ({{ soffitVent2 || 0 }} Existing,
-            {{ soffitVent2Remove || 0 }} to remove,
-            {{ (soffitVent2 || 0) - (soffitVent2Remove || 0) }} to keep,
+            >2" Soffit Vents (
             {{ soffitVent2Add || 0 }} to add)</ion-label
           >
         </ion-item>
@@ -2501,54 +2384,6 @@
                 "
                 >Valid 0-999 value</ion-label
               >
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="soffitVent2Remove"
-                  [(ngModel)]="soffitVent2Remove"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !issoffitVent2"></ion-input>
-                <p>PC</p>
-              </ion-item>
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  issoffitVent2 &&
-                  form?.controls?.soffitVent2Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent2Remove?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label color="danger" *ngIf="soffitVent2Remove > soffitVent2"
-                  >To remove lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{ (soffitVent2 || 0) - (soffitVent2Remove || 0) }} PC</ion-label
-                >
-              </ion-item>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -2609,25 +2444,18 @@
               issoffitVent3 &&
               ((form?.controls?.soffitVent3?.status !== 'VALID' &&
                 form?.controls?.soffitVent3?.touched) ||
-                (form?.controls?.soffitVent3Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent3Remove?.touched) ||
                 (form?.controls?.soffitVent3Add?.status !== 'VALID' &&
-                  form?.controls?.soffitVent3Add?.touched) ||
-                soffitVent3Remove > soffitVent3)
+                  form?.controls?.soffitVent3Add?.touched))
                 ? 'danger'
                 : soffitVent3 === undefined ||
-                  soffitVent3Remove === undefined ||
                   soffitVent3Add === undefined ||
                   soffitVent3 === null ||
-                  soffitVent3Remove === null ||
                   soffitVent3Add === null ||
                   !issoffitVent3
                 ? 'dark'
                 : 'success'
             "
-            >3" Soffit Vents ({{ soffitVent3 || 0 }} Existing,
-            {{ soffitVent3Remove || 0 }} to remove,
-            {{ (soffitVent3 || 0) - (soffitVent3Remove || 0) }} to keep,
+            >3" Soffit Vents (
             {{ soffitVent3Add || 0 }} to add)</ion-label
           >
         </ion-item>
@@ -2661,54 +2489,6 @@
                 "
                 >Valid 0-999 value</ion-label
               >
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="soffitVent3Remove"
-                  [(ngModel)]="soffitVent3Remove"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !issoffitVent3"></ion-input>
-                <p>PC</p>
-              </ion-item>
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  issoffitVent3 &&
-                  form?.controls?.soffitVent3Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent3Remove?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label color="danger" *ngIf="soffitVent3Remove > soffitVent3"
-                  >To remove lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{ (soffitVent3 || 0) - (soffitVent3Remove || 0) }} PC</ion-label
-                >
-              </ion-item>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -2769,25 +2549,18 @@
               issoffitVent4 &&
               ((form?.controls?.soffitVent4?.status !== 'VALID' &&
                 form?.controls?.soffitVent4?.touched) ||
-                (form?.controls?.soffitVent4Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent4Remove?.touched) ||
                 (form?.controls?.soffitVent4Add?.status !== 'VALID' &&
-                  form?.controls?.soffitVent4Add?.touched) ||
-                soffitVent4Remove > soffitVent4)
+                  form?.controls?.soffitVent4Add?.touched))
                 ? 'danger'
                 : soffitVent4 === undefined ||
-                  soffitVent4Remove === undefined ||
                   soffitVent4Add === undefined ||
                   soffitVent4 === null ||
-                  soffitVent4Remove === null ||
                   soffitVent4Add === null ||
                   !issoffitVent4
                 ? 'dark'
                 : 'success'
             "
-            >4" Soffit Vents ({{ soffitVent4 || 0 }} Existing,
-            {{ soffitVent4Remove || 0 }} to remove,
-            {{ (soffitVent4 || 0) - (soffitVent4Remove || 0) }} to keep,
+            >4" Soffit Vents (
             {{ soffitVent4Add || 0 }} to add)</ion-label
           >
         </ion-item>
@@ -2825,54 +2598,6 @@
           </ion-row>
           <ion-row>
             <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To remove </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="light" lines="none">
-                <ion-input
-                  name="soffitVent4Remove"
-                  [(ngModel)]="soffitVent4Remove"
-                  class="ion-text-left ion-no-padding"
-                  type="number"
-                  pattern="^[1-9][0-9]{1,2}$|^\d$"
-                  maxlength="3"
-                  min="0"
-                  placeholder="00"
-                  [disabled]="!noRequired || !issoffitVent4"></ion-input>
-                <p>PC</p>
-              </ion-item>
-              <ion-label
-                color="danger"
-                class="roofing-error"
-                *ngIf="
-                  noRequired &&
-                  issoffitVent4 &&
-                  form?.controls?.soffitVent4Remove?.status !== 'VALID' &&
-                  form?.controls?.soffitVent4Remove?.touched
-                "
-                >Valid 0-999 value</ion-label
-              >
-              <h4 class="roofing-error ion-no-padding">
-                <ion-label color="danger" *ngIf="soffitVent4Remove > soffitVent4"
-                  >To remove lower than existing</ion-label
-                >
-              </h4>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
-              <ion-label color="gray"> To keep </ion-label>
-            </ion-col>
-            <ion-col size-xs="4">
-              <ion-item color="white" lines="none">
-                <ion-label color="gray"
-                  >{{ (soffitVent4 || 0) - (soffitVent4Remove || 0) }} PC</ion-label
-                >
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-xs="4" style="align-content: center">
               <ion-label color="gray"> To add </ion-label>
             </ion-col>
             <ion-col size-xs="4">
@@ -2904,6 +2629,22 @@
           </ion-row>
         </div>
       </ion-accordion>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating" id="soffit-vents-notes-label">
+              Soffit Vents Notes:
+            </ion-label>
+            <ion-textarea
+              name="soffitVentsNotes"
+              [(ngModel)]="soffitVentsNotes"
+              clearInput
+              formControlName="soffitVentsNotes"
+              placeholder="Input Soffit Vents Notes"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
       <ion-item lines="none" class="ion-no-padding padding-left">
         <ion-label class="roofing-title">Other ventilation</ion-label>
       </ion-item>
@@ -3531,11 +3272,6 @@
             louveredVent4WithoutExtensionsRemove > louveredVent4WithoutExtensions ||
             louveredVent6WithExtensionsRemove > louveredVent6WithExtensions ||
             louveredVent6WithoutExtensionsRemove > louveredVent6WithoutExtensions ||
-            soffitVent416Remove > soffitVent416 ||
-            soffitVent616Remove > soffitVent616 ||
-            soffitVent2Remove > soffitVent2 ||
-            soffitVent3Remove > soffitVent3 ||
-            soffitVent4Remove > soffitVent4 ||
             powerVentRemove > powerVent ||
             solarPowerVentRemove > solarPowerVent
           ">
