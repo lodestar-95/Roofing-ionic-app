@@ -930,6 +930,7 @@ export class VentingComponent implements OnInit, OnDestroy {
   }
   toBeReplacedChange(): void {
     this.ridgeVent = 0;
+    this.isRidgeVentAddNew = false;
     this.toBeReplace = !this.toBeReplace;
     if (this.isRidgeVent) {
       this.ridgeVent = this.building.psb_measure.ridge_lf;

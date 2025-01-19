@@ -2017,32 +2017,7 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <ion-row>
-            <ion-col size-xs="6">
-              <ion-item
-                color="light"
-                lines="none"
-                class="cursor-pointer"
-                (click)="inPlaceChange()"
-                [disabled]="
-                  (!noRequired ||
-                    this.building.psb_measure.ridge_lf === 0 ||
-                    this.building.psb_measure.ridge_lf === null ||
-                    this.building.psb_measure.ridge_lf === undefined) ||
-                  !isRidgeVent
-                ">
-                <ion-icon
-                  name="square-outline"
-                  *ngIf="!isinplace"
-                  class="ion-padding icon"></ion-icon>
-                <ion-icon
-                  name="checkbox"
-                  *ngIf="isinplace"
-                  class="ion-padding icon"
-                  color="success"></ion-icon>
-                <ion-label class="Certain-Teed">In place </ion-label>
-              </ion-item>
-            </ion-col>
-            <ion-col size-xs="6" class="ion-padding-start" *ngIf="isinplace">
+            <ion-col size-xs="6" class="ion-padding-start">
               <ion-item
                 color="light"
                 lines="none"
@@ -2067,7 +2042,7 @@
                 <ion-label>To be replaced </ion-label>
               </ion-item>
             </ion-col>
-            <ion-col size-xs="6" *ngIf="!isinplace">
+            <ion-col size-xs="6">
               <ion-item
                 color="light"
                 lines="none"
