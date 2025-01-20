@@ -246,7 +246,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.vent_metal_artict_remove ? true : false
       },
       {
-        description: 'Metal Attic Vents to keep',
+        description: 'Metal Attic Vents to reuse',
         value: `${this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove} PC`,
         visible: this.building.psb_measure.vent_metal_artict - this.building.psb_measure.vent_metal_artict_remove > 0? true : false
       },
@@ -268,7 +268,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.vent_j_vent_4_remove ? true : false
       },
       {
-        description: 'J Vent 4” to keep',
+        description: 'J Vent 4” to reuse',
         value: `${this.building.psb_measure.vent_j_vent_4_pc - this.building.psb_measure.vent_j_vent_4_remove} PC`,
         visible: this.building.psb_measure.vent_j_vent_4_pc - this.building.psb_measure.vent_j_vent_4_remove? true : false
       },
@@ -288,7 +288,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.vent_j_vent_6_remove ? true : false
       },
       {
-        description: 'J Vent 6” to keep',
+        description: 'J Vent 6” to reuse',
         value: `${this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_remove} PC`,
         visible: this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_remove? true : false
       },
@@ -310,7 +310,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove  ? true : false
       },
       {
-        description: '4" LV with extensions to keep',
+        description: '4" LV with extensions to reuse',
         value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove} PC`,
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove? true : false
       },
@@ -333,7 +333,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent6WithExtensions_remove  ? true : false
       },
       {
-        description: '6" LV with extensions to keep',
+        description: '6" LV with extensions to reuse',
         value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent6WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent6WithExtensions_remove} PC`,
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent6WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent6WithExtensions_remove? true : false
       },
@@ -354,7 +354,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove ? true : false
       },
       {
-        description: '4" LV without to keep',
+        description: '4" LV without to reuse',
         value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove} PC`,
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove? true : false
       },
@@ -375,7 +375,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove ? true : false
       },
       {
-        description: '6" LV without to keep',
+        description: '6" LV without to reuse',
         value: `${this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove} PC`,
         visible: this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents.vent_louveredVent4WithExtensions_remove? true : false
       },
@@ -469,7 +469,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.vent_solar_power_vent_pc_remove ? true : false
       },
       {
-        description: 'Solar power vent to keep',
+        description: 'Solar power vent to reuse',
         value: `${this.building.psb_measure.vent_solar_power_vent_pc - this.building.psb_measure.vent_solar_power_vent_pc_remove} PC`,
         visible: this.building.psb_measure.vent_solar_power_vent_pc - this.building.psb_measure.vent_solar_power_vent_pc_remove? true : false
       },
@@ -489,7 +489,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.vent_power_vent_pc_remove ? true : false
       },
       {
-        description: 'Power vent to keep',
+        description: 'Power vent to reuse',
         value: `${this.building.psb_measure.vent_power_vent_pc - this.building.psb_measure.vent_power_vent_pc_remove} PC`,
         visible: this.building.psb_measure.vent_power_vent_pc -this.building.psb_measure.vent_power_vent_pc_remove ? true : false
       },
