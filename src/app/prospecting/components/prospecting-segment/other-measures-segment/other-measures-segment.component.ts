@@ -407,17 +407,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         value: `${this.building.psb_measure.psb_soffitvents.soffitVent416} PC`,
         visible: this.building.psb_measure.psb_soffitvents.soffitVent416 ? true : false
       },
-      {
-        description: '4" x 16" SV to remove and cover',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent416Remove} PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent416Remove ? true : false
-      },
-
-      {
-        description: '4" x 16" SV to keep',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent416 - this.building.psb_measure.psb_soffitvents.soffitVent416Remove} PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent416 -this.building.psb_measure.psb_soffitvents.soffitVent416Remove ? true : false
-      },
+      
       {
         description: '4" x 16" SV to add',
         value: `${this.building.psb_measure.psb_soffitvents.soffitVent416Add} PC`,
@@ -427,17 +417,6 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         description: 'Existing 6" x 16" SV',
         value: `${this.building.psb_measure.psb_soffitvents.soffitVent616} PC`,
         visible: this.building.psb_measure.psb_soffitvents.soffitVent616 ? true : false
-      },
-      {
-        description: '6" x 16" SV to remove and cover',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent616Remove} PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent616Remove ? true : false
-      },
-
-      {
-        description: '6" x 16" SV to keep',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent616 - this.building.psb_measure.psb_soffitvents.soffitVent616Remove} PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent616 -this.building.psb_measure.psb_soffitvents.soffitVent616Remove ? true : false
       },
       {
         description: '6" x 16" SV to add',
@@ -450,16 +429,6 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.psb_soffitvents.soffitVent2 ? true : false
       },
       {
-        description: '2" SV to remove and cover',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent2Remove} PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent2Remove ? true : false
-      },
-      {
-        description: '2" SV to keep',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent2 - this.building.psb_measure.psb_soffitvents.soffitVent2Remove } PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent2 - this.building.psb_measure.psb_soffitvents.soffitVent2Remove ? true : false
-      },
-      {
         description: '2" SV to add',
         value: `${this.building.psb_measure.psb_soffitvents.soffitVent2Add} PC`,
         visible: this.building.psb_measure.psb_soffitvents.soffitVent2Add ? true : false
@@ -468,16 +437,6 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         description: 'Existing 3" SV',
         value: `${this.building.psb_measure.psb_soffitvents.soffitVent3} PC`,
         visible: this.building.psb_measure.psb_soffitvents.soffitVent3 ? true : false
-      },
-      {
-        description: '3" SV to remove and cover',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent3Remove} PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent3Remove ? true : false
-      },
-      {
-        description: '3" SV to keep',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent3 - this.building.psb_measure.psb_soffitvents.soffitVent3Remove } PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent3 - this.building.psb_measure.psb_soffitvents.soffitVent3Remove ? true : false
       },
       {
         description: '3" SV to add',
@@ -490,19 +449,14 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.psb_soffitvents.soffitVent4 ? true : false
       },
       {
-        description: '4" SV to remove and cover',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent4Remove} PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent4Remove ? true : false
-      },
-      {
-        description: '4" SV to keep',
-        value: `${this.building.psb_measure.psb_soffitvents.soffitVent4 - this.building.psb_measure.psb_soffitvents.soffitVent4Remove } PC`,
-        visible: this.building.psb_measure.psb_soffitvents.soffitVent4 - this.building.psb_measure.psb_soffitvents.soffitVent4Remove ? true : false
-      },
-      {
         description: '4" SV to add',
         value: `${this.building.psb_measure.psb_soffitvents.soffitVent4Add} PC`,
         visible: this.building.psb_measure.psb_soffitvents.soffitVent4Add ? true : false
+      },
+      {
+        description: 'SV notes',
+        value: `${this.building.psb_measure.psb_soffitvents.soffitVentsNotes} PC`,
+        visible: this.building.psb_measure.psb_soffitvents.soffitVentsNotes ? true : false
       },
       {
         description: 'Existing solar power vent',

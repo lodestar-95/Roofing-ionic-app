@@ -45,6 +45,8 @@ export class UpgradesSegmentComponent implements OnInit, OnDestroy {
   storeSubs: Subscription;
   buildingVerified = false;
   withoutRidge: boolean;
+  isCheckedToBeReplaced: boolean;
+  isCheckedAddNew: boolean;
 
   constructor(
     private catalogsService: CatalogsService,
@@ -73,6 +75,9 @@ export class UpgradesSegmentComponent implements OnInit, OnDestroy {
       this.upgradesActive = this.projectService.findResourceId(11);
       this.getVentilationList();
       this.validateRolePermission();
+    
+      this.isCheckedToBeReplaced = this.buildings[0].psb_measure.vent_is_ridgevent_be_replace;
+      this.isCheckedAddNew = this.buildings[0].psb_measure.vent_is_ridgevent_add;
     });
   }
 
@@ -106,9 +111,17 @@ export class UpgradesSegmentComponent implements OnInit, OnDestroy {
       const upgrade = this.findCostIntegrationId(2);
       if (this.building.psb_measure.psb_upgrades && upgrade) {
         this.costIntegrationsRidgeVent.map((x) => {
-          if (x.id == upgrade.id_cost_integration) {
+          if(this.isCheckedToBeReplaced){     
+            this.withoutRidge = true;
+          }
+          if(this.isCheckedAddNew && x.id == 1){
             x.isChecked = true;
-            this.costIntegrationRidgeV = x;
+          }
+          if(this.isCheckedAddNew && x.id != 1){
+            x.isChecked = false;
+          }
+          if(!this.isCheckedAddNew && !this.isCheckedToBeReplaced){
+            x.isChecked = false;
           }
         });
       }

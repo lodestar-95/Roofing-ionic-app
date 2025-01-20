@@ -64,20 +64,17 @@ export class VentingComponent implements OnInit, OnDestroy {
 
   //psb_siffutvents
   soffitVent416: number;
-  soffitVent416Remove: number;
   soffitVent416Add: number;
   soffitVent616: number;
-  soffitVent616Remove: number;
   soffitVent616Add: number;
   soffitVent2: number;
-  soffitVent2Remove: number;
   soffitVent2Add: number;
   soffitVent3: number;
-  soffitVent3Remove: number;
   soffitVent3Add: number;
   soffitVent4: number;
-  soffitVent4Remove: number;
   soffitVent4Add: number;
+
+  soffitVentsNotes: string;
 
   metalArtticVents: number;
   metalArtticVentsReplace: number;
@@ -92,8 +89,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   powerVentAdd: number;
   powerVentRelocate: number;
   solarPowerVent: number;
+  solarPowerVentReplace: number;
   solarPowerVentRemove: number;
   solarPowerVentAdd: number;
+  solarPowerVentRelocate: number;
   soffitEvesIn: number;
   soffit_rakes_in: number;
   additionalSoffitEvesSf: number;
@@ -333,18 +332,14 @@ export class VentingComponent implements OnInit, OnDestroy {
 
       this.soffitVent2 = this.building.psb_measure.psb_soffitvents.soffitVent2;
       this.soffitVent2Add = this.building.psb_measure.psb_soffitvents.soffitVent2Add;
-      this.soffitVent2Remove =
-        this.building.psb_measure.psb_soffitvents.soffitVent2Remove;
 
       if (
         this.soffitVent2 != undefined ||
-        this.soffitVent2Add != undefined ||
-        this.soffitVent2Remove != undefined
+        this.soffitVent2Add != undefined
       ) {
         if (
           this.soffitVent2 +
-            this.soffitVent2Add +
-            this.soffitVent2Remove !==
+            this.soffitVent2Add !==
           0
         )
         this.issoffitVent2 = true;
@@ -352,18 +347,14 @@ export class VentingComponent implements OnInit, OnDestroy {
 
       this.soffitVent3 = this.building.psb_measure.psb_soffitvents.soffitVent3;
       this.soffitVent3Add = this.building.psb_measure.psb_soffitvents.soffitVent3Add;
-      this.soffitVent3Remove =
-        this.building.psb_measure.psb_soffitvents.soffitVent3Remove;
 
       if (
         this.soffitVent3 != undefined ||
-        this.soffitVent3Add != undefined ||
-        this.soffitVent3Remove != undefined
+        this.soffitVent3Add != undefined
       ) {
         if (
           this.soffitVent3 +
-            this.soffitVent3Add +
-            this.soffitVent3Remove !==
+            this.soffitVent3Add !==
           0
         )
         this.issoffitVent3 = true;
@@ -371,18 +362,14 @@ export class VentingComponent implements OnInit, OnDestroy {
 
       this.soffitVent4 = this.building.psb_measure.psb_soffitvents.soffitVent4;
       this.soffitVent4Add = this.building.psb_measure.psb_soffitvents.soffitVent4Add;
-      this.soffitVent4Remove =
-        this.building.psb_measure.psb_soffitvents.soffitVent4Remove;
 
       if (
         this.soffitVent4 != undefined ||
-        this.soffitVent4Add != undefined ||
-        this.soffitVent4Remove != undefined
+        this.soffitVent4Add != undefined
       ) {
         if (
           this.soffitVent4 +
-            this.soffitVent4Add +
-            this.soffitVent4Remove !==
+            this.soffitVent4Add !==
           0
         )
         this.issoffitVent4 = true;
@@ -390,18 +377,14 @@ export class VentingComponent implements OnInit, OnDestroy {
 
       this.soffitVent416 = this.building.psb_measure.psb_soffitvents.soffitVent416;
       this.soffitVent416Add = this.building.psb_measure.psb_soffitvents.soffitVent416Add;
-      this.soffitVent416Remove =
-        this.building.psb_measure.psb_soffitvents.soffitVent416Remove;
 
       if (
         this.soffitVent416 != undefined ||
-        this.soffitVent416Add != undefined ||
-        this.soffitVent416Remove != undefined
+        this.soffitVent416Add != undefined
       ) {
         if (
           this.soffitVent416 +
-            this.soffitVent416Add +
-            this.soffitVent416Remove !==
+            this.soffitVent416Add !==
           0
         )
         this.issoffitVent416 = true;
@@ -409,17 +392,14 @@ export class VentingComponent implements OnInit, OnDestroy {
 
       this.soffitVent616 = this.building.psb_measure.psb_soffitvents.soffitVent616;
       this.soffitVent616Add = this.building.psb_measure.psb_soffitvents.soffitVent616Add;
-      this.soffitVent616Remove = this.building.psb_measure.psb_soffitvents.soffitVent616Remove;
 
       if (
         this.soffitVent616 != undefined ||
-        this.soffitVent616Add != undefined ||
-        this.soffitVent616Remove != undefined
+        this.soffitVent616Add != undefined
       ) {
         if (
           this.soffitVent616 +
-            this.soffitVent616Add +
-            this.soffitVent616Remove !==
+            this.soffitVent616Add !==
           0
         )
         this.issoffitVent616 = true;
@@ -518,19 +498,24 @@ export class VentingComponent implements OnInit, OnDestroy {
       this.cutNewMetalArtticVents = this.building.psb_measure.vent_metal_artict_cut_in_pc;
 
       this.solarPowerVent = this.building.psb_measure.vent_solar_power_vent_pc;
+      this.solarPowerVentReplace = this.building.psb_measure.vent_solar_power_vent_pc_replace;
       this.solarPowerVentAdd = this.building.psb_measure.vent_solar_power_vent_pc_add;
-      this.solarPowerVentRemove =
-        this.building.psb_measure.vent_solar_power_vent_pc_remove;
+      this.solarPowerVentRemove = this.building.psb_measure.vent_solar_power_vent_pc_remove;
+      this.solarPowerVentRelocate = this.building.psb_measure.vent_solar_power_vent_pc_relocate;
 
       if (
         this.solarPowerVent != undefined ||
+        this.solarPowerVentReplace != undefined ||
         this.solarPowerVentAdd != undefined ||
-        this.solarPowerVentRemove != undefined
+        this.solarPowerVentRemove != undefined ||
+        this.solarPowerVentRelocate != undefined
       ) {
         if (
           this.solarPowerVent +
+            this.solarPowerVentReplace +
             this.solarPowerVentAdd +
-            this.solarPowerVentRemove !==
+            this.solarPowerVentRemove +
+            this.solarPowerVentRelocate !==
           0
         )
         this.issolarPowerVent = true;
@@ -655,8 +640,10 @@ export class VentingComponent implements OnInit, OnDestroy {
       vent_metal_artict_relocate: this.metalArtticVentsRelocate,
       vent_metal_artict_cut_in_pc: this.cutNewMetalArtticVents,
       vent_solar_power_vent_pc: this.solarPowerVent,
+      vent_solar_power_vent_pc_replace: this.solarPowerVentReplace,
       vent_solar_power_vent_pc_add: this.solarPowerVentAdd,
       vent_solar_power_vent_pc_remove: this.solarPowerVentRemove,
+      vent_solar_power_vent_pc_relocate: this.solarPowerVentRelocate,
       vent_power_vent_pc: this.powerVent,
       vent_power_vent_pc_replace: this.powerVentReplace,
       vent_power_vent_pc_add: this.powerVentAdd,
@@ -674,20 +661,16 @@ export class VentingComponent implements OnInit, OnDestroy {
         id_psb_measure: this.building.psb_measure.id,
         id: uuidv4(),
         soffitVent416: this.soffitVent416,
-        soffitVent416Remove: this.soffitVent416Remove,
         soffitVent416Add: this.soffitVent416Add,
         soffitVent616: this.soffitVent616,
-        soffitVent616Remove: this.soffitVent616Remove,
         soffitVent616Add: this.soffitVent616Add,
         soffitVent2: this.soffitVent2,
-        soffitVent2Remove: this.soffitVent2Remove,
         soffitVent2Add: this.soffitVent2Add,
         soffitVent3: this.soffitVent3,
-        soffitVent3Remove: this.soffitVent3Remove,
         soffitVent3Add: this.soffitVent3Add,
         soffitVent4: this.soffitVent4,
-        soffitVent4Remove: this.soffitVent4Remove,
-        soffitVent4Add: this.soffitVent4Add
+        soffitVent4Add: this.soffitVent4Add,
+        soffitVentsNotes: this.soffitVentsNotes
       },
       psb_louvrevents: {
         id_psb_measure: this.building.psb_measure.id,
@@ -921,6 +904,7 @@ export class VentingComponent implements OnInit, OnDestroy {
   }
   toBeReplacedChange(): void {
     this.ridgeVent = 0;
+    this.isRidgeVentAddNew = false;
     this.toBeReplace = !this.toBeReplace;
     if (this.isRidgeVent) {
       this.ridgeVent = this.building.psb_measure.ridge_lf;
@@ -1005,35 +989,30 @@ export class VentingComponent implements OnInit, OnDestroy {
   soffitVent416Change(e): void {
     e.stopPropagation();
     this.soffitVent416 = 0;
-    this.soffitVent416Remove = 0;
     this.soffitVent416Add = 0;
     this.issoffitVent416 = !this.issoffitVent416;
   }
   soffitVent616Change(e): void {
     e.stopPropagation();
     this.soffitVent616 = 0;
-    this.soffitVent616Remove = 0;
     this.soffitVent616Add = 0;
     this.issoffitVent616 = !this.issoffitVent616;
   }
   soffitVent2Change(e): void {
     e.stopPropagation();
     this.soffitVent2 = 0;
-    this.soffitVent2Remove = 0;
     this.soffitVent2Add = 0;
     this.issoffitVent2 = !this.issoffitVent2;
   }
   soffitVent3Change(e): void {
     e.stopPropagation();
     this.soffitVent3 = 0;
-    this.soffitVent3Remove = 0;
     this.soffitVent3Add = 0;
     this.issoffitVent3 = !this.issoffitVent3;
   }
   soffitVent4Change(e): void {
     e.stopPropagation();
     this.soffitVent4 = 0;
-    this.soffitVent4Remove = 0;
     this.soffitVent4Add = 0;
     this.issoffitVent4 = !this.issoffitVent4;
   }
@@ -1049,8 +1028,10 @@ export class VentingComponent implements OnInit, OnDestroy {
   solarPowerVentChange(e): void {
     e.stopPropagation();
     this.solarPowerVent = 0;
+    this.solarPowerVentReplace = 0;
     this.solarPowerVentRemove = 0;
     this.solarPowerVentAdd = 0;
+    this.solarPowerVentRelocate = 0;
     this.issolarPowerVent = !this.issolarPowerVent;
   }
 }
