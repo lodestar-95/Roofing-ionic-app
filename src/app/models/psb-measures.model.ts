@@ -113,8 +113,8 @@ export class PsbMeasures implements Sync {
   isAllSegmentsVerified?: boolean;
   psb_selected_materials: PsbSelectedMaterial[];
   psb_material_calculations: PsbMaterialCalculation[];
-  psb_louvrevents: PsbLouveredVent
-  psb_soffitvents: PsbSoffitVent
+  psb_louvrevents: PsbLouveredVent;
+  psb_soffitvents: PsbSoffitVent;
 
   constructor() {
     this.id = null;
