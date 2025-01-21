@@ -65,10 +65,11 @@
                 "
             >Metal Attic vents ({{ metalArtticVents || 0 }} Existing,
             {{ metalArtticVentsReplace || 0 }} to replace,
-            {{ metalArtticVentsRelocate || 0 }} to relocate,
+            {{ metalArtticVentsAdd || 0 }} to add,
             {{ metalArtticVentsRemove || 0 }} to remove,
-            {{ (metalArtticVents || 0) - (metalArtticVentsReplace || 0) - (metalArtticVentsRelocate || 0) - (metalArtticVentsRemove || 0)}} to reuse,
-            {{ metalArtticVentsAdd || 0 }} to add)</ion-label
+            {{ metalArtticVentsRelocate || 0 }} to relocate,
+            {{ (metalArtticVents || 0) - (metalArtticVentsReplace || 0) - (metalArtticVentsRelocate || 0) - (metalArtticVentsRemove || 0)}} to reuse
+            )</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -343,10 +344,11 @@
             "
             >4" J vents ({{ vent4 || 0 }} Existing,
             {{ vent4Replace || 0 }} to replace,
-            {{ vent4Relocate || 0 }} to relocate,
+            {{ vent4Add || 0 }} to add,
             {{ vent4Remove || 0 }} to remove,
-            {{ (vent4 || 0) - (vent4Replace || 0) - (vent4Relocate || 0) - (vent4Remove || 0)}} to reuse,
-            {{ vent4Add || 0 }} to add)</ion-label
+            {{ vent4Relocate || 0 }} to relocate,
+            {{ (vent4 || 0) - (vent4Replace || 0) - (vent4Relocate || 0) - (vent4Remove || 0)}} to reuse
+            )</ion-label
           >
 
         </ion-item>
@@ -622,10 +624,11 @@
               "
               >6" J vents ({{ vent6 || 0 }} Existing,
               {{ vent6Replace || 0 }} to replace,
-              {{ vent6Relocate || 0 }} to relocate,
+              {{ vent6Add || 0 }} to add,
               {{ vent6Remove || 0 }} to remove,
-              {{ (vent6 || 0) - (vent6Replace || 0) - (vent6Relocate || 0) - (vent6Remove || 0)}} to reuse,
-              {{ vent6Add || 0 }} to add)</ion-label
+              {{ vent6Relocate || 0 }} to relocate,
+              {{ (vent6 || 0) - (vent6Replace || 0) - (vent6Relocate || 0) - (vent6Remove || 0)}} to reuse
+              )</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -905,11 +908,12 @@
               " 
           >4" Louvered vents with extensions ({{ louveredVent4WithExtensions || 0 }} Existing,
           {{ louveredVent4WithExtensionsReplace || 0 }} to replace,
-          {{ louveredVent4WithExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent4WithExtensionsAdd || 0 }} to add,
           {{ louveredVent4WithExtensionsRemove || 0 }} to remove,
+          {{ louveredVent4WithExtensionsRelocate || 0 }} to relocate,
           {{ (louveredVent4WithExtensions || 0) - (louveredVent4WithExtensionsReplace || 0) - 
-            (louveredVent4WithExtensionsRelocate || 0) - (louveredVent4WithExtensionsRemove || 0)}} to reuse,
-          {{ louveredVent4WithExtensionsAdd || 0 }} to add)</ion-label
+            (louveredVent4WithExtensionsRelocate || 0) - (louveredVent4WithExtensionsRemove || 0)}} to reuse
+          )</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -1187,11 +1191,12 @@
             " 
           >6" Louvered vents with extensions ({{ louveredVent6WithExtensions || 0 }} Existing,
           {{ louveredVent6WithExtensionsReplace || 0 }} to replace,
-          {{ louveredVent6WithExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent6WithExtensionsAdd || 0 }} to add,
           {{ louveredVent6WithExtensionsRemove || 0 }} to remove,
+          {{ louveredVent6WithExtensionsRelocate || 0 }} to relocate,
           {{ (louveredVent6WithExtensions || 0) - (louveredVent6WithExtensionsReplace || 0) - 
-            (louveredVent6WithExtensionsRelocate || 0) - (louveredVent6WithExtensionsRemove || 0)}} to reuse,
-          {{ louveredVent6WithExtensionsAdd || 0 }} to add)</ion-label
+            (louveredVent6WithExtensionsRelocate || 0) - (louveredVent6WithExtensionsRemove || 0)}} to reuse
+          )</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -1471,11 +1476,12 @@
               " 
           >4" Louvered vents without extensions ({{ louveredVent4WithoutExtensions || 0 }} Existing,
           {{ louveredVent4WithoutExtensionsReplace || 0 }} to replace,
-          {{ louveredVent4WithoutExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent4WithoutExtensionsAdd || 0 }} to add,
           {{ louveredVent4WithoutExtensionsRemove || 0 }} to remove,
+          {{ louveredVent4WithoutExtensionsRelocate || 0 }} to relocate,
           {{ (louveredVent4WithoutExtensions || 0) - (louveredVent4WithoutExtensionsReplace || 0) - 
-            (louveredVent4WithoutExtensionsRelocate || 0) - (louveredVent4WithoutExtensionsRemove || 0)}} to reuse,
-          {{ louveredVent4WithoutExtensionsAdd || 0 }} to add)</ion-label
+            (louveredVent4WithoutExtensionsRelocate || 0) - (louveredVent4WithoutExtensionsRemove || 0)}} to reuse
+          )</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -1754,11 +1760,12 @@
               " 
           >6" Louvered vents without extensions ({{ louveredVent6WithoutExtensions || 0 }} Existing,
           {{ louveredVent6WithoutExtensionsReplace || 0 }} to replace,
-          {{ louveredVent6WithoutExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent6WithoutExtensionsAdd || 0 }} to add,
           {{ louveredVent6WithoutExtensionsRemove || 0 }} to remove,
+          {{ louveredVent6WithoutExtensionsRelocate || 0 }} to relocate,
           {{ (louveredVent6WithoutExtensions || 0) - (louveredVent6WithoutExtensionsReplace || 0) - 
-            (louveredVent6WithoutExtensionsRelocate || 0) - (louveredVent6WithoutExtensionsRemove || 0)}} to reuse,
-          {{ louveredVent6WithoutExtensionsAdd || 0 }} to add)</ion-label
+            (louveredVent6WithoutExtensionsRelocate || 0) - (louveredVent6WithoutExtensionsRemove || 0)}} to reuse
+          )</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -2726,10 +2733,11 @@
               "
               >Power Vents ({{ powerVent || 0 }} Existing,
               {{ powerVentReplace || 0 }} to replace,
-              {{ powerVentRelocate || 0 }} to relocate,
+              {{ powerVentAdd || 0 }} to add,
               {{ powerVentRemove || 0 }} to remove,
-              {{ (powerVent || 0) - (powerVentReplace || 0) - (powerVentRelocate || 0) - (powerVentRemove || 0)}} to reuse,
-              {{ powerVentAdd || 0 }} to add)</ion-label
+              {{ powerVentRelocate || 0 }} to relocate,
+              {{ (powerVent || 0) - (powerVentReplace || 0) - (powerVentRelocate || 0) - (powerVentRemove || 0)}} to reuse
+              )</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -2997,18 +3005,19 @@
                 solarPowerVentReplace === null ||
                 solarPowerVentRemove === null ||
                 solarPowerVentAdd === null ||
-                psolarPowerVentRelocate ===null ||
+                solarPowerVentRelocate ===null ||
                 !issolarPowerVent
               ? 'dark'
               : 'success'
               "
               >Solar Power Vents ({{ solarPowerVent || 0 }} Existing,
               {{ solarPowerVentReplace || 0 }} to replace,
-              {{ solarPowerVentRelocate || 0 }} to relocate,
+              {{ solarPowerVentAdd || 0 }} to add,
               {{ solarPowerVentRemove || 0 }} to remove,
+              {{ solarPowerVentRelocate || 0 }} to relocate,
               {{ (solarPowerVent || 0) - (solarPowerVentReplace || 0) - 
-                (solarPowerVentRelocate || 0) - (solarPowerVentRemove || 0)}} to reuse,
-              {{ solarPowerVentAdd || 0 }} to add)</ion-label
+                (solarPowerVentRelocate || 0) - (solarPowerVentRemove || 0)}} to reuse
+              )</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
