@@ -375,6 +375,8 @@ export class VentingComponent implements OnInit, OnDestroy {
         this.issoffitVent4 = true;
       }
 
+      this.soffitVentsNotes = this.building.psb_measure.psb_soffitvents.soffitVentsNotes;
+
       this.soffitVent416 = this.building.psb_measure.psb_soffitvents.soffitVent416;
       this.soffitVent416Add = this.building.psb_measure.psb_soffitvents.soffitVent416Add;
 
