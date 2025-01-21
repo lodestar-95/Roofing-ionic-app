@@ -28,6 +28,9 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
+          style="white-space: normal; 
+          word-wrap: break-word; 
+          overflow-wrap: break-word;"
             [color]="
               noRequired &&
               ismetalArtticVents &&
@@ -52,14 +55,14 @@
                   metalArtticVentsAdd === undefined ||
                   metalArtticVentsRelocate === undefined||
                   metalArtticVents === null ||
-                  metalArtticVentsReplace === unll ||
+                  metalArtticVentsReplace === null ||
                   metalArtticVentsRemove === null ||
                   metalArtticVentsAdd === null ||
                   metalArtticVentsRelocate === null ||
                   !ismetalArtticVents
                 ? 'dark'
                 : 'success'
-            "
+                "
             >Metal Attic vents ({{ metalArtticVents || 0 }} Existing,
             {{ metalArtticVentsReplace || 0 }} to replace,
             {{ metalArtticVentsRelocate || 0 }} to relocate,
@@ -302,6 +305,9 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
+          style="white-space: normal; 
+          word-wrap: break-word; 
+          overflow-wrap: break-word;"
             [color]="
               noRequired &&
               isvent4 &&
@@ -340,7 +346,7 @@
             {{ vent4Relocate || 0 }} to relocate,
             {{ vent4Remove || 0 }} to remove,
             {{ (vent4 || 0) - (vent4Replace || 0) - (vent4Relocate || 0) - (vent4Remove || 0)}} to reuse,
-            {{ mvent4Add || 0 }} to add)</ion-label
+            {{ vent4Add || 0 }} to add)</ion-label
           >
 
         </ion-item>
@@ -578,45 +584,48 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-          [color]="
-          noRequired &&
-          isvent6 &&
-          ((form?.controls?.vent6?.status !== 'VALID' &&
-            form?.controls?.vent6?.touched) ||
-            (form?.controls?.vent6Replace?.status !== 'VALID' &&
-              form?.controls?.vent6Replace?.touched) ||
-            (form?.controls?.vent6Remove?.status !== 'VALID' &&
-              form?.controls?.vent6Remove?.touched) ||
-            (form?.controls?.vent6Add?.status !== 'VALID' &&
-              form?.controls?.vent6Add?.touched) ||
-            (form?.controls?.vent6Relocate?.status !== 'VALID' &&
-            form?.controls?.vent6Relocate?.touched) ||
-            vent6Replace > vent6 ||
-            vent6Remove > vent6 ||
-            vent6Relocate > vent6 ||
-            (vent6Replace + vent6Remove +vent6Relocate) > vent6
-            )
-            ? 'danger'
-            : vent6 === undefined ||
-              vent6Replace === undefined ||
-              vent6Remove === undefined ||
-              vent6Add === undefined ||
-              vent6Relocate === undefined ||
-              vent6 === null ||
-              vent6Replace === null ||
-              vent6Remove === null ||
-              vent6Add === null ||
-              vent6Relocate ===null ||
-              !isvent6
-            ? 'dark'
-            : 'success'
-        "
-            >6" J vents ({{ vent6 || 0 }} Existing,
-            {{ vent6Replace || 0 }} to replace,
-            {{ vent6Relocate || 0 }} to relocate,
-            {{ vent6Remove || 0 }} to remove,
-            {{ (vent6 || 0) - (vent6Replace || 0) - (vent6Relocate || 0) - (vent6Remove || 0)}} to reuse,
-            {{ mvent6Add || 0 }} to add)</ion-label
+            style="white-space: normal; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;"
+            [color]="
+            noRequired &&
+            isvent6 &&
+            ((form?.controls?.vent6?.status !== 'VALID' &&
+              form?.controls?.vent6?.touched) ||
+              (form?.controls?.vent6Replace?.status !== 'VALID' &&
+                form?.controls?.vent6Replace?.touched) ||
+              (form?.controls?.vent6Remove?.status !== 'VALID' &&
+                form?.controls?.vent6Remove?.touched) ||
+              (form?.controls?.vent6Add?.status !== 'VALID' &&
+                form?.controls?.vent6Add?.touched) ||
+              (form?.controls?.vent6Relocate?.status !== 'VALID' &&
+              form?.controls?.vent6Relocate?.touched) ||
+              vent6Replace > vent6 ||
+              vent6Remove > vent6 ||
+              vent6Relocate > vent6 ||
+              (vent6Replace + vent6Remove +vent6Relocate) > vent6
+              )
+              ? 'danger'
+              : vent6 === undefined ||
+                vent6Replace === undefined ||
+                vent6Remove === undefined ||
+                vent6Add === undefined ||
+                vent6Relocate === undefined ||
+                vent6 === null ||
+                vent6Replace === null ||
+                vent6Remove === null ||
+                vent6Add === null ||
+                vent6Relocate ===null ||
+                !isvent6
+              ? 'dark'
+              : 'success'
+              "
+              >6" J vents ({{ vent6 || 0 }} Existing,
+              {{ vent6Replace || 0 }} to replace,
+              {{ vent6Relocate || 0 }} to relocate,
+              {{ vent6Remove || 0 }} to remove,
+              {{ (vent6 || 0) - (vent6Replace || 0) - (vent6Relocate || 0) - (vent6Remove || 0)}} to reuse,
+              {{ vent6Add || 0 }} to add)</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -859,45 +868,48 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-          [color]="
-          noRequired &&
-          islouveredVent4WithExtensions &&
-          ((form?.controls?.louveredVent4WithExtensions?.status !== 'VALID' &&
-            form?.controls?.louveredVent4WithExtensions?.touched) ||
-            (form?.controls?.louveredVent4WithExtensionsReplace?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithExtensionsReplace?.touched) ||
-            (form?.controls?.louveredVent4WithExtensionsRemove?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithExtensionsRemove?.touched) ||
-            (form?.controls?.louveredVent4WithExtensionsAdd?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithExtensionsAdd?.touched) ||
-            (form?.controls?.louveredVent4WithExtensionsRelocate?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithExtensionsRelocate?.touched) ||
-            louveredVent4WithExtensionsReplace > louveredVent4WithExtensions ||
-            louveredVent4WithExtensionsRemove > louveredVent4WithExtensions ||
-            louveredVent4WithExtensionsRelocate > louveredVent4WithExtensions||
-            (louveredVent4WithExtensionsReplace + louveredVent4WithExtensionsRemove + louveredVent4WithExtensionsRelocate) > louveredVent4WithExtensions)
-            ? 'danger'
-            : louveredVent4WithExtensions === undefined ||
-              louveredVent4WithExtensionsReplace === undefined ||
-              louveredVent4WithExtensionsRemove === undefined ||
-              louveredVent4WithExtensionsAdd === undefined ||
-              louveredVent4WithExtensionsRelocate === undefined||
-              louveredVent4WithExtensions === null ||
-              louveredVent4WithExtensionsReplace === unll ||
-              louveredVent4WithExtensionsRemove === null ||
-              louveredVent4WithExtensionsAdd === null ||
-              louveredVent4WithExtensionsRelocate === null ||
-              !islouveredVent4WithExtensions
-            ? 'dark'
-            : 'success'
-        " 
-        >4" Louvered vents with extensions ({{ louveredVent4WithExtensions || 0 }} Existing,
-        {{ louveredVent4WithExtensionsReplace || 0 }} to replace,
-        {{ louveredVent4WithExtensionsRelocate || 0 }} to relocate,
-        {{ louveredVent4WithExtensionsRemove || 0 }} to remove,
-        {{ (louveredVent4WithExtensions || 0) - (louveredVent4WithExtensionsReplace || 0) - 
-          (louveredVent4WithExtensionsRelocate || 0) - (louveredVent4WithExtensionsRemove || 0)}} to reuse,
-        {{ louveredVent4WithExtensionsAdd || 0 }} to add)</ion-label
+            style="white-space: normal; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;"
+            [color]="
+            noRequired &&
+            islouveredVent4WithExtensions &&
+            ((form?.controls?.louveredVent4WithExtensions?.status !== 'VALID' &&
+              form?.controls?.louveredVent4WithExtensions?.touched) ||
+              (form?.controls?.louveredVent4WithExtensionsReplace?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithExtensionsReplace?.touched) ||
+              (form?.controls?.louveredVent4WithExtensionsRemove?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithExtensionsRemove?.touched) ||
+              (form?.controls?.louveredVent4WithExtensionsAdd?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithExtensionsAdd?.touched) ||
+              (form?.controls?.louveredVent4WithExtensionsRelocate?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithExtensionsRelocate?.touched) ||
+              louveredVent4WithExtensionsReplace > louveredVent4WithExtensions ||
+              louveredVent4WithExtensionsRemove > louveredVent4WithExtensions ||
+              louveredVent4WithExtensionsRelocate > louveredVent4WithExtensions||
+              (louveredVent4WithExtensionsReplace + louveredVent4WithExtensionsRemove + louveredVent4WithExtensionsRelocate) > louveredVent4WithExtensions)
+              ? 'danger'
+              : louveredVent4WithExtensions === undefined ||
+                louveredVent4WithExtensionsReplace === undefined ||
+                louveredVent4WithExtensionsRemove === undefined ||
+                louveredVent4WithExtensionsAdd === undefined ||
+                louveredVent4WithExtensionsRelocate === undefined||
+                louveredVent4WithExtensions === null ||
+                louveredVent4WithExtensionsReplace === null ||
+                louveredVent4WithExtensionsRemove === null ||
+                louveredVent4WithExtensionsAdd === null ||
+                louveredVent4WithExtensionsRelocate === null ||
+                !islouveredVent4WithExtensions
+              ? 'dark'
+              : 'success'
+              " 
+          >4" Louvered vents with extensions ({{ louveredVent4WithExtensions || 0 }} Existing,
+          {{ louveredVent4WithExtensionsReplace || 0 }} to replace,
+          {{ louveredVent4WithExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent4WithExtensionsRemove || 0 }} to remove,
+          {{ (louveredVent4WithExtensions || 0) - (louveredVent4WithExtensionsReplace || 0) - 
+            (louveredVent4WithExtensionsRelocate || 0) - (louveredVent4WithExtensionsRemove || 0)}} to reuse,
+          {{ louveredVent4WithExtensionsAdd || 0 }} to add)</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -1138,45 +1150,48 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-          [color]="
-          noRequired &&
-          islouveredVent6WithExtensions &&
-          ((form?.controls?.louveredVent6WithExtensions?.status !== 'VALID' &&
-            form?.controls?.louveredVent6WithExtensions?.touched) ||
-            (form?.controls?.louveredVent6WithExtensionsReplace?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithExtensionsReplace?.touched) ||
-            (form?.controls?.louveredVent6WithExtensionsRemove?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithExtensionsRemove?.touched) ||
-            (form?.controls?.louveredVent6WithExtensionsAdd?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithExtensionsAdd?.touched) ||
-            (form?.controls?.louveredVent6WithExtensionsRelocate?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithExtensionsRelocate?.touched) ||
-            louveredVent6WithExtensionsReplace > louveredVent6WithExtensions ||
-            louveredVent6WithExtensionsRemove > louveredVent6WithExtensions ||
-            louveredVent6WithExtensionsRelocate > louveredVent6WithExtensions||
-            (louveredVent6WithExtensionsReplace + louveredVent6WithExtensionsRemove + louveredVent6WithExtensionsRelocate) > louveredVent6WithExtensions)
-            ? 'danger'
-            : louveredVent6WithExtensions === undefined ||
-              louveredVent6WithExtensionsReplace === undefined ||
-              louveredVent6WithExtensionsRemove === undefined ||
-              louveredVent6WithExtensionsAdd === undefined ||
-              louveredVent6WithExtensionsRelocate === undefined||
-              louveredVent6WithExtensions === null ||
-              louveredVent6WithExtensionsReplace === unll ||
-              louveredVent6WithExtensionsRemove === null ||
-              louveredVent6WithExtensionsAdd === null ||
-              louveredVent6WithExtensionsRelocate === null ||
-              !islouveredVent6WithExtensions
-            ? 'dark'
-            : 'success'
-        " 
-        >6" Louvered vents with extensions ({{ louveredVent6WithExtensions || 0 }} Existing,
-        {{ louveredVent6WithExtensionsReplace || 0 }} to replace,
-        {{ louveredVent6WithExtensionsRelocate || 0 }} to relocate,
-        {{ louveredVent6WithExtensionsRemove || 0 }} to remove,
-        {{ (louveredVent6WithExtensions || 0) - (louveredVent6WithExtensionsReplace || 0) - 
-          (louveredVent6WithExtensionsRelocate || 0) - (louveredVent6WithExtensionsRemove || 0)}} to reuse,
-        {{ louveredVent6WithExtensionsAdd || 0 }} to add)</ion-label
+            style="white-space: normal; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;"
+            [color]="
+            noRequired &&
+            islouveredVent6WithExtensions &&
+            ((form?.controls?.louveredVent6WithExtensions?.status !== 'VALID' &&
+              form?.controls?.louveredVent6WithExtensions?.touched) ||
+              (form?.controls?.louveredVent6WithExtensionsReplace?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithExtensionsReplace?.touched) ||
+              (form?.controls?.louveredVent6WithExtensionsRemove?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithExtensionsRemove?.touched) ||
+              (form?.controls?.louveredVent6WithExtensionsAdd?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithExtensionsAdd?.touched) ||
+              (form?.controls?.louveredVent6WithExtensionsRelocate?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithExtensionsRelocate?.touched) ||
+              louveredVent6WithExtensionsReplace > louveredVent6WithExtensions ||
+              louveredVent6WithExtensionsRemove > louveredVent6WithExtensions ||
+              louveredVent6WithExtensionsRelocate > louveredVent6WithExtensions||
+              (louveredVent6WithExtensionsReplace + louveredVent6WithExtensionsRemove + louveredVent6WithExtensionsRelocate) > louveredVent6WithExtensions)
+              ? 'danger'
+              : louveredVent6WithExtensions === undefined ||
+                louveredVent6WithExtensionsReplace === undefined ||
+                louveredVent6WithExtensionsRemove === undefined ||
+                louveredVent6WithExtensionsAdd === undefined ||
+                louveredVent6WithExtensionsRelocate === undefined||
+                louveredVent6WithExtensions === null ||
+                louveredVent6WithExtensionsReplace === null ||
+                louveredVent6WithExtensionsRemove === null ||
+                louveredVent6WithExtensionsAdd === null ||
+                louveredVent6WithExtensionsRelocate === null ||
+                !islouveredVent6WithExtensions
+              ? 'dark'
+              : 'success'
+            " 
+          >6" Louvered vents with extensions ({{ louveredVent6WithExtensions || 0 }} Existing,
+          {{ louveredVent6WithExtensionsReplace || 0 }} to replace,
+          {{ louveredVent6WithExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent6WithExtensionsRemove || 0 }} to remove,
+          {{ (louveredVent6WithExtensions || 0) - (louveredVent6WithExtensionsReplace || 0) - 
+            (louveredVent6WithExtensionsRelocate || 0) - (louveredVent6WithExtensionsRemove || 0)}} to reuse,
+          {{ louveredVent6WithExtensionsAdd || 0 }} to add)</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -1418,46 +1433,49 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-          [color]="
-          noRequired &&
-          islouveredVent4WithoutExtensions &&
-          ((form?.controls?.louveredVent4WithoutExtensions?.status !== 'VALID' &&
-            form?.controls?.louveredVent4WithoutExtensions?.touched) ||
-            (form?.controls?.louveredVent4WithoutExtensionsReplace?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithoutExtensionsReplace?.touched) ||
-            (form?.controls?.louveredVent4WithoutExtensionsRemove?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithoutExtensionsRemove?.touched) ||
-            (form?.controls?.louveredVent4WithoutExtensionsAdd?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithoutExtensionsAdd?.touched) ||
-            (form?.controls?.louveredVent4WithoutExtensionsRelocate?.status !== 'VALID' &&
-              form?.controls?.louveredVent4WithoutExtensionsRelocate?.touched) ||
-            louveredVent4WithoutExtensionsReplace > louveredVent4WithoutExtensions ||
-            louveredVent4WithoutExtensionsRemove > louveredVent4WithoutExtensions ||
-            louveredVent4WithoutExtensionsRelocate > louveredVent4WithoutExtensions||
-            (louveredVent4WithoutExtensionsReplace + louveredVent4WithoutExtensionsRemove + 
-            louveredVent4WithoutExtensionsRelocate) > louveredVent4WithoutExtensions)
-            ? 'danger'
-            : louveredVent4WithoutExtensions === undefined ||
-              louveredVent4WithoutExtensionsReplace === undefined ||
-              louveredVent4WithoutExtensionsRemove === undefined ||
-              louveredVent4WithoutExtensionsAdd === undefined ||
-              louveredVent4WithoutExtensionsRelocate === undefined||
-              louveredVent4WithoutExtensions === null ||
-              louveredVent4WithoutExtensionsReplace === unll ||
-              louveredVent4WithoutExtensionsRemove === null ||
-              louveredVent4WithoutExtensionsAdd === null ||
-              louveredVent4WithoutExtensionsRelocate === null ||
-              !islouveredVent4WithoutExtensions
-            ? 'dark'
-            : 'success'
-        " 
-        >4" Louvered vents without extensions ({{ louveredVent4WithoutExtensions || 0 }} Existing,
-        {{ louveredVent4WithoutExtensionsReplace || 0 }} to replace,
-        {{ louveredVent4WithoutExtensionsRelocate || 0 }} to relocate,
-        {{ louveredVent4WithoutExtensionsRemove || 0 }} to remove,
-        {{ (louveredVent4WithoutExtensions || 0) - (louveredVent4WithoutExtensionsReplace || 0) - 
-          (louveredVent4WithoutExtensionsRelocate || 0) - (louveredVent4WithoutExtensionsRemove || 0)}} to reuse,
-        {{ louveredVent4WithoutExtensionsAdd || 0 }} to add)</ion-label
+            style="white-space: normal; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;"
+            [color]="
+            noRequired &&
+            islouveredVent4WithoutExtensions &&
+            ((form?.controls?.louveredVent4WithoutExtensions?.status !== 'VALID' &&
+              form?.controls?.louveredVent4WithoutExtensions?.touched) ||
+              (form?.controls?.louveredVent4WithoutExtensionsReplace?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithoutExtensionsReplace?.touched) ||
+              (form?.controls?.louveredVent4WithoutExtensionsRemove?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithoutExtensionsRemove?.touched) ||
+              (form?.controls?.louveredVent4WithoutExtensionsAdd?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithoutExtensionsAdd?.touched) ||
+              (form?.controls?.louveredVent4WithoutExtensionsRelocate?.status !== 'VALID' &&
+                form?.controls?.louveredVent4WithoutExtensionsRelocate?.touched) ||
+              louveredVent4WithoutExtensionsReplace > louveredVent4WithoutExtensions ||
+              louveredVent4WithoutExtensionsRemove > louveredVent4WithoutExtensions ||
+              louveredVent4WithoutExtensionsRelocate > louveredVent4WithoutExtensions||
+              (louveredVent4WithoutExtensionsReplace + louveredVent4WithoutExtensionsRemove + 
+              louveredVent4WithoutExtensionsRelocate) > louveredVent4WithoutExtensions)
+              ? 'danger'
+              : louveredVent4WithoutExtensions === undefined ||
+                louveredVent4WithoutExtensionsReplace === undefined ||
+                louveredVent4WithoutExtensionsRemove === undefined ||
+                louveredVent4WithoutExtensionsAdd === undefined ||
+                louveredVent4WithoutExtensionsRelocate === undefined||
+                louveredVent4WithoutExtensions === null ||
+                louveredVent4WithoutExtensionsReplace === null ||
+                louveredVent4WithoutExtensionsRemove === null ||
+                louveredVent4WithoutExtensionsAdd === null ||
+                louveredVent4WithoutExtensionsRelocate === null ||
+                !islouveredVent4WithoutExtensions
+              ? 'dark'
+              : 'success'
+              " 
+          >4" Louvered vents without extensions ({{ louveredVent4WithoutExtensions || 0 }} Existing,
+          {{ louveredVent4WithoutExtensionsReplace || 0 }} to replace,
+          {{ louveredVent4WithoutExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent4WithoutExtensionsRemove || 0 }} to remove,
+          {{ (louveredVent4WithoutExtensions || 0) - (louveredVent4WithoutExtensionsReplace || 0) - 
+            (louveredVent4WithoutExtensionsRelocate || 0) - (louveredVent4WithoutExtensionsRemove || 0)}} to reuse,
+          {{ louveredVent4WithoutExtensionsAdd || 0 }} to add)</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -1698,46 +1716,49 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-          [color]="
-          noRequired &&
-          islouveredVent6WithoutExtensions &&
-          ((form?.controls?.louveredVent6WithoutExtensions?.status !== 'VALID' &&
-            form?.controls?.louveredVent6WithoutExtensions?.touched) ||
-            (form?.controls?.louveredVent6WithoutExtensionsReplace?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithoutExtensionsReplace?.touched) ||
-            (form?.controls?.louveredVent6WithoutExtensionsRemove?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithoutExtensionsRemove?.touched) ||
-            (form?.controls?.louveredVent6WithoutExtensionsAdd?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithoutExtensionsAdd?.touched) ||
-            (form?.controls?.louveredVent6WithoutExtensionsRelocate?.status !== 'VALID' &&
-              form?.controls?.louveredVent6WithoutExtensionsRelocate?.touched) ||
-            louveredVent6WithoutExtensionsReplace > louveredVent6WithoutExtensions ||
-            louveredVent6WithoutExtensionsRemove > louveredVent6WithoutExtensions ||
-            louveredVent6WithoutExtensionsRelocate > louveredVent6WithoutExtensions||
-            (louveredVent6WithoutExtensionsReplace + louveredVent6WithoutExtensionsRemove + 
-            louveredVent6WithoutExtensionsRelocate) > louveredVent6WithoutExtensions)
-            ? 'danger'
-            : louveredVent6WithoutExtensions === undefined ||
-              louveredVent6WithoutExtensionsReplace === undefined ||
-              louveredVent6WithoutExtensionsRemove === undefined ||
-              louveredVent6WithoutExtensionsAdd === undefined ||
-              louveredVent6WithoutExtensionsRelocate === undefined||
-              louveredVent6WithoutExtensions === null ||
-              louveredVent6WithoutExtensionsReplace === unll ||
-              louveredVent6WithoutExtensionsRemove === null ||
-              louveredVent6WithoutExtensionsAdd === null ||
-              louveredVent6WithoutExtensionsRelocate === null ||
-              !islouveredVent6WithoutExtensions
-            ? 'dark'
-            : 'success'
-        " 
-        >6" Louvered vents without extensions ({{ louveredVent6WithoutExtensions || 0 }} Existing,
-        {{ louveredVent6WithoutExtensionsReplace || 0 }} to replace,
-        {{ louveredVent6WithoutExtensionsRelocate || 0 }} to relocate,
-        {{ louveredVent6WithoutExtensionsRemove || 0 }} to remove,
-        {{ (louveredVent6WithoutExtensions || 0) - (louveredVent6WithoutExtensionsReplace || 0) - 
-          (louveredVent6WithoutExtensionsRelocate || 0) - (louveredVent6WithoutExtensionsRemove || 0)}} to reuse,
-        {{ louveredVent6WithoutExtensionsAdd || 0 }} to add)</ion-label
+            style="white-space: normal; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;"
+            [color]="
+            noRequired &&
+            islouveredVent6WithoutExtensions &&
+            ((form?.controls?.louveredVent6WithoutExtensions?.status !== 'VALID' &&
+              form?.controls?.louveredVent6WithoutExtensions?.touched) ||
+              (form?.controls?.louveredVent6WithoutExtensionsReplace?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithoutExtensionsReplace?.touched) ||
+              (form?.controls?.louveredVent6WithoutExtensionsRemove?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithoutExtensionsRemove?.touched) ||
+              (form?.controls?.louveredVent6WithoutExtensionsAdd?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithoutExtensionsAdd?.touched) ||
+              (form?.controls?.louveredVent6WithoutExtensionsRelocate?.status !== 'VALID' &&
+                form?.controls?.louveredVent6WithoutExtensionsRelocate?.touched) ||
+              louveredVent6WithoutExtensionsReplace > louveredVent6WithoutExtensions ||
+              louveredVent6WithoutExtensionsRemove > louveredVent6WithoutExtensions ||
+              louveredVent6WithoutExtensionsRelocate > louveredVent6WithoutExtensions||
+              (louveredVent6WithoutExtensionsReplace + louveredVent6WithoutExtensionsRemove + 
+              louveredVent6WithoutExtensionsRelocate) > louveredVent6WithoutExtensions)
+              ? 'danger'
+              : louveredVent6WithoutExtensions === undefined ||
+                louveredVent6WithoutExtensionsReplace === undefined ||
+                louveredVent6WithoutExtensionsRemove === undefined ||
+                louveredVent6WithoutExtensionsAdd === undefined ||
+                louveredVent6WithoutExtensionsRelocate === undefined||
+                louveredVent6WithoutExtensions === null ||
+                louveredVent6WithoutExtensionsReplace === null ||
+                louveredVent6WithoutExtensionsRemove === null ||
+                louveredVent6WithoutExtensionsAdd === null ||
+                louveredVent6WithoutExtensionsRelocate === null ||
+                !islouveredVent6WithoutExtensions
+              ? 'dark'
+              : 'success'
+              " 
+          >6" Louvered vents without extensions ({{ louveredVent6WithoutExtensions || 0 }} Existing,
+          {{ louveredVent6WithoutExtensionsReplace || 0 }} to replace,
+          {{ louveredVent6WithoutExtensionsRelocate || 0 }} to relocate,
+          {{ louveredVent6WithoutExtensionsRemove || 0 }} to remove,
+          {{ (louveredVent6WithoutExtensions || 0) - (louveredVent6WithoutExtensionsReplace || 0) - 
+            (louveredVent6WithoutExtensionsRelocate || 0) - (louveredVent6WithoutExtensionsRemove || 0)}} to reuse,
+          {{ louveredVent6WithoutExtensionsAdd || 0 }} to add)</ion-label
       >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -2667,45 +2688,48 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-          [color]="
-          noRequired &&
-          ispowerVent &&
-          ((form?.controls?.powerVent?.status !== 'VALID' &&
-            form?.controls?.powerVent?.touched) ||
-            (form?.controls?.powerVentReplace?.status !== 'VALID' &&
-              form?.controls?.powerVentReplace?.touched) ||
-            (form?.controls?.powerVentRemove?.status !== 'VALID' &&
-              form?.controls?.powerVentRemove?.touched) ||
-            (form?.controls?.powerVentAdd?.status !== 'VALID' &&
-              form?.controls?.powerVentAdd?.touched) ||
-            (form?.controls?.powerVentRelocate?.status !== 'VALID' &&
-            form?.controls?.powerVentRelocate?.touched) ||
-            powerVentReplace > powerVent ||
-            powerVentRemove > powerVent ||
-            powerVentRelocate > powerVent ||
-            (powerVentReplace + powerVentRemove + powerVentRelocate) > powerVent
-            )
-            ? 'danger'
-            : powerVent === undefined ||
-              powerVentReplace === undefined ||
-              powerVentRemove === undefined ||
-              powerVentAdd === undefined ||
-              powerVentRelocate === undefined ||
-              powerVent === null ||
-              powerVentReplace === null ||
-              powerVentRemove === null ||
-              powerVentAdd === null ||
-              powerVentRelocate ===null ||
-              !ispowerVent
-            ? 'dark'
-            : 'success'
-        "
-            >Power Vents ({{ powerVent || 0 }} Existing,
-            {{ powerVentReplace || 0 }} to replace,
-            {{ powerVentRelocate || 0 }} to relocate,
-            {{ powerVentRemove || 0 }} to remove,
-            {{ (powerVent || 0) - (powerVentReplace || 0) - (powerVentRelocate || 0) - (powerVentRemove || 0)}} to reuse,
-            {{ powerVentAdd || 0 }} to add)</ion-label
+            style="white-space: normal; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;"
+            [color]="
+            noRequired &&
+            ispowerVent &&
+            ((form?.controls?.powerVent?.status !== 'VALID' &&
+              form?.controls?.powerVent?.touched) ||
+              (form?.controls?.powerVentReplace?.status !== 'VALID' &&
+                form?.controls?.powerVentReplace?.touched) ||
+              (form?.controls?.powerVentRemove?.status !== 'VALID' &&
+                form?.controls?.powerVentRemove?.touched) ||
+              (form?.controls?.powerVentAdd?.status !== 'VALID' &&
+                form?.controls?.powerVentAdd?.touched) ||
+              (form?.controls?.powerVentRelocate?.status !== 'VALID' &&
+              form?.controls?.powerVentRelocate?.touched) ||
+              powerVentReplace > powerVent ||
+              powerVentRemove > powerVent ||
+              powerVentRelocate > powerVent ||
+              (powerVentReplace + powerVentRemove + powerVentRelocate) > powerVent
+              )
+              ? 'danger'
+              : powerVent === undefined ||
+                powerVentReplace === undefined ||
+                powerVentRemove === undefined ||
+                powerVentAdd === undefined ||
+                powerVentRelocate === undefined ||
+                powerVent === null ||
+                powerVentReplace === null ||
+                powerVentRemove === null ||
+                powerVentAdd === null ||
+                powerVentRelocate ===null ||
+                !ispowerVent
+              ? 'dark'
+              : 'success'
+              "
+              >Power Vents ({{ powerVent || 0 }} Existing,
+              {{ powerVentReplace || 0 }} to replace,
+              {{ powerVentRelocate || 0 }} to relocate,
+              {{ powerVentRemove || 0 }} to remove,
+              {{ (powerVent || 0) - (powerVentReplace || 0) - (powerVentRelocate || 0) - (powerVentRemove || 0)}} to reuse,
+              {{ powerVentAdd || 0 }} to add)</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
@@ -2942,46 +2966,49 @@
               color="success"></ion-icon>
           </ion-item>
           <ion-label
-          [color]="
-          noRequired &&
-          issolarPowerVent &&
-          ((form?.controls?.solarPowerVent?.status !== 'VALID' &&
-            form?.controls?.solarPowerVent?.touched) ||
-            (form?.controls?.solarPowerVentReplace?.status !== 'VALID' &&
-              form?.controls?.solarPowerVentReplace?.touched) ||
-            (form?.controls?.solarPowerVentRemove?.status !== 'VALID' &&
-              form?.controls?.solarPowerVentRemove?.touched) ||
-            (form?.controls?.solarPowerVentAdd?.status !== 'VALID' &&
-              form?.controls?.solarPowerVentAdd?.touched) ||
-            (form?.controls?.solarPowerVentRelocate?.status !== 'VALID' &&
-            form?.controls?.solarPowerVentRelocate?.touched) ||
-            solarPowerVentReplace > solarPowerVent ||
-            solarPowerVentRemove > solarPowerVent ||
-            solarPowerVentRelocate > solarPowerVent ||
-            (solarPowerVentReplace + solarPowerVentRemove + solarPowerVentRelocate) > solarPowerVent
-            )
-            ? 'danger'
-            : solarPowerVent === undefined ||
-              solarPowerVentReplace === undefined ||
-              solarPowerVentRemove === undefined ||
-              solarPowerVentAdd === undefined ||
-              solarPowerVentRelocate === undefined ||
-              solarPowerVent === null ||
-              solarPowerVentReplace === null ||
-              solarPowerVentRemove === null ||
-              solarPowerVentAdd === null ||
-              psolarPowerVentRelocate ===null ||
-              !issolarPowerVent
-            ? 'dark'
-            : 'success'
-        "
-            >Solar Power Vents ({{ solarPowerVent || 0 }} Existing,
-            {{ solarPowerVentReplace || 0 }} to replace,
-            {{ solarPowerVentRelocate || 0 }} to relocate,
-            {{ solarPowerVentRemove || 0 }} to remove,
-            {{ (solarPowerVent || 0) - (solarPowerVentReplace || 0) - 
-              (solarPowerVentRelocate || 0) - (solarPowerVentRemove || 0)}} to reuse,
-            {{ solarPowerVentAdd || 0 }} to add)</ion-label
+            style="white-space: normal; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;"
+            [color]="
+            noRequired &&
+            issolarPowerVent &&
+            ((form?.controls?.solarPowerVent?.status !== 'VALID' &&
+              form?.controls?.solarPowerVent?.touched) ||
+              (form?.controls?.solarPowerVentReplace?.status !== 'VALID' &&
+                form?.controls?.solarPowerVentReplace?.touched) ||
+              (form?.controls?.solarPowerVentRemove?.status !== 'VALID' &&
+                form?.controls?.solarPowerVentRemove?.touched) ||
+              (form?.controls?.solarPowerVentAdd?.status !== 'VALID' &&
+                form?.controls?.solarPowerVentAdd?.touched) ||
+              (form?.controls?.solarPowerVentRelocate?.status !== 'VALID' &&
+              form?.controls?.solarPowerVentRelocate?.touched) ||
+              solarPowerVentReplace > solarPowerVent ||
+              solarPowerVentRemove > solarPowerVent ||
+              solarPowerVentRelocate > solarPowerVent ||
+              (solarPowerVentReplace + solarPowerVentRemove + solarPowerVentRelocate) > solarPowerVent
+              )
+              ? 'danger'
+              : solarPowerVent === undefined ||
+                solarPowerVentReplace === undefined ||
+                solarPowerVentRemove === undefined ||
+                solarPowerVentAdd === undefined ||
+                solarPowerVentRelocate === undefined ||
+                solarPowerVent === null ||
+                solarPowerVentReplace === null ||
+                solarPowerVentRemove === null ||
+                solarPowerVentAdd === null ||
+                psolarPowerVentRelocate ===null ||
+                !issolarPowerVent
+              ? 'dark'
+              : 'success'
+              "
+              >Solar Power Vents ({{ solarPowerVent || 0 }} Existing,
+              {{ solarPowerVentReplace || 0 }} to replace,
+              {{ solarPowerVentRelocate || 0 }} to relocate,
+              {{ solarPowerVentRemove || 0 }} to remove,
+              {{ (solarPowerVent || 0) - (solarPowerVentReplace || 0) - 
+                (solarPowerVentRelocate || 0) - (solarPowerVentRemove || 0)}} to reuse,
+              {{ solarPowerVentAdd || 0 }} to add)</ion-label
           >
         </ion-item>
         <div class="ion-padding" slot="content">
