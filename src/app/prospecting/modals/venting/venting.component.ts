@@ -22,6 +22,7 @@ import { selectProjectWithoutRidge } from '../../state/propsecting.selectors';
  * @author: Carlos Rodríguez
  */
 export class VentingComponent implements OnInit, OnDestroy {
+  
   isVent_modify: boolean = false;
 
   vent4: number;
@@ -737,7 +738,7 @@ export class VentingComponent implements OnInit, OnDestroy {
    */
   async presentMore2VentsAlert() {
     const alert = await this.alertController.create({
-      message: `You're mixing diferent types of ventilation. Are you sure about combine them?`,
+      message: `You're mixing different types of ventilation. Are you sure about combine them?`,
       buttons: [
         {
           text: 'Yes',
@@ -782,21 +783,45 @@ export class VentingComponent implements OnInit, OnDestroy {
    * @returns
    */
   confirm2MoreVents() {
+
     let count = 0;
+
+    if (this.vent4 || this.vent4Add|| 
+      this.vent6 || this.vent6Add) {
+      count++;
+    }
+
+    if (this.louveredVent4WithExtensions || this.louveredVent4WithExtensionsAdd || 
+      this.louveredVent6WithExtensions || this.louveredVent6WithExtensionsAdd ||
+      this.louveredVent4WithoutExtensions || this.louveredVent4WithoutExtensionsAdd ||
+      this.louveredVent6WithoutExtensions || this.louveredVent6WithoutExtensionsAdd) {
+      count++;
+    }
+
+    if (this.soffitVent2 || this.soffitVent2Add || this.soffitVent3 || this.soffitVent3Add ||
+      this.soffitVent4 || this.soffitVent4Add || this.soffitVent416 || this.soffitVent416Add || 
+      this.soffitVent616 || this.soffitVent616Add) {
+        count++;
+    }
+
     if (this.ridgeVent) {
       count++;
     }
-    if (this.metalArtticVentsAdd || this.cutNewMetalArtticVents) {
+
+    if (this.metalArtticVents || this.metalArtticVentsAdd) {
       count++;
     }
-    if (this.solarPowerVent) {
+
+    if (this.solarPowerVent || this.solarPowerVentAdd) {
       count++;
     }
-    if (this.powerVent) {
+
+    if (this.powerVent || this.powerVentAdd) {
       count++;
     }
 
     return count;
+
   }
 
   /**

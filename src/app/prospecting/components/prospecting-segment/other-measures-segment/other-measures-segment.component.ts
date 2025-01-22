@@ -300,7 +300,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         this.building.psb_measure.vent_j_vent_4_remove - this.building.psb_measure.vent_j_vent_4_relocate ? true : false
       },
       {
-        description: 'J Vent 6”',
+        description: 'Existing J Vent 6”',
         value: `${this.building.psb_measure.vent_j_vent_6_pc} PC`,
         visible: this.building.psb_measure.vent_j_vent_6_pc ? true : false
       },
@@ -358,10 +358,10 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
       },
       {
         description: '4" LV with extensions to reuse',
-        value: `${this.building.psb_measure.vent_j_vent_4_pc - this.building.psb_measure.vent_j_vent_4_replace -
-          this.building.psb_measure.vent_j_vent_4_remove - this.building.psb_measure.vent_j_vent_4_relocate} PC`,
-        visible: this.building.psb_measure.vent_j_vent_4_pc - this.building.psb_measure.vent_j_vent_4_replace -
-        this.building.psb_measure.vent_j_vent_4_remove - this.building.psb_measure.vent_j_vent_4_relocate ? true : false
+        value: `${this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions_replace -
+          this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions_remove - this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions_relocate} PC`,
+        visible: this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions - this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions_replace -
+        this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions_remove - this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithExtensions_relocate ? true : false
       },
       {
         description: 'Existing 6" LV with extensions',
@@ -391,13 +391,17 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
       },
       {
         description: '6" LV with extensions to reuse',
-        value: `${this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_replace -
-          this.building.psb_measure.vent_j_vent_6_remove - this.building.psb_measure.vent_j_vent_6_relocate} PC`,
-        visible: this.building.psb_measure.vent_j_vent_6_pc - this.building.psb_measure.vent_j_vent_6_replace -
-        this.building.psb_measure.vent_j_vent_6_remove - this.building.psb_measure.vent_j_vent_6_relocate ? true : false
+        value: `${this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions - 
+          this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions_replace -
+          this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions_remove - 
+          this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions_relocate} PC`,
+        visible: this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions - 
+        this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions_replace -
+        this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions_remove - 
+        this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithExtensions_relocate ? true : false
       },
       {
-        description: '4" LV without with extensions',
+        description: 'Existing 4" LV without with extensions',
         value: `${this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithoutExtensions} PC`,
         visible: this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithoutExtensions ? true : false
       },
@@ -433,7 +437,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         this.building.psb_measure.psb_louvrevents?.vent_louveredVent4WithoutExtensions_relocate ? true : false
       },
       {
-        description: '6" LV without extensions',
+        description: 'Existing 6" LV without extensions',
         value: `${this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithoutExtensions} PC`,
         visible: this.building.psb_measure.psb_louvrevents?.vent_louveredVent6WithoutExtensions ? true : false
       },
@@ -537,7 +541,7 @@ export class OtherMeasuresSegmentComponent implements OnInit, OnDestroy {
         visible: this.building.psb_measure.psb_soffitvents?.soffitVent4Add ? true : false
       },
       {
-        description: 'SV notes',
+        description: 'Soffit vents notes',
         value: `${this.building.psb_measure.psb_soffitvents?.soffitVentsNotes}`,
         visible: this.building.psb_measure.psb_soffitvents?.soffitVentsNotes ? true : false
       },

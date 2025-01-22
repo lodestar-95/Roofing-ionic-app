@@ -13,7 +13,15 @@
         <div *ngFor="let item of otherMeasuresList">
           <ion-item *ngIf="item.visible" class="ion-no-padding" lines="none"><!--no-inner-padding-->
             <ion-label>{{ item.description }}</ion-label>
-            <ion-label slot="end">{{ item.value }}</ion-label>
+            <ion-label 
+              slot="end" 
+              [ngStyle]="{
+                'width': item.description === 'Soffit vents notes' ? '70%' : 'auto',
+                'white-space': item.description === 'Soffit vents notes' ? 'normal' : 'nowrap',
+                'word-wrap': item.description === 'Soffit vents notes' ? 'break-word' : 'normal'
+              }"
+            >{{ item.value }}
+            </ion-label>
           </ion-item>
         </div>
       </ion-list>
