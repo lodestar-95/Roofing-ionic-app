@@ -32,6 +32,7 @@ export class ProjectsService {
   buildings: Building[];
   isActive: boolean = false;
   private url = environment.url;
+  // private url = 'http://localhost:8082/api';
   user: User;
 
   constructor(
@@ -137,6 +138,82 @@ export class ProjectsService {
               }
 
               this.storage.set('syncDate_' + this.user.id, new Date());
+            },
+            error => reject(error)
+          );
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  /**
+   * Get the projects assigned to the user
+   * @param id
+   * @returns
+   * @author: Carlos Rodríguez
+   */
+  async getOnlineProjectStatus(id: number): Promise<number> {
+    await this.auth.getAuthUser().then(x => {
+      this.user = x;
+    });
+
+
+    const body = {
+      id,
+    };
+
+    return new Promise((resolve, reject) => {
+      const url = 'http://localhost:8202/api';
+      if (this.networkService.isConnected) {
+        this.http
+          .post<number>(`${this.url}/projects/getProjectStatus/`, body)
+          // .post<ApiResponse<string>>(
+          //   `${this.url}/projects/getProjects/`,
+          //   body
+          // )
+          .subscribe(
+            response => {
+              const onlineStatusId = response;
+              resolve(onlineStatusId);
+            },
+            error => reject(error)
+          );
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  /**
+   * Get the projects assigned to the user
+   * @param id
+   * @returns
+   * @author: Carlos Rodríguez
+   */
+  async getOnlineProjectFiles(id: number): Promise<any[]> {
+    await this.auth.getAuthUser().then(x => {
+      this.user = x;
+    });
+
+
+    const body = {
+      id,
+    };
+
+    return new Promise((resolve, reject) => {
+      const url = 'http://localhost:8202/api';
+      if (this.networkService.isConnected) {
+        this.http
+          .post<any[]>(`${this.url}/projects/getProjectFiles/`, body)
+          // .post<ApiResponse<string>>(
+          //   `${this.url}/projects/getProjects/`,
+          //   body
+          // )
+          .subscribe(
+            response => {
+              const onlineFiles = response;
+              resolve(onlineFiles);
             },
             error => reject(error)
           );

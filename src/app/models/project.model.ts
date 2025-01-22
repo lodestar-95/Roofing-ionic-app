@@ -32,7 +32,7 @@ export interface Project extends Sync {
   id_job_priority?: number;
   start_date?: string;
   end_date?: string;
-  project_files?: ProjectFile[]
+  project_files?: ProjectFile[];
   flag:string;
 
   // Search filters

@@ -291,6 +291,7 @@ console.log("b.psb_measure?.psb_material_calculations", b.psb_measure?.psb_mater
         const materialType = this.getMaterialType(element.id_material_type);
         const trademark = this.getTrademark(materialType?.id_trademark);
         const color = this.getColor(element.id_material_type);
+        console.log("colors:", color);
         const cost = this.getCost(this.costCalculation, element, this.version?.id_cost_type);
         return { ...element, show: false, materialType, trademark, cost, color };
       }).filter(x => x.trademark);

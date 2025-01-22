@@ -32,6 +32,7 @@ import { IonRouterOutlet, MenuController, ModalController, AlertController } fro
 })
 export class EstimatePage implements OnInit, OnDestroy {
   @Output() changeVersionEmited = new EventEmitter<boolean>();
+  id_project_status = 4;
   idProject: any;
   project: Project;
   mainBuilding: Building;
@@ -50,6 +51,11 @@ export class EstimatePage implements OnInit, OnDestroy {
   showCloseBtn: boolean = true;
 
   version: Version;
+  isSigned = false;
+  id_project_status_online: number;
+  acceptanceModal: any;
+  loadingStatus: boolean = false;
+  loadingFiles: boolean = false;
 
   constructor(
     private store: Store<AppState>,
@@ -263,10 +269,10 @@ export class EstimatePage implements OnInit, OnDestroy {
 
     let reject_message;
 
-    if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
+    if (this.rejectReasons[this.project.id_reject_reason - 1]?.id === 6) {
       reject_message = "This proposal was marked as " + this.project.reject_reason;
     }
-    else
+    else if (this.rejectReasons[this.project.id_reject_reason - 1])
       reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
 
     if (this.project.id_project_status >= 5) {
@@ -301,16 +307,21 @@ export class EstimatePage implements OnInit, OnDestroy {
   /**
    * Click menu item
    */
-  goToScope() {
-    localStorage.removeItem('storeproject');
-    localStorage.setItem('storeproject', JSON.stringify(this.project));
-    this.nav.navigateForward('pdf-viewer-page');
+  async goToScope() {
+    if(!this.isSigned || true) {
+      localStorage.removeItem('storeproject');
+      localStorage.setItem('storeproject', JSON.stringify(this.project));
+      this.nav.navigateForward('pdf-viewer-page');
+    }
   }
 
   async acceptContinue() {
     const modal = await this.modalController.create({
       component: ModalAcceptanceComponent,
       cssClass: 'fullscreen',
+      componentProps: {
+        isSigned: this.isSigned,
+      },
     });
     // Escuchar el evento cuando se cierra la modal
     modal.onDidDismiss().then((data) => {
@@ -321,8 +332,8 @@ export class EstimatePage implements OnInit, OnDestroy {
         this.router.navigate(['/home/prospecting']);
       }
     });
+    this.acceptanceModal = modal;
     await modal.present();
-
   }
 
   ngOnDestroy(): void {
@@ -331,7 +342,34 @@ export class EstimatePage implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    if(this.project?.id) {
+      this.loadingStatus = true;
+      this.projectService.getOnlineProjectStatus(this.project?.id)
+      .then(result => {
+        this.id_project_status_online = result;
+        this.isSigned = result === this.id_project_status || this.project.id_project_status === this.id_project_status;
+        if(this.isSigned) {
+          const projectUpdated: Project = {
+            ...this.project,
+            isModified: true,
+            id_project_status: this.id_project_status,
+            // project_status: {
+            //   id: this.id_project_status,
+            //   project_status: "accepted"
+            // }
+          };
+          this.projectService.update(this.project.id, projectUpdated);
+          this.loadingStatus = false;
+          this.acceptanceModal && this.acceptanceModal.remove();
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        this.loadingStatus = false;
+      });
+    }
+  }
 
 
   ionViewWillEnter() {

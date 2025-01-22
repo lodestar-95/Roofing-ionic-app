@@ -48,8 +48,8 @@ export class BugsReportsService {
       if (this.networkService.isConnected) {
         this.http
           .get<ApiResponse<BugReport[]>>(
-            `${this.url}/bugs-report/list?offset=${offset}&limit=${limit}`
-            // `http://localhost:8000/api/bugs-report/list?offset=${offset}&limit=${limit}`
+            //`${this.url}/bugs-report/list?offset=${offset}&limit=${limit}`
+            `http://localhost:8015/api/bugs-report/list?offset=${offset}&limit=${limit}`
 
           )
           .subscribe(

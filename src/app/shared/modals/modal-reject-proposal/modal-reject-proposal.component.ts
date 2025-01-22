@@ -103,7 +103,7 @@ export class ModalRejectProposalComponent implements OnInit {
    */
   async presentToastOk() {
     const toast = await this.toastController.create({
-      message: 'Data has been saved.',
+      message: 'The synchronization has finished.',
       duration: 2000
     });
     toast.present();

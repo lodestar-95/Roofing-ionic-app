@@ -412,7 +412,12 @@ export class CalculationService {
 
     let allCalculationList = [];
     Object.keys(buildingsCalculation).forEach(
-      key => (allCalculationList = [...allCalculationList, ...buildingsCalculation[key]])
+      key => {
+        allCalculationList = [...allCalculationList];
+        if(buildingsCalculation[key] && buildingsCalculation[key].length) {
+          allCalculationList.push(...buildingsCalculation[key]);
+        }
+      }
     );
 
     //Labor Calculations
@@ -445,10 +450,10 @@ export class CalculationService {
       }
     }
 
-    let osb_slopes = building.psb_measure.psb_slopes.filter(
+    let osb_slopes = building.psb_measure.psb_slopes?.filter(
       slope => slope.osb_area != null && slope.osb_area > 0
     );
-    if (osb_slopes.length > 0) {
+    if (osb_slopes && osb_slopes.length > 0) {
       laborCalculations.osb = await this.osbLabor.calcOsbLabor(
         building,
         allCalculationList
@@ -757,8 +762,7 @@ export class CalculationService {
       'category_plastic_caps'
     );
     let material = this.general.getMaterial(this.materialList, category_plastic_caps)[0];
-
-    if (buildingsCalculation.nails && buildingsCalculation.InWShield) {
+    if (buildingsCalculation.nails && buildingsCalculation.InWShield && buildingsCalculation.InWShield.length) {
       const plasticCaps = buildingsCalculation.InWShield.filter(
         x => x.id_material_type == material.id_material_type
       );

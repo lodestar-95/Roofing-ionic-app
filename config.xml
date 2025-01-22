@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ehroofing.app" version="2.22.15" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ehroofing.app" version="2.26.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>E&amp;H </name>
-    <description>E&amp;H Pro with extras</description>
+    <description>E&amp;H Pro</description>
     <author email="edgar@ehroofing.com" href="https://ehroofing.com/">Edgar Sanchez</author>
     <content src="index.html" />
     <access origin="*" />

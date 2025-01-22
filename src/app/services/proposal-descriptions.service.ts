@@ -343,7 +343,7 @@ export class ProposalDescriptionsService {
 
 
       //se filtran los psb_material_calculations con base a las listas de precios filtradas en materialPricesListIds
-      const psbMaterialCalcSelected = this.building.psb_measure.psb_material_calculations.find(item => materialPricesListIds.includes(item.id_material_price_list*1));
+      const psbMaterialCalcSelected = this.building.psb_measure?.psb_material_calculations.find(item => materialPricesListIds.includes(item.id_material_price_list*1));
       console.log('psbMaterialCalcSelected',psbMaterialCalcSelected);
 
         const materialPricesListSelected = materialPricesListData.find(item => psbMaterialCalcSelected.id_material_price_list == item.id);
@@ -945,7 +945,7 @@ export class ProposalDescriptionsService {
 
     return this.building?.psb_measure?.psb_slopes?.some(x => x.pitch >= 2 && x.pitch < 4 && !x.deletedAt)
       && (generalsTypes.includes(this.building.id_job_type)
-        && (generalsInw.includes(this.building.psb_measure.id_inwshield_rows)))
+        && (generalsInw.includes(this.building.psb_measure?.id_inwshield_rows)))
       ? ''
       : this.removeLineKey;
   }
@@ -1076,7 +1076,7 @@ export class ProposalDescriptionsService {
   getOptionsText() {
     let text = '';
     if (this.building?.psb_measure?.psb_options?.filter(x => x.is_built_in)?.length > 0) {
-      this.building.psb_measure.psb_options
+      this.building.psb_measure?.psb_options
         .filter(x => x.is_built_in)
         .forEach(option => {
           text += `- ${option.option} \n`;
@@ -1105,9 +1105,9 @@ export class ProposalDescriptionsService {
     const isBuiltUpgrade = this.project?.versions?.find(x => x.active)?.buildings?.find(x => x.is_main_building)?.psb_measure?.psb_upgrades?.some(x => x.id_cost_integration == cost_integration_built_in && x.id_upgrade == upgrade_ridgevents);
 
     if (isBuiltUpgrade && !this.building?.psb_measure?.vent_is_ridgevent_in_place) {
-      let vents = this.general.parseNumber(this.building.psb_measure.vent_power_vent_pc);
-      vents += this.general.parseNumber(this.building.psb_measure.vent_solar_power_vent_pc);
-      vents += this.general.parseNumber(this.building.psb_measure.vent_metal_artict_cut_in_pc);
+      let vents = this.general.parseNumber(this.building.psb_measure?.vent_power_vent_pc);
+      vents += this.general.parseNumber(this.building.psb_measure?.vent_solar_power_vent_pc);
+      vents += this.general.parseNumber(this.building.psb_measure?.vent_metal_artict_cut_in_pc);
 
       if (vents > 0) {
         return vents;
@@ -1139,9 +1139,9 @@ export class ProposalDescriptionsService {
   }
 
   osbQty() {
-    const wasting = 1 + (this.building.psb_measure.wasting * 0.01);
+    const wasting = 1 + (this.building.psb_measure?.wasting * 0.01);
 
-    const quantity = (this.building.psb_measure.psb_slopes
+    const quantity = (this.building.psb_measure?.psb_slopes
       .reduce((previous, current) => previous + this.general.parseNumber(current.osb_area), 0) ?? 0)
       * wasting;
 
@@ -1149,14 +1149,14 @@ export class ProposalDescriptionsService {
   }
 
   completeOsb() {
-    const allOsb = this.building.psb_measure.psb_slopes
+    const allOsb = this.building.psb_measure?.psb_slopes
       .every(x => this.general.parseNumber(x.osb_area) == this.general.parseNumber(x.shingle_area));
 
     return allOsb == true ? '' : this.removeLineKey;
   }
 
   partialOsb() {
-    const partialOsb = this.building.psb_measure.psb_slopes
+    const partialOsb = this.building.psb_measure?.psb_slopes
       .every(x => this.general.parseNumber(x.osb_area) > 0
         && this.general.parseNumber(x.osb_area) != this.general.parseNumber(x.shingle_area));
 
@@ -1178,11 +1178,11 @@ export class ProposalDescriptionsService {
     const cost_integration_built_in = await this.general.getConstDecimalValue('cost_integration_built_in');
     const upgrade_ridgevents = await this.general.getConstDecimalValue('upgrade_ridgevents');
 
-    const upgrade = this.project.versions.find(x => x.active).buildings.find(x => x.is_main_building).psb_measure.psb_upgrades
-      .find(x => x.id_cost_integration == cost_integration_built_in
+    const upgrade = this.project.versions?.find(x => x.active).buildings?.find(x => x.is_main_building).psb_measure.psb_upgrades
+      ?.find(x => x.id_cost_integration == cost_integration_built_in
         && x.id_upgrade == upgrade_ridgevents);
 
-    return upgrade && !this.building.psb_measure.vent_is_ridgevent_in_place ? '' : this.removeLineKey;
+    return upgrade && !this.building.psb_measure?.vent_is_ridgevent_in_place ? '' : this.removeLineKey;
   }
 
   async windBuiltin() {
@@ -1269,7 +1269,7 @@ export class ProposalDescriptionsService {
   }
 
   async metalFlashing() {
-    let rolledMetalLF = this.general.parseNumber(this.building.psb_measure.flash_rolled_metal_20_50_lf);
+    let rolledMetalLF = this.general.parseNumber(this.building.psb_measure?.flash_rolled_metal_20_50_lf);
     rolledMetalLF += await this.getCricketsRollMetalLF(this.building.psb_measure);
     rolledMetalLF += await this.getChimneyRollMetalLF(this.building.psb_measure);
 
@@ -1428,7 +1428,7 @@ export class ProposalDescriptionsService {
 
   hasSiddingChimneyWithCricket() {
     const siddingMaterialId = 1;
-    const exists = this.building.psb_measure.psb_chimneys?.some(x =>
+    const exists = this.building.psb_measure?.psb_chimneys?.some(x =>
       x.id_wall_material == siddingMaterialId
       && !x.cricket_exists
       && x.cricket_height
@@ -1440,7 +1440,7 @@ export class ProposalDescriptionsService {
 
   hasCutSiddingChimneyWithCricket() {
     const siddingMaterialId = 1;
-    const exists = this.building.psb_measure.psb_chimneys?.some(x =>
+    const exists = this.building.psb_measure?.psb_chimneys?.some(x =>
       x.id_wall_material == siddingMaterialId
       && !x.cricket_exists
       && x.cricket_height
@@ -1454,7 +1454,7 @@ export class ProposalDescriptionsService {
     const stuckoMaterialId = 2;
     const stoneMaterialId = 3;
     const brickMaterialId = 4;
-    const exists = this.building.psb_measure.psb_chimneys?.some(x =>
+    const exists = this.building.psb_measure?.psb_chimneys?.some(x =>
       (x.id_wall_material == stuckoMaterialId
         || x.id_wall_material == stoneMaterialId
         || x.id_wall_material == brickMaterialId)
@@ -1480,10 +1480,10 @@ export class ProposalDescriptionsService {
     const materialsIds = materialsData.filter(item => materialsTypesIds.includes(item.id_material_type)).map(item => Number(item.id))
 
     // obtengo en los materiales calculados relacionados con materials price list ids
-    const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialsIds.includes(item.id_concept))
-    if (psbMaterialCalcSelectedList.length > 1 && textMoreOneLuxury)
+    const psbMaterialCalcSelectedList = this.building.psb_measure?.psb_material_calculations.filter(item => materialsIds.includes(item.id_concept))
+    if (psbMaterialCalcSelectedList?.length > 1 && textMoreOneLuxury)
       return textMoreOneLuxury;
-    const psbMaterialCalcSelected = psbMaterialCalcSelectedList[0];
+    const psbMaterialCalcSelected = psbMaterialCalcSelectedList ? psbMaterialCalcSelectedList[0] : null;
 
     if (!psbMaterialCalcSelected) {
       return this.removeLineKey;
@@ -1523,13 +1523,13 @@ export class ProposalDescriptionsService {
     const materialsIds = materialsData.filter(item => materialsTypesIds.includes(item.id_material_type)).map(item => Number(item.id))
 
     // obtengo en los materiales calculados relacionados con materials price list ids
-    /*const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialPricesListIds.includes(item.id_material_price_list))
+    /*const psbMaterialCalcSelectedList = this.building.psb_measure?.psb_material_calculations.filter(item => materialPricesListIds.includes(item.id_material_price_list))
     if(psbMaterialCalcSelectedList.length > 1 && textMoreOneLuxury)
     return textMoreOneLuxury;*/
-    const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialsIds.includes(item.id_concept))
+    const psbMaterialCalcSelectedList = this.building.psb_measure?.psb_material_calculations.filter(item => materialsIds.includes(item.id_concept))
 
     //selecciono el unico
-    const psbMaterialCalcSelected = psbMaterialCalcSelectedList[0];
+    const psbMaterialCalcSelected = psbMaterialCalcSelectedList ? psbMaterialCalcSelectedList[0] : null;
     if (!psbMaterialCalcSelected) return this.removeLineKey;
     // busco el id material en catalogo de materiales
     const materialSelected = materialsData.find(item => psbMaterialCalcSelectedList[0].id_concept == item.id);
@@ -1563,14 +1563,14 @@ export class ProposalDescriptionsService {
       const materialPricesListIds = materialPricesListData.filter(item => materialsIds.includes(item.id_material)).map(item => Number(item.id))
 
       // obtengo en los materiales calculados relacionados con materials price list ids
-      const psbMaterialCalcSelectedList = this.building.psb_measure.psb_material_calculations.filter(item => materialPricesListIds.includes(item.id_material_price_list))
+      const psbMaterialCalcSelectedList = this.building.psb_measure?.psb_material_calculations.filter(item => materialPricesListIds.includes(item.id_material_price_list))
       if(psbMaterialCalcSelectedList.length > 1 && textMoreOneLuxury)
       return textMoreOneLuxury;
       console.log(materialsData);
       console.log(materialPricesListIds);
       console.log(materialPricesListData);
       console.log(psbMaterialCalcSelectedList);
-      console.log(this.building.psb_measure.psb_material_calculations);
+      console.log(this.building.psb_measure?.psb_material_calculations);
       const psbMaterialCalcSelected = psbMaterialCalcSelectedList[0];
 
       if(!psbMaterialCalcSelected){

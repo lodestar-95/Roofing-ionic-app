@@ -15,13 +15,13 @@ export class SkylightService {
         private shingle: ShinglesService) { }
 
     async calculateLabor(building: Building, materialCalculations) {
-        const slSmall = building.psb_measure.psb_skylights.filter(x => !x.deletedAt && x.need_replace && x.id_skylight_size == 1);
-        const slSmallN = building.psb_measure.psb_skylights.filter(x => !x.deletedAt && !x.need_replace && x.id_skylight_size == 1);
+        const slSmall = building.psb_measure.psb_skylights?.filter(x => !x.deletedAt && x.need_replace && x.id_skylight_size == 1);
+        const slSmallN = building.psb_measure.psb_skylights?.filter(x => !x.deletedAt && !x.need_replace && x.id_skylight_size == 1);
 
-        const slLarge = building.psb_measure.psb_skylights.filter(x => !x.deletedAt && x.need_replace && x.id_skylight_size == 2);
-        const slLargeN = building.psb_measure.psb_skylights.filter(x => !x.deletedAt && !x.need_replace && x.id_skylight_size == 2);
+        const slLarge = building.psb_measure.psb_skylights?.filter(x => !x.deletedAt && x.need_replace && x.id_skylight_size == 2);
+        const slLargeN = building.psb_measure.psb_skylights?.filter(x => !x.deletedAt && !x.need_replace && x.id_skylight_size == 2);
 
-        const skylights = building.psb_measure.psb_skylights.filter(x => !x.deletedAt && x.id_skylight_size == 3);
+        const skylights = building.psb_measure.psb_skylights?.filter(x => !x.deletedAt && x.id_skylight_size == 3);
 
         const smallSkylightCalculations = await this.getSmallSkylightCalculations(slSmall, materialCalculations);
         const smallSkylightCalculationsN = await this.getSmallSkylightCalculations(slSmallN, materialCalculations);
@@ -49,7 +49,9 @@ export class SkylightService {
 
         const laborPrices = (await this.catalogs.getLaborPrices()).data;
         const laborPrice = laborPrices.find(price => price.id == labor_price_skylight_small);
-
+        if(!(skylights && skylights.length)) {
+            return laborCalculationList;
+        }
         for (const skylight of skylights) {
             for (const shingle of shingles) {
                 const laborCalculation = JSON.parse(JSON.stringify(CALCULATION_SCHEMA));
@@ -102,7 +104,9 @@ export class SkylightService {
 
         const laborPrices = (await this.catalogs.getLaborPrices()).data;
         const laborPrice = laborPrices.find(price => price.id == labor_price_skylight_large);
-
+        if(!(skylights && skylights.length)) {
+            return laborCalculationList;
+        }
         for (const skylight of skylights) {
             for (const shingle of shingles) {
                 const laborCalculation = JSON.parse(JSON.stringify(CALCULATION_SCHEMA));
@@ -154,7 +158,9 @@ export class SkylightService {
         const labor_price_skylight_large = await this.general.getConstDecimalValue('labor_price_skylight_large');
 
         const laborPrices = (await this.catalogs.getLaborPrices()).data;
-
+        if(!(skylights && skylights.length)) {
+            return laborCalculationList;
+        }
         for (const skylight of skylights) {
             for (const shingle of shingles) {
                 let laborPrice : LaborPrice;

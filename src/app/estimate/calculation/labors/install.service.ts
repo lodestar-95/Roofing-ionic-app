@@ -32,7 +32,7 @@ export class InstallLaborService {
 
 
     async calcInstallLabor(building: Building, materialsCalc) {
-        let slopes = building.psb_measure.psb_slopes.filter(x => x.deletedAt == null);
+        let slopes = building.psb_measure.psb_slopes?.filter(x => x.deletedAt == null);
         let labors = [];
         let shingles = await this.shingle.getShingles();
         const category_ridgecap = await this.generalService.getConstValue('category_ridgecap');

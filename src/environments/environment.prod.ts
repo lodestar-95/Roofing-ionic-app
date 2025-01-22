@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  name: 'dev.',
+  name: 'prod.',
   //url: 'https://ehroofing-gw-gateway-prd-e7655b826815.herokuapp.com/api',
   //url: 'https://ehroofing-gw-gateway-qa-b1b593482770.herokuapp.com/api',
   url: 'https://eh-roofing-gateway.herokuapp.com/api',

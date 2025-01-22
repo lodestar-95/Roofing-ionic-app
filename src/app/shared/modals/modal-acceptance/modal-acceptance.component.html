@@ -70,7 +70,7 @@
           </ion-button>
           <ion-label>{{ file.name }}</ion-label>
         </ion-item>
-        <ion-item>
+        <ion-item *ngIf="false">
           <ion-icon lazy="true" slot="start" name="image"></ion-icon>
           <ion-label slot="end">Upload Image</ion-label>
           <input
@@ -99,7 +99,7 @@
               class="roofing-label sf-pro-regular"
               button
               (click)="openPopoverColors($event, item.id)"
-              [disabled]="!canModifyProposal || userDisabledPermision">
+              [disabled]="isSigned || !canModifyProposal || userDisabledPermision">
               {{ item.group }}
             </ion-item>
             <ion-item lines="none" *ngIf="item.groupColor">

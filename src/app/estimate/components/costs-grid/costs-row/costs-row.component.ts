@@ -33,6 +33,7 @@ export class CostsRowComponent implements OnInit {
     private general: GeneralService ) { }
 
   ngOnInit() {
+    console.log("shinglelines1", JSON.parse(localStorage.getItem("shingleLines")) || this.shingleLines);
     this.shingleLines = JSON.parse(localStorage.getItem("shingleLines")) || this.shingleLines;
     this.getAlwaysAllowModification();
   }

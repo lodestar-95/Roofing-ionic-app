@@ -27,7 +27,7 @@
       <ion-button *ngIf="!showMdlAcceptance" (click)="clickCreateVersion()">
         <ion-icon name="duplicate-outline"></ion-icon>
       </ion-button>
-      <ion-button *ngIf="showPreview" (click)="goToScope()">
+      <ion-button *ngIf="showPreview" [disabled]="loadingStatus || loadingFiles" (click)="goToScope()">
         <ion-icon name="newspaper-outline"></ion-icon>
       </ion-button>
       <ion-button (click)="openNotesModal()">

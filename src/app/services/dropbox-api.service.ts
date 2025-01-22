@@ -67,4 +67,22 @@ export class DropboxApiService {
       }
     }
   }
+  
+  async getFileUrl(pathLower: string): Promise<string> {
+    try {
+      // Get the download URL
+      const linkResponse = await this.dbx.filesGetTemporaryLink({
+        path: pathLower,
+      });
+      return linkResponse.result.link;
+    } catch (error) {
+      if (error.error && error.error.error_summary.startsWith('path/conflict/folder/')) {
+        // La carpeta ya existe, maneja este caso como necesario
+      } else {
+        // Otro tipo de error
+        console.error(`Error al crear la carpeta:`, error);
+        throw error;
+      }
+    }
+  }
 }

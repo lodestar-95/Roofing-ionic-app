@@ -338,7 +338,7 @@ export class INWShieldUnderlaymentsService {
     }
 
     private getSlopes() {
-        return this.building.psb_measure.psb_slopes.filter(x => x.deletedAt == null);
+        return this.building.psb_measure.psb_slopes?.filter(x => x.deletedAt == null);
     }
 
     private getTotalShinglesSQ(shingle) {

@@ -25,9 +25,12 @@ import { CatalogsService } from 'src/app/services/catalogs.service';
   styleUrls: ['./modal-acceptance.component.scss']
 })
 export class ModalAcceptanceComponent implements OnInit {
+  @Input() isSigned: boolean;
+
   private id_project_status: number = 4;
+  private id_project_status_online: number = 0;
   project$: Observable<Project>;
-  
+
   stepsCompleted: boolean = false;
   lastDate: string;
   startDate: string;
@@ -66,7 +69,7 @@ export class ModalAcceptanceComponent implements OnInit {
     private catalogs: CatalogsService,
     private alertController: AlertController
   ) {
-    
+
   }
 
   async ngOnInit() {
@@ -125,7 +128,7 @@ export class ModalAcceptanceComponent implements OnInit {
       this.workPriority[i].isChecked = false;
     }
   }
-  
+
   /*
    * remove an item in list files and input type file
    * @param index number
@@ -174,11 +177,11 @@ export class ModalAcceptanceComponent implements OnInit {
         }
       ]
     });
-  
+
     await alert.present();
   }
 
-  
+
   async saveAcceptance() {
     const loading = await this.loadingCtrl.create({
       message: 'Uploading the data...',
@@ -223,7 +226,7 @@ export class ModalAcceptanceComponent implements OnInit {
           return { ...x };
         }
       });
-  
+
     const projectUpdated: Project = {
         ...this.project,
         isModified: true,
@@ -267,7 +270,7 @@ export class ModalAcceptanceComponent implements OnInit {
    */
   async presentToastOk() {
     const toast = await this.toastController.create({
-      message: 'Data has been saved.',
+      message: 'The synchronization has finished.',
       duration: 2000
     });
     toast.present();

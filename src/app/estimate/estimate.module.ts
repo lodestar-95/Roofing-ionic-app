@@ -27,6 +27,7 @@ import { RowSegmentComponent } from './components/costs-grid/row-segment/row-seg
 import { PopoverMaterialColorsComponent } from './components/popover-material-colors/popover-material-colors.component';
 import { PopoverGroupColorsComponent } from './components/popover-group-colors/popover-group-colors.component';
 import { BidSheetPageModule } from './pages/bid-sheet/bid-sheet.module';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { BidSheetPageModule } from './pages/bid-sheet/bid-sheet.module';
     EstimatePageRoutingModule,
     ComponentsModule,
     ComponentsModule,
-    BidSheetPageModule
+    BidSheetPageModule,
+    PdfViewerModule
   ],
 })
 export class EstimatePageModule {}

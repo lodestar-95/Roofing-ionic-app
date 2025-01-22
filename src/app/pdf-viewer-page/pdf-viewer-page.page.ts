@@ -23,6 +23,10 @@ import { SyncProjectsService } from '../services/sync-projects.service';
 import { Printer, PrintOptions } from '@ionic-native/printer/ngx';
 import { Version } from '../models/version.model';
 import { MaterialService } from '../services/material.service';
+import { environment } from '../../environments/environment';
+import { DocusignService } from '../services/docusign.service';
+import { DropboxApiService } from '../services/dropbox-api.service';
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 (window as any).pdfWorkerSrc = '../../assets/js/pdf.worker.min.js';
 
@@ -57,7 +61,7 @@ export class PdfViewerPagePage implements OnInit {
   logosM: any = [];
   calculations: any;
   costType = 1;
-  loading: any;
+  loading: HTMLIonLoadingElement;
   //data pdf
   stName: String;
   stAddress: string;
@@ -68,6 +72,7 @@ export class PdfViewerPagePage implements OnInit {
   colors: any = [];
   canSendEmail = true;
   canChangeStatus = false;
+  loadingFiles = true;
 
   // add number and type heading
   buildingNumber = 0;
@@ -76,6 +81,8 @@ export class PdfViewerPagePage implements OnInit {
   docDefinition: any[] = [];
   generatingNumber = 0;
   disablePrinter: boolean = false;
+
+  isSigned: boolean = false;
 
   finalProposal = {
     isFinal: false,
@@ -87,8 +94,7 @@ export class PdfViewerPagePage implements OnInit {
     soffitVentColor: false,
     regletColor: false
   };
-
-
+  blob = null
 
   amount = '';
   finalProposaltext:boolean =  false;
@@ -113,7 +119,9 @@ Drip Edge color: -> dripEdgeColor
     private projectService: ProjectsService,
     private general: GeneralService,
     private synProjects: SyncProjectsService,
-    private materialService: MaterialService
+    private materialService: MaterialService,
+    private docusignService: DocusignService,
+    private dropboxApiService: DropboxApiService,
   ) {
     const storeproject = localStorage.getItem('storeproject');
     this.project = JSON.parse(storeproject);
@@ -124,15 +132,52 @@ Drip Edge color: -> dripEdgeColor
       })
       .then(res => {
         this.loading = res;
-        if (this.platform.is('cordova')) {
-          this.loading.present();
-        }
+        // if (this.platform.is('cordova')) {
+        this.loading.present();
+        // }
       });
   }
 
   ngOnInit() {
     this.iniLogos().then(resp => {
       this.getListBuildings();
+    });
+    this.isSigned = this.project.id_project_status === 4;
+    this.loadingFiles = true;
+    this.projectService.getOnlineProjectFiles(this.project.id)
+    .then(result => {
+      if(this.isSigned && result) {
+        const projectUpdated: Project = {
+          ...this.project,
+          isModified: true,
+          project_files: result,
+        };
+        console.log(result);
+        if(result && result.length) {
+          this.dropboxApiService.getFileUrl(result[result.length - 1].url)
+          .then(result => {
+            this.pdfSrc = result
+            // this.loadingFiles = false;
+            // this.acceptanceModal && this.acceptanceModal.remove();
+          })
+          .catch(e => {
+            console.log(e);
+            this.loadingFiles = false;
+            this.loading.dismiss();
+            this.navController.back();
+          });
+        }
+        else {
+          this.navController.back();
+        }
+        this.projectService.update(this.project.id, projectUpdated);
+      }
+    })
+    .catch(e => {
+      console.log(e);
+      this.loadingFiles = false;
+      this.loading.dismiss();
+      this.navController.back();
     });
   }
 
@@ -154,7 +199,7 @@ Drip Edge color: -> dripEdgeColor
   async getListBuildings() {
     try {
       if (this.project) {
-        this.canSendEmail = await this.areAllScopeVerified();
+        this.canSendEmail = await this.areAllScopeVerified(); // && !this.isSigned;
         this.calculations = (
           await this.calculation.calculateBidsheet(this.project)
         ).data.buildings;
@@ -194,13 +239,12 @@ Drip Edge color: -> dripEdgeColor
           let groups = await this.catalogsService.getGroups().then(resp => {
             return resp.data;
           });
-
           try {
             if (version.pv_colors != undefined) {
               version.pv_colors.forEach(color => {
                 this.colors.push({
-                  group: groups.find(g => g.id == color.id_group).group,
-                  color: groupColors.find(gc => gc.id == color.id_group_color).color
+                  group: groups.find(g => g.id == color.id_group)?.group,
+                  color: groupColors.find(gc => gc.id == color.id_group_color)?.color
                 });
               });
             }
@@ -261,10 +305,16 @@ Drip Edge color: -> dripEdgeColor
 
     for (const building of version.buildings) {
       for (const scope of building.pb_scopes) {
+        console.log(1);
+        console.log(hasArchitectural);
+        console.log(scope.is_architectural);
+        console.log(scope.is_verified);
+        console.log(scope);
         if (hasArchitectural && scope.is_architectural && scope.is_verified == false) {
           return false;
         }
 
+        console.log(2);
         if (
           hasPresidential &&
           scope.is_architectural == false &&
@@ -312,7 +362,7 @@ Drip Edge color: -> dripEdgeColor
         cal => cal.id_building === bOpt.id
       );
       let buildingTotals = calculationsBuilding.totals.filter(
-        f => f.id_psb_measure == bOpt.psb_measure.id && f.id_cost_type == this.costType
+        f => f.id_psb_measure == bOpt.psb_measure?.id && f.id_cost_type == this.costType
       );
 
       let building = {
@@ -416,8 +466,8 @@ Drip Edge color: -> dripEdgeColor
     const dbUpgrades = (await this.catalogsService.getUpgrades()).data;
     for (const building of buildingsType) {
       let optionsArray = [];
-      if (building.building.psb_measure.hasOwnProperty('psb_options')) {
-        building.building.psb_measure.psb_options.forEach((element, index) => {
+      if (building.building.psb_measure?.hasOwnProperty('psb_options')) {
+        building.building.psb_measure?.psb_options?.forEach((element, index) => {
           if (!element.is_built_in) {
             optionsArray.push({
               name: `Option ${index + 1}`,
@@ -457,8 +507,8 @@ Drip Edge color: -> dripEdgeColor
           let mainBuilding = this.buildings.find(e => e.is_main_building);
           let currentBuilding = this.buildings.find(e => e.id == building.building.id);
           let upgrades =
-            mainBuilding.psb_measure.psb_upgrades != undefined
-              ? mainBuilding.psb_measure.psb_upgrades.filter(
+            mainBuilding.psb_measure?.psb_upgrades != undefined
+              ? mainBuilding.psb_measure?.psb_upgrades.filter(
                   f => f.id_cost_integration == 2
                 )
               : [];
@@ -574,25 +624,47 @@ Drip Edge color: -> dripEdgeColor
     return jobType;
   }
 
+  getMargins() {
+    let margins = [10, -4, 0, 0];
+    if (this.platform.is('cordova')) {
+      margins = [10, -6, 0, 0];
+      if (this.platform.is('ios')) {
+        margins = [10, -8, 0, 0];
+      }
+    }
+    return margins;
+  }
+
+  getAcceptanceDateMargins() {
+    let margins = [10, -2, 0, 0];
+    if (this.platform.is('cordova')) {
+      margins = [10, -4, 0, 0];
+      if (this.platform.is('ios')) {
+        margins = [10, -6, 0, 0];
+      }
+    }
+    return margins;
+  }
+
   // Function to group items into columns of four elements (two pairs)
   groupColumns(items, Ismail) {
     let columnsArray = [];
     let textFlashing = false;
-    for (var i = 0; i < items.length; i += 2) {
+    for (var i = 0; i < items.length; i++) {
       var columns = [];
+      console.log(items[i]);
+      // const columns={
+      //   width: '50%',
+      //   alignment: 'right',
+      //   columns: [...items[i].value]
+      // }; // Add first pair
+      columns.push({width: '50%', text: '', alignment: 'right'})
       columns.push({
+        alignment: 'right',
         width: '50%',
         columns: [...items[i].value]
-      }); // Add first pair
-      if (items[i + 1]) {
-        columns.push({
-          width: '50%',
-          columns: [...items[i + 1].value]
-        }); // Add second pair if exists
-      }
-      columnsArray.push({
-        columns: columns
-      });
+      }); // Add second pair if exists
+      columnsArray.push({columns});
       if (items[i]?.underText) {
         columnsArray.push(items[i]?.underText);
       }
@@ -603,7 +675,7 @@ Drip Edge color: -> dripEdgeColor
 
       columnsArray.push({ text: '', margin: [0, 10] }); // Add spacing
     }
-   if(Ismail) {
+  if(Ismail) {
     columnsArray.push(
       { text: '', margin: [0, 10] },
       {
@@ -622,7 +694,9 @@ Drip Edge color: -> dripEdgeColor
           },
           {
             width: '*',
-            text: '#Signature#'
+            text: '#Signature#',
+            color: 'white',
+            margin: [10, 0, 0, 0]
           },
           {
             width: 'auto',
@@ -630,7 +704,9 @@ Drip Edge color: -> dripEdgeColor
           },
           {
             width: '*',
-            text: '#AcceptanceDate#'
+            text: '#AcceptanceDate#',
+            color: 'white',
+            margin: this.getAcceptanceDateMargins()
           }
         ]
       }
@@ -667,7 +743,6 @@ Drip Edge color: -> dripEdgeColor
         ]
       }
     );
-
    }
     return columnsArray;
   }
@@ -681,6 +756,7 @@ Drip Edge color: -> dripEdgeColor
     upgrades,
     footerText,
   ) {
+    if(this.isSigned) return;
     const logo4 = this.logosM[4];
 
     let tableLogos = [
@@ -743,16 +819,17 @@ Drip Edge color: -> dripEdgeColor
       }
     });
 
-    let images = {};
+    const images_pdf = {};
     let indeximage = 0;
 
-    tableLogos.map(logo => {
+    tableLogos.forEach((logo, i) => {
       if (logo != '') {
-        images[`$$pdfmake$$${indeximage + 1}`] = logo['image'];
+        images_pdf[`$$pdfmake$$${indeximage + 1}`] = logo['image'];
         indeximage++;
       }
     });
 
+    const images = images_pdf;
     /*let colorPdf = [];
     this.colors.forEach((color, key) => {
       let alignment;
@@ -868,22 +945,24 @@ Drip Edge color: -> dripEdgeColor
         shingleColor: {
           value: [
             {
-              width: 'auto',
+              width: '*',
               text: 'Shingle and Ridge color:',
-              preserveLeadingSpaces: true
+              alignment: 'right',
+              // preserveLeadingSpaces: true,
             },
             {
               width: '*',
-              text: '_______________________'
+              text: '_______________________',
             }
           ]
         }, // Shingle and Ridge color
         dripEdgeColor: {
           value: [
             {
-              width: 'auto',
-              text: '              Drip Edge color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Drip Edge color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true,
             },
             {
               width: '*',
@@ -894,9 +973,10 @@ Drip Edge color: -> dripEdgeColor
         flashingColor: {
           value: [
             {
-              width: 'auto',
-              text: '               Flashing color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Flashing color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
               width: '*',
@@ -907,6 +987,7 @@ Drip Edge color: -> dripEdgeColor
             {
               text: '(Pipe flashing, J vents, Louver vents, powder fans, exhaust\nvents, roll metal, 3x5x10 end wall, screws, spray paint)',
               fontSize: 8,
+              alignment: 'right',
               margin: [60, 0, 0, 10]
             }
           ]
@@ -914,9 +995,10 @@ Drip Edge color: -> dripEdgeColor
         sACapColor: {
           value: [
             {
-              width: 'auto',
-              text: '                   SA Cap color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'SA Cap color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
               width: '*',
@@ -927,9 +1009,10 @@ Drip Edge color: -> dripEdgeColor
         atticVentColor: {
           value: [
             {
-              width: 'auto',
-              text: '           Attic Vents color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Attic Vents color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
               width: '*',
@@ -940,9 +1023,10 @@ Drip Edge color: -> dripEdgeColor
         soffitVentColor: {
           value: [
             {
-              width: 'auto',
-              text: '           Soffit Vents color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Soffit Vents color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
               width: '*',
@@ -953,9 +1037,10 @@ Drip Edge color: -> dripEdgeColor
         regletColor: {
           value: [
             {
-              width: 'auto',
-              text: '                   Reglet color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Reglet color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
               width: '*',
@@ -981,50 +1066,67 @@ Drip Edge color: -> dripEdgeColor
       let mailsignSections= [];
       selectedItems = [];
 
+      const margins = this.getMargins();
+
       mailsignSections.push({ text: '', margin: [0, 10] });
       let SignProposalDocItems = {
         shingleColor: {
           value: [
             {
-              width: 'auto',
+              width: '*',
               text: 'Shingle and Ridge color:',
-              preserveLeadingSpaces: true
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
-              width: '*',
-              text: '#ShingleColor#',
+              width: '80',
+              text: '#Shingle#',
+              color: 'white',
+              alignment: 'left',
+              margin: margins
             }
           ]
         }, // Shingle and Ridge color
         dripEdgeColor: {
           value: [
             {
-              width: 'auto',
-              text: '              Drip Edge color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Drip Edge color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
-              width: '*',
-              text: "#DripEdgeColor#"
+              width: '80',
+              text: '#Drip Edge#',
+              color: 'white',
+              alignment: 'left',
+              noWrap: true,
+              margin: margins
             }
           ]
         }, // Drip Edge color
         flashingColor: {
           value: [
             {
-              width: 'auto',
-              text: '               Flashing color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Flashing color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
-              width: '*',
-              text: '#FlashingColor#'
+              width: '80',
+              text: '#Flashing & Pipe#',
+              color: 'white',
+              alignment: 'left',
+              noWrap: true,
+              margin: margins
             }
           ],
           underText: [
             {
               text: '(Pipe flashing, J vents, Louver vents, powder fans, exhaust\nvents, roll metal, 3x5x10 end wall, screws, spray paint)',
               fontSize: 8,
+              alignment: 'right',
               margin: [60, 0, 0, 10]
             }
           ]
@@ -1032,67 +1134,85 @@ Drip Edge color: -> dripEdgeColor
         sACapColor: {
           value: [
             {
-              width: 'auto',
-              text: '                   SA Cap color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'SA Cap color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
-              width: '*',
-              text: '#SACapColor#'
+              width: '80',
+              text: '#SA Cap#',
+              color: 'white',
+              alignment: 'left',
+              margin: margins
             }
           ]
         },
         atticVentColor: {
           value: [
             {
-              width: 'auto',
-              text: '           Attic Vents color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Attic Vents color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
-              width: '*',
-              text: '#AtticVentColor#'
+              width: '80',
+              text: '#Attic Vents#',
+              color: 'white',
+              alignment: 'left',
+              noWrap: true,
+              margin: margins
             }
           ]
         },
         soffitVentColor: {
           value: [
             {
-              width: 'auto',
-              text: '           Soffit Vents color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Soffit Vents color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
-              width: '*',
-              text: '#SoffitVentColor#'
+              width: '80',
+              text: '#Soffit Vents#',
+              color: 'white',
+              alignment: 'left',
+              noWrap: true,
+              margin: margins
             }
           ]
         },
         regletColor: {
           value: [
             {
-              width: 'auto',
-              text: '                   Reglet color:',
-              preserveLeadingSpaces: true
+              width: '*',
+              text: 'Reglet color:',
+              alignment: 'right',
+              // preserveLeadingSpaces: true
             },
             {
-              width: '*',
-              text: '#RegleColor#'
+              width: '80',
+              text: '#Reglet#',
+              color: 'white',
+              alignment: 'left',
+              margin: margins
             }
           ]
         }
       };
 
-      for (var key in this.finalProposal) {
-        if (this.finalProposal.hasOwnProperty(key) && this.finalProposal[key]) {
-          if (SignProposalDocItems.hasOwnProperty(key)) {
-            selectedItems.push(SignProposalDocItems[key]);
+      for (const key0 in this.finalProposal) {
+        if (this.finalProposal.hasOwnProperty(key0) && this.finalProposal[key0]) {
+          if (SignProposalDocItems.hasOwnProperty(key0)) {
+            selectedItems.push(SignProposalDocItems[key0]);
           }
         }
       }
 
       mailsignSections.push(...this.groupColumns(selectedItems, true));
-      FinaldocDefinitionpdf = this.makedocDfinitionpdf(tableLogos, jobType, building, sowText, mailsignSections, footerText, logo4, images)
+      FinaldocDefinitionpdf = this.makedocDfinitionpdf(tableLogos, jobType, building, sowText, mailsignSections, footerText, logo4, {...images});
 
       this.pdfObjectPrinter = pdfMake.createPdf(FinaldocDefinitionpdf);
       // for test
@@ -1101,6 +1221,7 @@ Drip Edge color: -> dripEdgeColor
       if (this.platform.is('cordova')) {
         this.pdfObjectPrinter.getBuffer(buffer => {
           var blob = new Blob([buffer], { type: 'application/pdf' });
+          this.blob = buffer;
           var path;
 
           if (this.platform.is('ios')) {
@@ -1109,18 +1230,19 @@ Drip Edge color: -> dripEdgeColor
             path = this.file.externalDataDirectory;
           }
 
-          this.file
+          this.file && this.file
             .writeFile(
               path,
               'docuSignpropoalpdf.pdf',
               blob,
               { replace: true }
             )
-            .then(entry => {
-              console.log("docuSignproposal pdf printerd");
-
+            ?.then(entry => {
               this.docuSignpropoalpdf = path + 'docuSignpropoalpdf.pdf';
-            });
+            })
+            .catch(e => {
+              console.log("failed pdf print");
+            })
         });
       }
     } else {
@@ -1326,142 +1448,102 @@ Drip Edge color: -> dripEdgeColor
       );
     }
 
-  this.generatingNumber++;
-  let Isend = this.generatingNumber == this.buildingNumber * this.buildingTypeLength;
+    this.generatingNumber++;
+    let Isend = this.generatingNumber == this.buildingNumber * this.buildingTypeLength;
 
-  let docDefinitionpdf = {
-    pageMargins: [40, 20, 40, 60],
-    content: this.docDefinition,
-    footer: function (currentPage) {
-      return [
-        {
-          text: currentPage == 1 ? footerText : '',
-          bold: true,
-          marginLeft: 35,
-          alignment: 'center'
-        },
-        {
-          layout: 'lightHorizontalLines',
-          table: {
-            headerRows: 1,
-            widths: ['auto', 'auto', 'auto'],
-            body: [
-              ['', '', ''],
-              [
+    let docDefinitionpdf = {
+      pageMargins: [40, 20, 40, 60],
+      content: this.docDefinition,
+      footer: function (currentPage) {
+        return [
+          {
+            text: currentPage == 1 ? footerText : '',
+            bold: true,
+            marginLeft: 35,
+            alignment: 'center'
+          },
+          {
+            layout: 'lightHorizontalLines',
+            table: {
+              headerRows: 1,
+              widths: ['auto', 'auto', 'auto'],
+              body: [
+                ['', '', ''],
                 [
-                  { text: 'Office Ph#: (208) 608-5569', style: ['footerText'] },
-                  { text: 'office@ehroofing.com', style: ['footerNetwork'] }
-                ],
-                [
-                  {
-                    text: 'Adress: 9530 S Powerline Rd, Nampa, ID 83686',
-                    style: ['footerText']
-                  },
-                  { text: 'www.ehroofing.com', style: ['footerNetwork'] }
-                ],
-                [
-                  {
-                    image: logo4,
-                    width: 60
-                  }
+                  [
+                    { text: 'Office Ph#: (208) 608-5569', style: ['footerText'] },
+                    { text: 'office@ehroofing.com', style: ['footerNetwork'] }
+                  ],
+                  [
+                    {
+                      text: 'Adress: 9530 S Powerline Rd, Nampa, ID 83686',
+                      style: ['footerText']
+                    },
+                    { text: 'www.ehroofing.com', style: ['footerNetwork'] }
+                  ],
+                  [
+                    {
+                      image: logo4,
+                      width: 60
+                    }
+                  ]
                 ]
               ]
-            ]
-          },
-          style: ['tableStyles']
+            },
+            style: ['tableStyles']
+          }
+        ];
+      },
+      //css
+      styles: {
+        proposal: {
+          fontSize: 22,
+          bold: true
+        },
+        proposalMin: {
+          fontSize: 16,
+          bold: true
+        },
+        columnsStyle: {
+          marginTop: 10
+        },
+        fontSizeText: {
+          fontSize: 12
+        },
+        scopeWork: {
+          fontSize: 17,
+          bold: true
+        },
+        footerText: {
+          fontSize: 12,
+          bold: true
+        },
+        footerNetwork: {
+          color: '#007aff',
+          bold: true
+        },
+        tableStyles: {
+          marginLeft: 40,
+          marginRight: 10
         }
-      ];
-    },
-    //css
-    styles: {
-      proposal: {
-        fontSize: 22,
-        bold: true
       },
-      proposalMin: {
-        fontSize: 16,
-        bold: true
-      },
-      columnsStyle: {
-        marginTop: 10
-      },
-      fontSizeText: {
-        fontSize: 12
-      },
-      scopeWork: {
-        fontSize: 17,
-        bold: true
-      },
-      footerText: {
-        fontSize: 12,
-        bold: true
-      },
-      footerNetwork: {
-        color: '#007aff',
-        bold: true
-      },
-      tableStyles: {
-        marginLeft: 40,
-        marginRight: 10
-      }
-    },
-    images
-  };
-  let singledocDefinitionpdf = this.makedocDfinitionpdf(tableLogos, jobType, building, sowText, signSections, footerText, logo4, images)
+      images
+    };
+    let singledocDefinitionpdf = this.makedocDfinitionpdf(tableLogos, jobType, building, sowText, signSections, footerText, logo4, {...images})
 
-  // for test
-  // this.pdfs = [...this.pdfs, {
-  //   idBuilding: building.building.id,
-  //   type: type,
-  //   urlPDF: 'test.pdf',
-  //   file: this.urlpath,
-  //   isFinal: this.finalProposal.isFinal
-  // }];
+    // for test
+    // this.pdfs = [...this.pdfs, {
+    //   idBuilding: building.building.id,
+    //   type: type,
+    //   urlPDF: 'test.pdf',
+    //   file: this.urlpath,
+    //   isFinal: this.finalProposal.isFinal
+    // }];
 
 
-
-
-  this.pdfObject = pdfMake.createPdf(singledocDefinitionpdf);
-  if (this.platform.is('cordova')) {
-    this.pdfObject.getBuffer(buffer => {
-      var blob = new Blob([buffer], { type: 'application/pdf' });
-      var path;
-
-      if (this.platform.is('ios')) {
-        path = this.file.documentsDirectory;
-      } else if (this.platform.is('android')) {
-        path = this.file.externalDataDirectory;
-      }
-
-      this.file
-        .writeFile(
-          path,
-          'Proposal_' + building.building.id + '_' + type + '_'+ this.generatingNumber + '.pdf',
-          blob,
-          { replace: true }
-        )
-        .then(entry => {
-
-          this.urlpath = `${path}Proposal_${building.building.id}_${type}_${this.generatingNumber}.pdf`;
-          let win: any = window;
-          var myURL = win.Ionic.WebView.convertFileSrc(this.urlpath);
-          this.pdfs = [...this.pdfs, {
-            idBuilding: building.building.id,
-            type: type,
-            urlPDF: myURL,
-            file: this.urlpath,
-            isFinal: this.finalProposal.isFinal
-          }];
-        });
-    });
-  }
-  if (Isend) {
-    this.pdfObjectPrinter = pdfMake.createPdf(docDefinitionpdf);
-    // this.getPdfs();// for test
-
-
+    this.pdfObject = pdfMake.createPdf(singledocDefinitionpdf);
     if (this.platform.is('cordova')) {
-      this.pdfObjectPrinter.getBuffer(buffer => {
+      this.pdfObject.getBuffer(buffer => {
         var blob = new Blob([buffer], { type: 'application/pdf' });
         var path;
 
@@ -1474,18 +1556,56 @@ Drip Edge color: -> dripEdgeColor
         this.file
           .writeFile(
             path,
-            'Proposal_' + building.building.id + 'printer.pdf',
+            'Proposal_' + building.building.id + '_' + type + '_'+ this.generatingNumber + '.pdf',
             blob,
             { replace: true }
           )
           .then(entry => {
-            this.printerpdf = path + 'Proposal_' + building.building.id + 'printer.pdf';
-            this.getPdfs();
+
+            this.urlpath = `${path}Proposal_${building.building.id}_${type}_${this.generatingNumber}.pdf`;
+            let win: any = window;
+            var myURL = win.Ionic.WebView.convertFileSrc(this.urlpath);
+            this.pdfs = [...this.pdfs, {
+              idBuilding: building.building.id,
+              type: type,
+              urlPDF: myURL,
+              file: this.urlpath,
+              isFinal: this.finalProposal.isFinal
+            }];
           });
       });
     }
-  }
-  this.pdfObject.open();
+    if (Isend) {
+      this.pdfObjectPrinter = pdfMake.createPdf(docDefinitionpdf);
+      // this.getPdfs();// for test
+
+
+      if (this.platform.is('cordova')) {
+        this.pdfObjectPrinter.getBuffer(buffer => {
+          var blob = new Blob([buffer], { type: 'application/pdf' });
+          var path;
+
+          if (this.platform.is('ios')) {
+            path = this.file.documentsDirectory;
+          } else if (this.platform.is('android')) {
+            path = this.file.externalDataDirectory;
+          }
+
+          this.file
+            .writeFile(
+              path,
+              'Proposal_' + building.building.id + 'printer.pdf',
+              blob,
+              { replace: true }
+            )
+            .then(entry => {
+              this.printerpdf = path + 'Proposal_' + building.building.id + 'printer.pdf';
+              this.getPdfs();
+            });
+        });
+      }
+    }
+    this.pdfObject.open();
   }
 
 
@@ -1708,22 +1828,70 @@ Drip Edge color: -> dripEdgeColor
   }
   PrinterFunction() {
     // this.pdfObjectPrinter.open(); // test
-    this.printer
-    .print(this.printerpdf, {
-      name: 'My PDF'
-    })
-    .then(
-      () => {
-        console.log('Print success!');
-        // this.disablePrinter = false;
-      },
-      error => {
-        console.error('Print failed:', error);
+    let path = "";
+    const fileName = this.project.id + '_signedDocument.pdf';
+
+    if (this.platform.is('ios')) {
+      path = this.file.documentsDirectory;
+    } else if (this.platform.is('android')) {
+      path = this.file.externalDataDirectory;
+    }
+    if (this.isSigned) {
+      fetch(this.pdfSrc)
+      .then(response => response.blob()).then(async (blob) => {
+        await this.file
+        ?.writeFile(
+          path,
+          fileName,
+          blob,
+          { replace: true }
+        )
+        ?.then(entry => {
+          this.printerpdf = path + fileName;
+          if(this.printerpdf) {
+            this.printer
+            .print(this.printerpdf, {
+              name: 'My PDF'
+            })
+            .then(
+              () => {
+                console.log('Print success!');
+                // this.disablePrinter = false;
+              },
+              error => {
+                console.error('Print failed:', error);
+              }
+            )
+            .catch(err => {
+              console.error('Unexpected error:', err);
+            });
+          }
+        })
+        .catch(e => {
+          console.log('failed pdf print');
+          this.printerpdf = null;
+        });
+      });
+    } else {
+      if(this.printerpdf) {
+        this.printer
+        .print(this.printerpdf, {
+          name: 'My PDF'
+        })
+        .then(
+          () => {
+            console.log('Print success!');
+            // this.disablePrinter = false;
+          },
+          error => {
+            console.error('Print failed:', error);
+          }
+        )
+        .catch(err => {
+          console.error('Unexpected error:', err);
+        });
       }
-    )
-    .catch(err => {
-      console.error('Unexpected error:', err);
-    });
+    }
   }
 
   async blobToBase64(blob: Blob): Promise<string> {
@@ -1733,6 +1901,21 @@ Drip Edge color: -> dripEdgeColor
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
+  }
+
+  uint8ArrayToBase64(uint8Array) {
+    if(!uint8Array?.length) {
+      alert('No uint8Array');
+      return null;
+    }
+    // Convert the Uint8Array to a string
+    let binaryString = '';
+    for (let i = 0; i < uint8Array.length; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+
+    // Convert the binary string to Base64
+    return btoa(binaryString);
   }
 
   selectPage(selectedPage) {
@@ -1748,33 +1931,39 @@ Drip Edge color: -> dripEdgeColor
   }
 
   getPdfs() {
-    if (this.pdfs.length == 0) {
-      setTimeout(() => {
-        this.getPdfs();
-      }, 1000);
-      return;
-    }
-    this.buildingOp[0].id;
+    // if (this.finalProposaltext) {
 
-    console.log(this.pdfs);
-    let init
+    // } else {
 
-    this.pdfs.forEach((pdf) => {
-
-      if(pdf.idBuilding == this.buildingOp[0].id && pdf.type == this.typeTxt) {
-        init = pdf;
+      if (this.pdfs.length == 0) {
+        setTimeout(() => {
+          this.getPdfs();
+        }, 1000);
+        return;
       }
-    })
+      this.buildingOp[0].id;
 
-    if (init != undefined) {
-      this.pdfSrc = init.urlPDF;
-    }
-    this.loading.dismiss();
+      let init
+
+      this.pdfs.forEach((pdf) => {
+
+        if(pdf.idBuilding == this.buildingOp[0].id && pdf.type == this.typeTxt) {
+          init = pdf;
+        }
+      })
+
+      if (init != undefined && !this.isSigned) {
+        this.pdfSrc = init.urlPDF;
+      }
+    // }
+    // this.loading.dismiss();
   }
 
   afterLoadComplete(pdf: PDFDocumentProxy) {
     this.page = 1;
     this.totalPages = pdf._pdfInfo.numPages;
+    this.loadingFiles = false;
+    this.loading.dismiss();
   }
 
   getBase64ImageFromURL(url) {
@@ -1799,9 +1988,28 @@ Drip Edge color: -> dripEdgeColor
   }
 
   async openEmailClient() {
+    const loading = await this.loadingCtrl
+      .create({
+        spinner: 'circles'
+      })
+      .then(res => {
+        return res;
+        // if (this.platform.is('cordova')) {
+        // }
+      });
+    await loading.present();
     this.catalogGeneral = await this.catalogsService.getGeneral().then(resp => {
       return resp.data;
     });
+
+    const selectedGroups = []
+    this.finalProposal.flashingColor && selectedGroups.push("Flashing & Pipe flashing");
+    this.finalProposal.sACapColor && selectedGroups.push("SA Cap");
+    this.finalProposal.atticVentColor && selectedGroups.push("Attic Vents");
+    this.finalProposal.regletColor && selectedGroups.push("Reglet");
+    this.finalProposal.soffitVentColor && selectedGroups.push("Soffit Vents");
+    this.finalProposal.shingleColor && selectedGroups.push("Shingle");
+    this.finalProposal.dripEdgeColor && selectedGroups.push("Drip Edge");
 
     let projectAddress = `${this.project.st_address}`;
 
@@ -1821,54 +2029,76 @@ Drip Edge color: -> dripEdgeColor
     mailSubject = mailSubject.replace('[ProjectAddress]', projectAddress);
     mailBody = mailBody.replace('[Inspector_name]', projectInspector);
 
-    let mailArray = [];
+    const mailArray = [];
     this.project.contact_address.contact.emails.forEach(element => {
       mailArray.push(element.email);
     });
-    let mailTo = mailArray.length != 0 ? mailArray : '';
+    const mailTo = mailArray.length != 0 ? mailArray : '';
 
-    console.log("mail", mailTo);
-
+    const email = {
+      to: mailTo,
+      cc: mailCc,
+      bcc: mailCco,
+      // attachments,
+      subject: mailSubject,
+      body: mailBody,
+      isHtml: true
+    };
 
     if (this.platform.is('cordova')) {
-      let attachments = [];
-      this.pdfs.forEach(pdf => {
-        attachments.push(pdf.file);
-      });
+      if(this.finalProposaltext === true && this.blob) {
+        const currentVersion = this.project.versions.find(x => x.active);
 
-      console.log("test final attachments: " + attachments);
+        const data = {
+          projectId: this.project.id,
+          versionId: currentVersion.id,
+          contactAddress: {
+            firstName: this.project.contact_address.contact.first_name,
+            lastName: this.project.contact_address.contact.last_name,
+            address: this.project.contact_address.address,
+            city: this.project.contact_address.city,
+            state: this.project.contact_address.country_state.country_state,
+          },
+          shingleLines: this.shingleLines,
+          groups: selectedGroups,
+          // pdfBytes: base64String,
+          customerName: this.project.st_name,
+          mailBody
+        };
 
-
-      if(this.finalProposaltext == true) {
-        attachments = [];
-        // this.file.checkFile(this.file.dataDirectory, 'docuSignpropoalpdf.pdf')
-        // .then(() => {
-          attachments.push(this.docuSignpropoalpdf);
-        // })
-        // .catch(err => {
-          // console.error("File not found:", err);
-        // });
+        const base64String = this.uint8ArrayToBase64(this.blob);
+        if(!base64String) {
+          alert('No base64String');
+          return null;
+        }
+        data["pdfBytes"] = base64String;
+        console.log("sent to docusign");
+        const result = await this.docusignService.createDocument(data);
+        const buttonText = `<br><br><a href='${result}' style="width: 200px; padding: 8px; background-color: yellow; margin: auto;">To Docusign</a>`;
+        email.body = mailBody + buttonText;
+      } else if (this.isSigned) {
+        const buttonText = `<br><br><a href='${this.pdfSrc}' style="width: 200px; padding: 8px; background-color: yellow; margin: auto;">Signed Document</a>`;
+        email.body = mailBody + buttonText;
+      } else {
+        const attachments = [];
+        this.pdfs.forEach(pdf => {
+          attachments.push(pdf.file);
+        });
+        email["attachments"] = attachments;
       }
-      console.log("test final attachments: " + attachments);
       // 2024-10-18 11:55:36.541313-0600 E&H[546:52784] test final attachments: file:///var/mobile/Containers/Data/Application/D3EB6FC1-82E4-45D2-BDCB-6AF314349114/Documents/docuSignpropoalpdf.pdf
 
-      //let app;
-      this.emailComposer.getClients().then(apps => {
+      // Read the PDF document to be signed
+      // const pdfBytes = fs.readFileSync(this.docuSignpropoalpdf);
+
+      // this.emailComposer?.getClients()?.then(apps => {
         //app = apps[0];
         //this.emailComposer.addAlias('main', app);
-        let email = {
-          to: mailTo,
-          cc: mailCc,
-          bcc: mailCco,
-          attachments: attachments,
-          subject: mailSubject,
-          body: mailBody,
-          isHtml: true
-        };
-        this.emailComposer.open(email);
-      });
+      await loading.dismiss();
+      await this.emailComposer.open(email);
     }
     this.canChangeStatus = true;
+    await loading.dismiss();
   }
 
   replaceTxt(txt, values = {}) {
@@ -1998,12 +2228,12 @@ Drip Edge color: -> dripEdgeColor
     const checkPsbUpgradesToFinal =
       version.buildings
         .find(item => item.id == buildingId)
-        .psb_measure.psb_upgrades.filter(item => item.id_cost_integration === 2)
+        .psb_measure?.psb_upgrades?.filter(item => item.id_cost_integration === 2)
         .length === 0;
     const checkPsbOptionsToFinal =
       version.buildings
         .find(item => item.id == buildingId)
-        .psb_measure.psb_options.filter(
+        .psb_measure?.psb_options?.filter(
           item => !item.is_built_in && item.deletedAt === null
         ).length === 0;
 
@@ -2042,11 +2272,10 @@ Drip Edge color: -> dripEdgeColor
       'category_spray_paint',
       buildingId
     );
-    const louvreVents = await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_6_without_ext', buildingId) &&
-                        await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_4_without_ext', buildingId) &&
-                        await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_6_with_ext', buildingId) &&
-                        await this.checkPsbMaterialCalcSelectedList('category_louvre_vents_4_with_ext', buildingId)
-                      ;
+    const louvreVents = await this.checkPsbMaterialCalcSelectedList(
+      'category_louvre_vents',
+      buildingId
+    );
 
     this.finalProposal.flashingColor =
       pipeFlashing ||
@@ -2076,19 +2305,10 @@ Drip Edge color: -> dripEdgeColor
     );
 
     // category_soffit_vents
-    this.finalProposal.soffitVentColor = await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_6_16', buildingId) &&
-                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_4_16', buildingId) &&
-                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_2', buildingId) &&
-                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_3', buildingId) &&
-                                        await this.checkPsbMaterialCalcSelectedList('category_soffit_vents_4', buildingId)
-                                      ;
-
-    /*// category_soffit_vents
     this.finalProposal.soffitVentColor = await this.checkPsbMaterialCalcSelectedList(
       'category_soffit_vents',
       buildingId
     );
-    */
 
     // Shingle and Ridge color and Drip Edge color
     const jobMaterialTypeId = version.buildings.find(item => item.id == buildingId)
@@ -2098,7 +2318,6 @@ Drip Edge color: -> dripEdgeColor
     );
     this.finalProposal.shingleColor = jobMaterialTypeId === jobMaterialTypeShingle;
     this.finalProposal.dripEdgeColor = jobMaterialTypeId === jobMaterialTypeShingle;
-
   }
 
   async checkPsbMaterialCalcSelectedList(key: string, buildingId) {
@@ -2121,11 +2340,11 @@ Drip Edge color: -> dripEdgeColor
     const building = this.buildings.find(item => item.id == buildingId);
     // obtengo en los materiales calculados relacionados con materials price list ids
     const psbMaterialCalcSelectedList =
-      building.psb_measure.psb_material_calculations.filter(
+      building.psb_measure?.psb_material_calculations?.filter(
         item => materialsIds.includes(item.id_concept) && item.deletedAt == null
       );
 
-    if (psbMaterialCalcSelectedList.length >= 1) return true;
+    if (psbMaterialCalcSelectedList && psbMaterialCalcSelectedList.length >= 1) return true;
     else return false;
   }
 }

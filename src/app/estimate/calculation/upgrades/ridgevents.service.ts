@@ -296,7 +296,7 @@ export class RidgeVentsService {
 
 
     hasBuildingAdvancedVentilation(measure: PsbMeasures) {
-        const noRequired = measure.psb_no_requireds.find(x => x.id_resource == 23)?.no_required ?? false;
+        const noRequired = measure.psb_no_requireds?.find(x => x.id_resource == 23)?.no_required ?? false;
         return !noRequired && measure.psb_upgrades_vent != undefined && measure.psb_upgrades_vent != null;
     }
 

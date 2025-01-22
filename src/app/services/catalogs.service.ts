@@ -83,7 +83,6 @@ import { Buffer } from 'buffer';
  * @author: Carlos Rodríguez
  */
 export class CatalogsService {
-  private url = environment.url;
   resorceRepository: ResourcesRepository;
   jobTypeRepository: JobTypesRepository;
   prospectingMaterialTypeRepository: ProspectingMaterialTypesRepository;
@@ -118,6 +117,7 @@ export class CatalogsService {
   warrantiesRepository: WarrantiesRepository;
   syncDateRepository: SyncDateRepository;
   userRepository: UserRepository;
+  private url = environment.url;
 
   constructor(
     private http: HttpClient,
