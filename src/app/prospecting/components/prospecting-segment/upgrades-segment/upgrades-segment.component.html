@@ -1,35 +1,39 @@
-<div [class.div-disabled]="upgradesActive || userDisabledPermision" class="padding-bottom">
+<div
+  [class.div-disabled]="upgradesActive || userDisabledPermision"
+  class="padding-bottom">
   <ion-grid>
     <ion-row>
-      <ion-col size="3" size="1" size-md="3"></ion-col>
-      <ion-col size="6" size="10" size-md="6">
+      <ion-col size="3" size-md="3"></ion-col>
+      <ion-col size="6" size-md="6">
         <div class="modal-title-padding">
           <ion-label class="roofing-title">Upgrades</ion-label>
         </div>
       </ion-col>
-      <ion-col size="3" size="1" size-md="3"></ion-col>
+      <ion-col size="3" size-md="3"></ion-col>
     </ion-row>
   </ion-grid>
 
   <app-checkbox-list
-  *ngIf="costIntegrationsValleyMetal"
-  [options]="costIntegrationsValleyMetal"
-  subTitle="W’ Style valley metal"
-  text="cost_integration"
-  (optionEmited)="onOptionSelectedCostIntegrations($event, 1, 'valley')"
-  ></app-checkbox-list>
-<div [class.div-disabled]="withoutRidge" class="padding-bottom">
-  <app-checkbox-list
-  *ngIf="costIntegrationsRidgeVent"
-  [options]="costIntegrationsRidgeVent"
-  subTitle="Ridge vent"
-  text="cost_integration"
-  (optionEmited)="onOptionSelectedCostIntegrations($event, 2, 'ridge')"
-  ></app-checkbox-list>
-</div>
+    *ngIf="costIntegrationsValleyMetal"
+    [options]="costIntegrationsValleyMetal"
+    subTitle="W’ Style valley metal"
+    text="cost_integration"
+    (optionEmited)="
+      onOptionSelectedCostIntegrations($event, 1, 'valley')
+    "></app-checkbox-list>
+  <div [class.div-disabled]="withoutRidge" class="padding-bottom">
+    <app-checkbox-list
+      *ngIf="costIntegrationsRidgeVent"
+      [options]="costIntegrationsRidgeVent"
+      subTitle="Ridge vent"
+      text="cost_integration"
+      (optionEmited)="
+        onOptionSelectedCostIntegrations($event, 2, 'ridge')
+      "></app-checkbox-list>
+  </div>
 
   <ion-grid>
-    <ion-row>
+    <!--<ion-row>
       <ion-col size="3" size="1" size-md="3"></ion-col>
       <ion-col size="6" size="10" size-md="6">
         <ion-item lines="none" class="ion-no-padding">
@@ -42,14 +46,20 @@
         </ion-item>
       </ion-col>
       <ion-col size="3" size="1" size-md="3"></ion-col>
-    </ion-row>
+    </ion-row>-->
     <ion-row>
       <ion-col size="3" size-xs="1" size-md="3" class="ion-no-padding"></ion-col>
       <ion-col size="6" size-xs="10" size-md="6" class="ion-no-padding">
         <ion-list class="ion-no-padding">
-          <div *ngFor="let item of upgradeList">
-            <ion-item style="height: 35px" *ngIf="item.visible" class="ion-no-padding" lines="none">
-              <ion-label class="lbl-margin" [color]="item.value ? 'black': 'medium'">{{ item.description }}</ion-label>
+          <div *ngfor="let item of upgradeList">
+            <ion-item
+              style="height: 35px"
+              *ngif="item.visible"
+              class="ion-no-padding"
+              lines="none">
+              <ion-label class="lbl-margin" [color]="item.value ? 'black' : 'medium'">{{
+                item.description
+              }}</ion-label>
               <ion-label class="lbl-margin" slot="end">{{ item.value }}</ion-label>
             </ion-item>
           </div>
@@ -64,7 +74,5 @@
   [class.div-disabled]="userDisabledPermision || buildingVerified"
   [isVerified]="upgradesActive"
   [showIconError]="showIconError"
-  (optionEmited)="onVerifiedCheked($event)"
->
+  (optionEmited)="onVerifiedCheked($event)">
 </app-verified-information>
-

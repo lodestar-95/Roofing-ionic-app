@@ -182,7 +182,7 @@ export class VentingsService {
       soffitVents616,
       shingles
     );
-                                  
+
 
       let ridgeVentLF = 0;
 
@@ -190,7 +190,7 @@ export class VentingsService {
         measures.vent_is_ridgevent_in_place ||
         measures.vent_is_ridgevent_be_replace ||
         measures.vent_is_ridgevent_add;
-      
+
       if (isRidgeVentApplicable) {
         ridgeVentLF = measures.vent_is_ridgevent_in_place
           ? measures.vent_ridgevent_lf ?? measures.ridge_lf
@@ -205,13 +205,13 @@ export class VentingsService {
       shingles
     );
     ventilationCalculations = [].concat(
-      x, 
-      y, 
-      z, 
-      w, 
-      v, 
-      u, 
-      costLouvreVents4Ext, 
+      x,
+      y,
+      z,
+      w,
+      v,
+      u,
+      costLouvreVents4Ext,
       costLouvreVents4WithoutExt,
       costLouvreVents6Ext,
       costLouvreVents6WithoutExt,
