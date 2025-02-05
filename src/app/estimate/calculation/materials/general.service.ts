@@ -160,9 +160,6 @@ export class GeneralService {
   async calculatePiecesCostCustom(skylights, material, shingles, addCoverageUnit = true) {
     const calc = [];
     const concept_types_material = await this.getConstValue('concept_types_material');
-    if(skylights === undefined) {
-      return calc;
-    }
     for (const skylight of skylights) {
         const newCalc = JSON.parse(JSON.stringify(CALCULATION_SCHEMA));
         newCalc.qty = skylight.custom_qty;
@@ -709,13 +706,17 @@ export class GeneralService {
   };
 
   async getConstDecimalValue(key) {
-    return +(await (this.getConstValue(key)));
+    try {
+      return +(await (this.getConstValue(key)));
+
+    } catch (error) {
+      console.log(key, error)
+      throw error;
+    }
   }
 
   async getConstValue(key) {
-    return await this.catalogs.getGeneral().then(result => {
-      return result.data.find(x => x.key == key)?.value
-  });
+    return await this.catalogs.getGeneral().then(result => result.data.find(x => x.key == key).value);
   }
 
   convertFractionalToDecimal = (integerPart, fractionalPart) => {

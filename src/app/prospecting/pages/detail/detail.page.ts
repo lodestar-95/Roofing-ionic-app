@@ -75,6 +75,9 @@ export class DetailPage implements OnInit, OnDestroy {
         return;
       }
 
+      console.log("project: ", this.project);
+      
+
       const version = this.project.versions.find(x => x.active);
       if (!version) {
         return;
@@ -103,12 +106,17 @@ export class DetailPage implements OnInit, OnDestroy {
         this.idUserRole = parseInt(user.role.id_role);
 
         this.showMdlAcceptance = false;
-        if (this.project.id_project_status == 3 || this.project.id_project_status >= 5) {
+        if (this.project.id_project_status == 3 || this.project.id_project_status == 5) {
           if (optionsOK && updatesOK && shingle_lines) {
+            
             this.showMdlAcceptance = true;
           }
         }
 
+
+        if (this.project.id_project_status == 5) {
+          this.showMdlAcceptance = true
+        }
         if (this.project.id_project_status == 5) {
           this.showCloseBtn = false
         }
@@ -123,9 +131,7 @@ export class DetailPage implements OnInit, OnDestroy {
       });
 
 
-      if (this.project.id_project_status < 3) {
-        this.showMdlAcceptance = false;
-      }
+      
     });
 
 
@@ -175,8 +181,10 @@ export class DetailPage implements OnInit, OnDestroy {
   }
 
   getNextProjectVersion(projectVersion: string) {
-    let versionNumber = +projectVersion.toLowerCase().match(/v(\d+)/)[1];
-    return `Proposal ${++versionNumber}-${new Date().toLocaleDateString()}`;
+    const matchVersion = projectVersion.match(/\d+/); // Find the first number in the string
+
+    let versionNumber =  matchVersion ? parseInt(matchVersion[0], 10) : 0;
+    return `Proposal ${1+versionNumber}-${new Date().toLocaleDateString()}`;
   }
 
 
@@ -247,7 +255,7 @@ export class DetailPage implements OnInit, OnDestroy {
         reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
       }
     }
-    if (this.project.id_project_status >= 5) {
+    if (this.project.id_project_status == 5) {
       const alert = await this.alertController.create({
         header: 'Are you sure you want accept this proposal?',
         message: reject_message,
@@ -349,13 +357,13 @@ export class DetailPage implements OnInit, OnDestroy {
 
     const lastVersion = this.project.versions[this.project.versions.length - 1];
     const nextProjectVersion = this.getNextProjectVersion(lastVersion.project_version);
-    // const newVersionId = uuidv4();
+    const newVersionId = uuidv4();
 
 
 
     return {
       ...activeVersion,
-      // id: newVersionId,
+      id: newVersionId,
       project_version: nextProjectVersion,
       active: true,
       is_current_version: true,
@@ -404,25 +412,8 @@ export class DetailPage implements OnInit, OnDestroy {
 
 
   async clickCreateVersion() {
-
-    this.rejectReasons = await (await this.rejectReasonService.getMockRejectReason()).data
-
-    let reject_message;
-
-
-    if (this.project.id_reject_reason !== null)
-      if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
-        reject_message = "This proposal was marked as " + this.project.reject_reason;
-      }
-      else
-        reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
-    else {
-      reject_message = "Previous proposal was declined without a specified reason";
-    }
-
     const alert = await this.alertController.create({
       header: 'Are you sure you want create a new  proposal option?',
-      message: reject_message,
       buttons: [
         {
           text: 'Cancel',
@@ -431,7 +422,7 @@ export class DetailPage implements OnInit, OnDestroy {
           handler: () => {
           }
         }, {
-          text: 'Accept',
+          text: 'Yes',
           handler: () => {
             this.createVersion();
           }

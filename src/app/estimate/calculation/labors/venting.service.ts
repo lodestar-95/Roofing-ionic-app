@@ -54,7 +54,7 @@ export class VentingService {
 
         const soffitVents616 = this.safetySum(psb_soffitvents?.soffitVent616Add, psb_soffitvents?.soffitVent616);
         const soffitVents616Calculations = await this.calculateLaborVent(soffitVents616, shingles, laborPrices, 'labor_category_install_soffit_6_x_16_vents', 'labor_price_install_6_X_16_soffit_vents');
-        
+
         const louvreVents4WithExtension = this.safetySum(psb_louvrevents?.vent_louveredVent4WithExtensions_add, psb_louvrevents?.vent_louveredVent4WithExtensions);
         const louvreVents4WithExtensionCalculations = await this.calculateLaborVent(louvreVents4WithExtension, shingles, laborPrices, 'labor_category_install_4_louvre_vents_with_extension', 'labor_price_install_4_louvre_vents_with_extensions');
 
@@ -79,7 +79,7 @@ export class VentingService {
         const louvreVents4WithExtensionRemove = psb_louvrevents?.vent_louveredVent4WithExtensions_remove ?? 0;
         const louvreVents4WithExtensionCalculationsRemove = await this.calculateLaborVent(louvreVents4WithExtensionRemove, shingles, laborPrices, 'labor_category_remove_4_louvre_vents_with_extension', 'labor_price_remove_louvre_4_vents_with_extension');
 
-        const louvreVents6WithExtensionRemove = psb_louvrevents?.vent_louveredVent6WithExtensions_remove ?? 0;
+        const louvreVents6WithExtensionRemove = psb_louvrevents?.vent_louveredVent6WithoutExtensions_remove ?? 0;
         const louvreVents6WithExtensionCalculationsRemove = await this.calculateLaborVent(louvreVents6WithExtensionRemove, shingles, laborPrices, 'labor_category_remove_6_louvre_vents_with_extension', 'labor_price_remove_louvre_6_vents_with_extension');
 
         const louvreVents4WithoutExtensionRemove = psb_louvrevents?.vent_louveredVent4WithoutExtensions_remove ?? 0;
@@ -99,37 +99,37 @@ export class VentingService {
 
         const powerVentsRemove = building?.psb_measure.vent_power_vent_pc_remove ?? 0;
         const powerVentsCalculationsRemove = await this.calculateLaborVent(powerVentsRemove, shingles, laborPrices, 'labor_category_remove_power_vents', 'labor_price_remove_power_vents');
-        
+
         const solarPowerVentsRemove = building?.psb_measure.vent_solar_power_vent_pc_remove ?? 0;
-        const solarPowerVentsCalculationsRemove = await this.calculateLaborVent(solarPowerVentsRemove, shingles, laborPrices, 'labor_category_remove_solar_power_vents', 'labor_category_remove_solar_power_vents');
- 
+        const solarPowerVentsCalculationsRemove = await this.calculateLaborVent(solarPowerVentsRemove, shingles, laborPrices, 'labor_category_remove_solar_power_vents', 'labor_price_remove_solar_power_vents');
+
         // CUT
         const louvreVents4WithExtensionCut = psb_louvrevents?.vent_louveredVent4WithExtensions_add ?? 0;
         const louvreVents4WithExtensionCalculationsCut = await this.calculateLaborVent(louvreVents4WithExtensionCut, shingles, laborPrices, 'labor_category_cut_in_4_louvre_vents_with_extension', 'labor_price_cut_in_4_louvre_vents_with_extension');
 
-        const louvreVents6WithExtensionCut = psb_louvrevents?.vent_louveredVent6WithExtensions_remove?? 0;
+        const louvreVents6WithExtensionCut = psb_louvrevents?.vent_louveredVent6WithExtensions_remove ?? 0;
         const louvreVents6WithExtensionCalculationsCut = await this.calculateLaborVent(louvreVents6WithExtensionCut, shingles, laborPrices, 'labor_category_cut_in_6_louvre_vents_with_extension', 'labor_price_cut_in_6_louvre_vents_with_extension');
 
 
-        const louvreVents6WithoutExtensionCut = psb_louvrevents?.vent_louveredVent6WithoutExtensions_remove?? 0;
+        const louvreVents6WithoutExtensionCut = psb_louvrevents?.vent_louveredVent6WithoutExtensions_remove ?? 0;
         const louvreVents6WithoutExtensionCalculationsCut = await this.calculateLaborVent(louvreVents6WithoutExtensionCut, shingles, laborPrices, 'labor_category_cut_in_6_louvre_vents_without_extension', 'labor_price_cut_in_6_louvre_vents_without_extension');
 
-        const louvreVents4WithoutExtensionCut = psb_louvrevents?.vent_louveredVent4WithoutExtensions_add ?? 0;
+        const louvreVents4WithoutExtensionCut = psb_louvrevents?.vent_louveredVent4WithExtensions_add ?? 0;
         const louvreVents4WithoutExtensionCalculationsCut = await this.calculateLaborVent(louvreVents4WithoutExtensionCut, shingles, laborPrices, 'labor_category_cut_in_4_louvre_vents_without_extension', 'labor_price_cut_in_4_louvre_vents_without_extension');
-        
-        const soffit616Cut = psb_soffitvents.soffitVent616Add ?? 0;
+
+        const soffit616Cut = psb_soffitvents?.soffitVent616Add ?? 0;
         const soffit616CalculationsCut = await this.calculateLaborVent(soffit616Cut, shingles, laborPrices, 'labor_category_cut_in_soffit_6_x_16_vents', 'labor_price_cut_in_6_16_soffit_vents');
 
-        const soffit416Cut = psb_soffitvents.soffitVent416Add ?? 0;
+        const soffit416Cut = psb_soffitvents?.soffitVent416Add ?? 0;
         const soffit416CalculationsCut = await this.calculateLaborVent(soffit416Cut, shingles, laborPrices, 'labor_category_cut_in_soffit_4_x_16_vents', 'labor_price_cut_in_4_16_soffit_vents');
 
-        const soffit4Cut = psb_soffitvents.soffitVent4Add ?? 0;
+        const soffit4Cut = psb_soffitvents?.soffitVent4Add ?? 0;
         const soffit4CalculationsCut = await this.calculateLaborVent(soffit4Cut, shingles, laborPrices, 'labor_category_cut_in_soffit_4_vents', 'labor_price_cut_in_4_soffit_vents');
 
-        const soffit2Cut = psb_soffitvents.soffitVent2Add ?? 0;
+        const soffit2Cut = psb_soffitvents?.soffitVent2Add ?? 0;
         const soffit2CalculationsCut = await this.calculateLaborVent(soffit2Cut, shingles, laborPrices, 'labor_category_cut_in_soffit_2_vents', 'labor_price_cut_in_2_soffit_vents');
 
-        const soffit3Cut = psb_soffitvents.soffitVent3Add ?? 0;
+        const soffit3Cut = psb_soffitvents?.soffitVent3Add ?? 0;
         const soffit3CalculationsCut = await this.calculateLaborVent(soffit3Cut, shingles, laborPrices, 'labor_category_cut_in_soffit_3_vents', 'labor_price_cut_in_3_soffit_vents');
 
         const metalAtticVentsCut = building?.psb_measure.vent_metal_artict_replace ?? 0;
@@ -137,7 +137,8 @@ export class VentingService {
 
         const powerVentCut = building?.psb_measure.vent_power_vent_pc_add ?? 0;
         const powerVentCalculationsCut = await this.calculateLaborVent(powerVentCut, shingles, laborPrices, 'labor_category_cut_in_power_vent', 'labor_category_cut_in_power_vent');
-        
+
+        console.log("++++++");
         const solarPowerVentCut = building?.psb_measure.vent_solar_power_vent_pc_add ?? 0;
         const solarPowerVentCalculationsCut = await this.calculateLaborVent(solarPowerVentCut, shingles, laborPrices, 'labor_category_cut_in_solar_power_vent', 'labor_price_cut_in_solar_power_vents');
 
@@ -145,9 +146,9 @@ export class VentingService {
 
 
         return [
-            ...pluginVentCalculations, 
-            ...ridgeVentCalculations, 
-            ...powerVentCalculations, 
+            ...pluginVentCalculations,
+            ...ridgeVentCalculations,
+            ...powerVentCalculations,
             ...solarPowerVentCalculations,
 
             ...soffitVents2Calculations,
@@ -242,6 +243,9 @@ export class VentingService {
         quantity, shingles, laborPrices, keyCategory: string, keyLaborPrice:string) {
         const laborCalculationList = [];
 
+        console.log(keyCategory);
+        console.log(keyLaborPrice);
+        console.log(laborPrices);
         const labor_category = await this.general.getConstDecimalValue(keyCategory);
         const labor_price_category = await this.general.getConstDecimalValue(keyLaborPrice);
         const laborPrice = laborPrices.find(price => price.id == labor_price_category);
@@ -255,6 +259,8 @@ export class VentingService {
 
 
     private getCalculationObj(quantity, laborPrice, category, shingle) {
+      console.log(">>>>>>>>>>>>>");
+      console.log(laborPrice);
         const laborCalculation = JSON.parse(JSON.stringify(CALCULATION_SCHEMA));
         laborCalculation.qty = quantity;
         laborCalculation.calculation_type = 'Costo de ' + laborPrice.labor;

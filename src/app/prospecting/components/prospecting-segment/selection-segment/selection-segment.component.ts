@@ -133,7 +133,7 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
         const pv_trademarks = this.removeDuplicateTradeMarks(this.version.pv_trademarks);
 
         console.log('_pv_trademarks', pv_trademarks)
-        
+
         this.trademarksSelected = pv_trademarks.filter(
           (x) => x.selected == true
         );
@@ -158,7 +158,7 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
 
   removeDuplicateTradeMarks(arr) {
     const seen = new Map();
-  
+
     return arr.filter(item => {
       if (seen.has(item.id_trademarks)) {
         return false;
@@ -325,11 +325,15 @@ export class SelectionSegmentComponent implements OnInit, OnDestroy {
     if (!this.building.psb_measure?.psb_upgrades) {
       return false
     }
-
-    return (
-      this.building.psb_measure.psb_upgrades.find((x) => x.id_upgrade == 2)
-        .id_cost_integration == 3
-    );
+    console.log(this.building.psb_measure.psb_upgrades);
+    try {
+      return (
+        this.building.psb_measure.psb_upgrades.find((x) => x.id_upgrade == 2)
+          .id_cost_integration == 3
+      );
+    } catch (error) {
+      return true;
+    }
   }
 
   validateSegments() {

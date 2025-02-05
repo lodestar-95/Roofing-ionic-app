@@ -115,7 +115,7 @@ export class ScopeOfWorkPage implements OnInit {
         if (this.project.id_project_status < 3 || shingle_lines) {
           this.showMdlAcceptance = false
         }
-        if (this.project.id_project_status >= 5) {
+        if (this.project.id_project_status == 5) {
           this.showMdlAcceptance = true
         }
         if (this.project.id_project_status >= 3) {
@@ -128,8 +128,10 @@ export class ScopeOfWorkPage implements OnInit {
     });
   }
   getNextProjectVersion(projectVersion: string) {
-    let versionNumber = +projectVersion.toLowerCase().match(/v(\d+)/)[1];
-    return `V${++versionNumber}-${new Date().toLocaleDateString()}`;
+    const matchVersion = projectVersion.match(/\d+/); // Find the first number in the string
+
+    let versionNumber =  matchVersion ? parseInt(matchVersion[0], 10) : 0;
+    return `Proposal ${1+versionNumber}-${new Date().toLocaleDateString()}`;
   }
 
 
@@ -142,7 +144,7 @@ export class ScopeOfWorkPage implements OnInit {
 
     return {
       ...activeVersion,
-      // id: newVersionId,
+      id: newVersionId,
       project_version: nextProjectVersion,
       active: true,
       is_current_version: true,
@@ -190,24 +192,8 @@ export class ScopeOfWorkPage implements OnInit {
   }
 
   async clickCreateVersion() {
-
-    this.rejectReasons = await (await this.rejectReasonService.getMockRejectReason()).data
-
-    let reject_message;
-
-    if (this.project.id_reject_reason !== null)
-      if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
-        reject_message = "This proposal was marked as " + this.project.reject_reason;
-      }
-      else
-        reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
-    else {
-      reject_message = "Previous proposal was declined without a specified reason";
-    }
-
     const alert = await this.alertController.create({
       header: 'Are you sure you want create a new  proposal option?',
-      message: reject_message,
       buttons: [
         {
           text: 'Cancel',
@@ -216,7 +202,7 @@ export class ScopeOfWorkPage implements OnInit {
           handler: () => {
           }
         }, {
-          text: 'Accept',
+          text: 'Yes',
           handler: () => {
             this.createVersion();
           }
@@ -264,7 +250,7 @@ export class ScopeOfWorkPage implements OnInit {
     else
       reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
 
-    if (this.project.id_project_status >= 5) {
+    if (this.project.id_project_status == 5) {
       const alert = await this.alertController.create({
         header: 'Are you sure you want accept this proposal?',
         message: reject_message,

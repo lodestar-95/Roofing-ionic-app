@@ -28,6 +28,8 @@ export class CheckboxListComponent implements OnInit {
 
   ngOnInit() {
     this.chkLists = [];
+    console.log("CheckboxList", this.subTitle);
+    
     this.options.forEach(option => {
       this.chkLists.push({ ...option });
     });

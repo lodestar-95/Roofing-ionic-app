@@ -124,7 +124,7 @@ export class EstimatePage implements OnInit, OnDestroy {
         if (this.project.id_project_status < 3 || shingle_lines) {
           this.showMdlAcceptance = false
         }
-        if (this.project.id_project_status >= 5) {
+        if (this.project.id_project_status == 5) {
           this.showMdlAcceptance = true
         }
         if (this.project.id_project_status >= 3) {
@@ -149,11 +149,11 @@ export class EstimatePage implements OnInit, OnDestroy {
 
     const lastVersion = this.project.versions[this.project.versions.length - 1];
     const nextProjectVersion = this.getNextProjectVersion(lastVersion.project_version);
-    // const newVersionId = uuidv4();
+    const newVersionId = uuidv4();
 
     return {
       ...activeVersion,
-      // id: newVersionId,
+      id: newVersionId,
       project_version: nextProjectVersion,
       active: true,
       is_current_version: true,
@@ -201,24 +201,8 @@ export class EstimatePage implements OnInit, OnDestroy {
   }
 
   async clickCreateVersion() {
-
-    this.rejectReasons = await (await this.rejectReasonService.getMockRejectReason()).data
-
-    let reject_message;
-
-    if (this.project.id_reject_reason !== null)
-      if (this.rejectReasons[this.project.id_reject_reason - 1].id === 6) {
-        reject_message = "This proposal was marked as " + this.project.reject_reason;
-      }
-      else
-        reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
-    else {
-      reject_message = "Previous proposal was declined without a specified reason";
-    }
-
     const alert = await this.alertController.create({
       header: 'Are you sure you want create a new proposal option?',
-      message: reject_message,
       buttons: [
         {
           text: 'Cancel',
@@ -227,7 +211,7 @@ export class EstimatePage implements OnInit, OnDestroy {
           handler: () => {
           }
         }, {
-          text: 'Accept',
+          text: 'Yes',
           handler: () => {
             this.createVersion();
           }
@@ -275,7 +259,7 @@ export class EstimatePage implements OnInit, OnDestroy {
     else if (this.rejectReasons[this.project.id_reject_reason - 1])
       reject_message = "This proposal was marked as " + this.rejectReasons[this.project.id_reject_reason - 1].reason;
 
-    if (this.project.id_project_status >= 5) {
+    if (this.project.id_project_status == 5) {
       const alert = await this.alertController.create({
         header: 'Are you sure you want accept this proposal?',
         message: reject_message,

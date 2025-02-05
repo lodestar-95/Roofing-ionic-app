@@ -174,6 +174,7 @@ export class ProspectingDetailComponent implements OnInit {
     }
 
     let versions: Version[];
+
     if (data.createNew) {
       const activeVersion = this.project.versions.find(x => x.active);
       const newVersion = this.createNewVersion(activeVersion);
@@ -209,6 +210,8 @@ export class ProspectingDetailComponent implements OnInit {
 
 
   private createNewVersion(activeVersion: Version) {
+    console.log("test", activeVersion);
+    
     this.projectService.saveVersion({ ...this.version, active: false, is_current_version: false });
 
     const lastVersion = this.project.versions[this.project.versions.length - 1];
@@ -216,7 +219,7 @@ export class ProspectingDetailComponent implements OnInit {
     const newVersionId = uuidv4();
     return {
       ...activeVersion,
-      // id: newVersionId,
+      id: newVersionId,
       project_version: nextProjectVersion,
       active: true,
       is_current_version: true,
@@ -265,8 +268,10 @@ export class ProspectingDetailComponent implements OnInit {
   }
 
   getNextProjectVersion(projectVersion: string) {
-    let versionNumber = +projectVersion.toLowerCase().match(/v(\d+)/)[1];
-    return `Proposal ${++versionNumber}-${new Date().toLocaleDateString()}`;
+    const matchVersion = projectVersion.match(/\d+/); // Find the first number in the string
+
+    let versionNumber =  matchVersion ? parseInt(matchVersion[0], 10) : 0;
+    return `Proposal ${1+versionNumber}-${new Date().toLocaleDateString()}`;
   }
 
   goToMaps(adress: string) {
