@@ -1,4 +1,4 @@
-# Roofing Ionic Mobile App — Senior Engineer Project Resume
+# Roofing Ionic Mobile App
 
 ## 📌 Overview
 
