@@ -7,9 +7,9 @@ export const environment = {
   name: 'qa',
    url: 'https://ehroofing-gw-gateway-qa-b1b593482770.herokuapp.com/api',
 
-  appKey:"qgm8gkydey74u6g",
-  appSecret:"doxew38mu5q2mlk",
-  refreshToken: "3EOAmzFZO1oAAAAAAAAAAT4QQUtWutr3nM8T6qz8zk2BLmWsL4yGc7tfWgc6Vfz1",
+  appKey:"",
+  appSecret:"",
+  refreshToken: "",
 
   jiraUsername:"albertozarate@gmail.com",
   jiraPassword:"Roofing+1m3"
